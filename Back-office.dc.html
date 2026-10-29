@@ -17,6 +17,14 @@ button,input,select,textarea{font-family:inherit;color:inherit}
 a{color:#111}a:hover{color:#5C5A55}
 input::placeholder,textarea::placeholder{color:#6B6862}
 table{border-collapse:collapse}
+.pcell{width:100%;min-width:92px;height:40px;border-radius:10px;border:1.5px solid transparent;background:transparent;padding:0 10px;font:500 15px 'IBM Plex Mono',monospace;color:#111;text-align:right;box-sizing:border-box;transition:border-color 120ms,background 120ms,box-shadow 120ms}
+.pcell:hover{border-color:#D6D3CB;background:#fff}
+.pcell:focus{outline:none;border-color:var(--gc,#111);background:#fff;box-shadow:0 0 0 3px var(--gr,rgba(17,17,17,.08))}
+.pcell.ed{background:#FFF7CC;border-color:#E0B800}
+.tf{height:44px;border-radius:12px;border:1.5px solid #E2E0D9;background:#FAF9F6;padding:0 12px;font-size:15px;color:#111;box-sizing:border-box;transition:border-color 120ms,background 120ms,box-shadow 120ms}
+.tf:hover{border-color:#C9C6BD}
+.tf:focus{outline:none;border-color:#111;background:#fff;box-shadow:0 0 0 3px rgba(250,210,13,.5)}
+.tf.mono{font-family:'IBM Plex Mono',monospace}
 @media (prefers-reduced-motion: reduce){*{transition-duration:1ms !important}}
 </style>
 </helmet>
@@ -52,6 +60,7 @@ table{border-collapse:collapse}
 <div style="flex:1;min-width:0;display:flex;flex-direction:column">
   <header style="display:flex;align-items:center;gap:12px;padding:16px 28px;background:#F3F2EE;flex-wrap:wrap">
     <sc-if value="{{ narrow }}"><button aria-label="เปิดเมนู" onClick="{{ openDrawer }}" style="width:44px;height:44px;border:none;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.menu }}</button></sc-if>
+    <sc-if value="{{ canBack }}"><button onClick="{{ goBack }}" style="height:44px;padding:0 16px 0 10px;border:none;border-radius:999px;background:#fff;display:flex;align-items:center;gap:4px;font-size:15px;cursor:pointer" style-hover="background:#E7E5DE">{{ ic.back }}{{ backLabel }}</button></sc-if>
     <h1 style="margin:0;font-size:24px;font-weight:500;flex:1;min-width:160px">{{ pageTitle }}</h1>
     <label style="display:flex;align-items:center;gap:8px;font-size:14px;color:#5C5A55">สาขา<select style="height:40px;border-radius:999px;border:1px solid #D6D3CB;background:#fff;padding:0 12px;font-size:14px;color:#111"><option>ทุกสาขา</option><option>ทีมลาดพร้าว</option><option>ทีมบางนา</option><option>ทีมรามอินทรา</option><option>ทีมบางแค</option></select></label>
     <div style="display:flex;align-items:center;gap:8px;font-size:14px"><span style="width:36px;height:36px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center;font-weight:500">นภ</span>คุณนภา</div>
@@ -96,7 +105,7 @@ table{border-collapse:collapse}
 
 <sc-if value="{{ is.b03 }}">
   <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
-    <div role="tablist" style="display:flex;background:#E7E5DE;border-radius:999px;padding:3px">
+    <div role="tablist" style="display:flex;flex-wrap:wrap;background:#E7E5DE;border-radius:22px;padding:3px">
       <button role="tab" aria-selected="{{ boardView }}" onClick="{{ setBoard }}" style="height:36px;padding:0 16px;border:none;border-radius:999px;background:{{ tabBoardBg }};font-size:14px;cursor:pointer">บอร์ด</button>
       <button role="tab" aria-selected="{{ tableView }}" onClick="{{ setTable }}" style="height:36px;padding:0 16px;border:none;border-radius:999px;background:{{ tabTableBg }};font-size:14px;cursor:pointer">ตาราง</button>
     </div>
@@ -111,8 +120,8 @@ table{border-collapse:collapse}
     <div style="overflow-x:auto;padding-bottom:8px">
       <div style="display:grid;grid-template-columns:repeat(6,minmax(240px,1fr));gap:12px;min-width:1500px">
         <sc-for list="{{ columns }}" as="c">
-          <div style="background:#E9E7E0;border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:10px;min-height:320px">
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:0 4px"><span style="font-size:15px;font-weight:500">{{ c.name }}</span><span style="font-size:13px;padding:2px 10px;border-radius:999px;background:#fff">{{ c.n }}</span></div>
+          <div style="background:#E9E7E0;border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:10px;min-height:320px;border-top:4px solid {{ c.dot }}">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0 4px;gap:8px"><span style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:500"><span style="width:10px;height:10px;border-radius:50%;background:{{ c.dot }};flex:none"></span>{{ c.name }}</span><span style="font-size:13px;padding:2px 10px;border-radius:999px;background:{{ c.bg }};color:{{ c.fg }};font-weight:500">{{ c.n }}</span></div>
             <sc-for list="{{ c.cards }}" as="d">
               <button onClick="{{ d.open }}" style="text-align:left;border:none;border-radius:16px;background:#fff;padding:12px 14px;display:flex;flex-direction:column;gap:4px;cursor:pointer;transition:box-shadow 150ms" style-hover="box-shadow:0 0 0 2px #111">
                 <div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:15px;font-weight:500">{{ d.model }}</span><span style="font-size:15px;font-weight:500">{{ d.price }}</span></div>
@@ -130,7 +139,7 @@ table{border-collapse:collapse}
     <div style="background:#fff;border-radius:20px;overflow-x:auto">
       <table style="width:100%;min-width:900px;font-size:14px">
         <thead><tr style="text-align:left;color:#5C5A55;background:#FAF9F6"><th style="font-weight:400;padding:12px 16px">เลข QR</th><th style="font-weight:400">รุ่น</th><th style="font-weight:400">สถานะ</th><th style="font-weight:400;text-align:right">ราคา</th><th style="font-weight:400;padding-left:16px">ทีม</th><th style="font-weight:400">ที่มา</th><th style="font-weight:400">หมายเหตุ</th></tr></thead>
-        <tbody><sc-for list="{{ rows3 }}" as="d"><tr onClick="{{ d.open }}" style="border-top:1px solid #F3F2EE;cursor:pointer" style-hover="background:#FAF9F6"><td style="padding:12px 16px;font-family:'IBM Plex Mono',monospace;font-size:13px">{{ d.qr }}</td><td>{{ d.model }}</td><td>{{ d.status }}</td><td style="text-align:right">{{ d.price }}</td><td style="padding-left:16px">{{ d.team }}</td><td>{{ d.src }}</td><td style="color:#5C5A55">{{ d.note }}</td></tr></sc-for></tbody>
+        <tbody><sc-for list="{{ rows3 }}" as="d"><tr onClick="{{ d.open }}" style="border-top:1px solid #F3F2EE;cursor:pointer" style-hover="background:#FAF9F6"><td style="padding:12px 16px;font-family:'IBM Plex Mono',monospace;font-size:13px">{{ d.qr }}</td><td>{{ d.model }}</td><td><span style="display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 8px;border-radius:999px;background:{{ d.sbg }};color:{{ d.sfg }};font-size:13px;font-weight:500;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:{{ d.sdot }}"></span>{{ d.status }}</span></td><td style="text-align:right">{{ d.price }}</td><td style="padding-left:16px">{{ d.team }}</td><td>{{ d.src }}</td><td style="color:#5C5A55">{{ d.note }}</td></tr></sc-for></tbody>
       </table>
     </div>
   </sc-if>
@@ -142,7 +151,7 @@ table{border-collapse:collapse}
     <div style="flex:1;min-width:240px;display:flex;flex-direction:column;gap:4px">
       <div style="font-size:24px;font-weight:500">{{ pp.model }}</div>
       <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#5C5A55">IMEI {{ pp.imei }}<span style="margin-left:16px">{{ pp.qr }}</span></div>
-      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap"><span style="padding:4px 12px;border-radius:999px;background:#FAD20D;font-size:14px;font-weight:500">เกรด {{ pp.grade }}</span><span style="padding:4px 12px;border-radius:999px;background:#F3F2EE;font-size:14px">{{ pp.priceChip }}</span><span style="padding:4px 12px;border-radius:999px;background:{{ pp.stBg }};color:{{ pp.stFg }};font-size:14px">{{ pp.status }}</span></div>
+      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap"><span style="padding:4px 12px;border-radius:999px;background:{{ pp.gbg }};color:{{ pp.gfg }};font-size:14px;font-weight:500">เกรด {{ pp.grade }}</span><span style="padding:4px 12px;border-radius:999px;background:#F3F2EE;font-size:14px">{{ pp.priceChip }}</span><span style="padding:4px 12px;border-radius:999px;background:{{ pp.stBg }};color:{{ pp.stFg }};font-size:14px">{{ pp.status }}</span></div>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button onClick="{{ printReceipt }}" style="height:44px;padding:0 18px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:15px;cursor:pointer" style-hover="background:#F7F6F2">พิมพ์ใบรับซื้อ</button>
@@ -196,7 +205,6 @@ table{border-collapse:collapse}
 <sc-if value="{{ is.b05 }}">
   <div style="display:flex;gap:12px;flex-wrap:wrap">
     <div style="padding:14px 20px;border-radius:20px;background:#fff"><span style="font-size:14px;color:#5C5A55">วันนี้ยืนยันแล้ว</span><span style="font-size:22px;font-weight:600;margin-left:10px">{{ confirmedToday }} รายการ</span></div>
-    <div style="padding:14px 20px;border-radius:20px;background:#fff"><span style="font-size:14px;color:#5C5A55">เวลาเฉลี่ย</span><span style="font-size:22px;font-weight:600;margin-left:10px">4 นาที</span></div>
   </div>
   <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
     <div style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:10px">
@@ -205,7 +213,7 @@ table{border-collapse:collapse}
         <button onClick="{{ q.pick }}" style="text-align:left;border:2px solid {{ q.bd }};border-radius:20px;background:#fff;padding:14px 16px;display:flex;flex-direction:column;gap:4px;cursor:pointer" style-hover="border-color:#111">
           <div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:16px;font-weight:500">{{ q.model }}</span><span style="font-size:13px;padding:2px 10px;border-radius:999px;background:#FFF1D6;color:#7A4A00;white-space:nowrap">รอ {{ q.wait }} นาที</span></div>
           <div style="font-size:14px;color:#5C5A55">{{ q.team }} {{ q.staff }}</div>
-          <div style="font-size:14px">ราคาระบบ {{ q.price }}<span style="margin-left:10px">เกรด {{ q.grade }}</span></div>
+          <div style="font-size:14px">ราคาระบบ {{ q.price }}<span style="margin-left:10px;padding:1px 9px;border-radius:999px;background:{{ q.gbg }};color:{{ q.gfg }};font-size:13px;font-weight:500">เกรด {{ q.grade }}</span></div>
         </button>
       </sc-for>
     </div>
@@ -214,9 +222,9 @@ table{border-collapse:collapse}
       <div style="padding:20px;border-radius:24px;background:#fff;display:flex;flex-direction:column;gap:12px">
         <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
           <div style="flex:1;min-width:200px"><div style="font-size:20px;font-weight:500">{{ sel5.model }}</div><div style="font-size:14px;color:#5C5A55"><span style="font-family:'IBM Plex Mono',monospace">{{ sel5.qr }}</span><span style="margin-left:12px">ที่มา {{ sel5.src }}</span></div></div>
-          <span style="padding:4px 12px;border-radius:999px;background:#FAD20D;font-size:14px;font-weight:500">เกรด {{ sel5.grade }}</span>
+          <span style="padding:4px 12px;border-radius:999px;background:{{ sel5.gbg }};color:{{ sel5.gfg }};font-size:14px;font-weight:500">เกรด {{ sel5.grade }}</span>
           <button onClick="{{ toPassport }}" style="height:40px;padding:0 14px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer" style-hover="background:#F7F6F2">Device Passport</button>
-          <button onClick="{{ callStaff }}" style="height:40px;padding:0 14px;border:none;border-radius:999px;background:#F3F2EE;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px">{{ ic.call }}{{ sel5.staff }} {{ sel5.phone }}</button>
+          <span style="height:40px;padding:0 14px;border-radius:999px;background:#F3F2EE;font-size:14px;display:flex;align-items:center;gap:6px" aria-label="เบอร์พนักงาน">{{ ic.call }}{{ sel5.staff }}<span style="font-family:'IBM Plex Mono',monospace">{{ sel5.phone }}</span></span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px">
           <div style="padding:14px;border-radius:16px;background:#F7F6F2;font-size:14px;line-height:1.6"><div style="font-weight:500">ผลตรวจจากแอป</div>{{ sel5.app }}</div>
@@ -308,7 +316,7 @@ table{border-collapse:collapse}
 
 <sc-if value="{{ is.b06 }}">
   <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
-    <div role="tablist" style="display:flex;background:#E7E5DE;border-radius:999px;padding:3px">
+    <div role="tablist" style="display:flex;flex-wrap:wrap;background:#E7E5DE;border-radius:22px;padding:3px">
       <sc-for list="{{ brands }}" as="b"><button role="tab" aria-selected="{{ b.on }}" onClick="{{ b.pick }}" style="height:36px;padding:0 16px;border:none;border-radius:999px;background:{{ b.bg }};font-size:14px;cursor:pointer">{{ b.name }}</button></sc-for>
     </div>
     <span style="font-size:13px;color:#5C5A55">แก้ล่าสุด 28 ต.ค. 2569 17:20 คุณนภา</span>
@@ -326,18 +334,20 @@ table{border-collapse:collapse}
   </sc-if>
   <div style="background:#fff;border-radius:20px;overflow-x:auto">
     <table style="width:100%;min-width:820px;font-size:14px">
-      <thead><tr style="text-align:left;color:#5C5A55;background:#FAF9F6"><th style="font-weight:400;padding:12px 16px">รุ่น</th><th style="font-weight:400">ความจุ</th><th style="font-weight:400">เกรด A</th><th style="font-weight:400">เกรด B</th><th style="font-weight:400">เกรด C</th><th style="font-weight:400">เกรด D</th><th style="font-weight:400;padding-right:16px">รับซื้อ</th></tr></thead>
+      <thead><tr style="text-align:left;color:#5C5A55;background:#FAF9F6"><th style="font-weight:400;padding:12px 16px">รุ่น</th><th style="font-weight:400">ความจุ</th><sc-for list="{{ gradeHeads }}" as="g"><th style="font-weight:500;color:#111;padding:10px 18px 10px 8px;text-align:right;background:{{ g.tint }};border-bottom:3px solid {{ g.solid }}"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:26px;height:26px;border-radius:8px;background:{{ g.solid }};color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:600">{{ g.k }}</span>เกรด {{ g.k }}</span></th></sc-for><th style="font-weight:400;padding-right:16px">รับซื้อ</th></tr></thead>
       <tbody><sc-for list="{{ priceRows }}" as="r"><tr style="border-top:1px solid #F3F2EE;opacity:{{ r.op }}">
         <td style="padding:8px 16px;font-weight:500">{{ r.model }}</td><td>{{ r.cap }}</td>
-        <sc-for list="{{ r.cells }}" as="c"><td style="padding:6px 8px 6px 0"><input inputmode="numeric" value="{{ c.v }}" onInput="{{ c.set }}" aria-label="{{ c.aria }}" style="width:96px;height:38px;border-radius:10px;border:1.5px solid {{ c.bd }};background:{{ c.bg }};padding:0 10px;font-size:14px;font-family:'IBM Plex Mono',monospace;box-sizing:border-box"><div style="font-size:11px;color:#7A4A00;height:14px">{{ c.from }}</div></td></sc-for>
+        <sc-for list="{{ r.cells }}" as="c"><td style="padding:6px 8px;background:{{ c.tint }}"><input class="pcell {{ c.ed }}" inputmode="numeric" value="{{ c.v }}" onInput="{{ c.set }}" aria-label="{{ c.aria }}" title="{{ c.from }}" style="--gc:{{ c.gc }};--gr:{{ c.gr }}"></td></sc-for>
         <td style="padding-right:16px"><button role="switch" aria-checked="{{ r.open }}" aria-label="{{ r.aria }}" onClick="{{ r.toggle }}" style="width:52px;height:30px;border:none;border-radius:999px;background:{{ r.swBg }};position:relative;cursor:pointer;transition:background 150ms"><span style="position:absolute;top:3px;left:{{ r.knob }};width:24px;height:24px;border-radius:50%;background:#fff;transition:left 150ms"></span></button></td>
       </tr></sc-for></tbody>
     </table>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px;align-items:start">
     <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px">
-      <div style="font-size:17px;font-weight:500">กติกาหักราคาตามตำหนิ</div>
-      <sc-for list="{{ rules }}" as="r"><div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-top:1px solid #F3F2EE;font-size:15px"><span style="flex:1">{{ r.k }}</span><span style="color:#5C5A55">−</span><input inputmode="numeric" value="{{ r.v }}" onInput="{{ r.set }}" aria-label="{{ r.k }}" style="width:90px;height:38px;border-radius:10px;border:1.5px solid #D6D3CB;padding:0 10px;font-size:14px;font-family:'IBM Plex Mono',monospace"></div></sc-for>
+      <div style="display:flex;align-items:center;gap:8px"><div style="flex:1;font-size:17px;font-weight:500">กติกาหักราคาตามตำหนิ</div><button onClick="{{ addRule }}" style="height:36px;padding:0 14px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px">{{ ic.plus }}เพิ่มกติกา</button></div>
+      <div style="font-size:13px;color:#5C5A55">แก้ชื่อและยอดหักได้ เพิ่มหรือลบรายการได้ มีผลกับการคำนวณราคาครั้งถัดไป</div>
+      <sc-for list="{{ rules }}" as="r"><div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid #F3F2EE;font-size:15px"><input class="tf" value="{{ r.k }}" onInput="{{ r.setName }}" placeholder="ชื่อตำหนิ" aria-label="ชื่อตำหนิ" style="flex:1;min-width:0"><span style="color:#5C5A55">−</span><input class="tf mono" inputmode="numeric" value="{{ r.v }}" onInput="{{ r.set }}" aria-label="ยอดหัก {{ r.k }}" style="width:100px;text-align:right"><button onClick="{{ r.del }}" aria-label="ลบกติกา {{ r.k }}" style="width:44px;height:44px;border:none;border-radius:999px;background:transparent;color:#B3261E;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none" style-hover="background:#FDECEC">{{ ic.x }}</button></div></sc-for>
+      <sc-if value="{{ noRules }}"><div style="font-size:14px;color:#5C5A55;padding:8px 0">ยังไม่มีกติกา กด "เพิ่มกติกา"</div></sc-if>
     </div>
     <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:12px">
       <div style="font-size:17px;font-weight:500">จำลองราคา</div>
@@ -366,7 +376,7 @@ table{border-collapse:collapse}
     <table style="width:100%;min-width:1180px;font-size:14px">
       <thead><tr style="text-align:left;color:#5C5A55;background:#FAF9F6"><th style="font-weight:400;padding:12px 16px">รุ่น</th><th style="font-weight:400">ความจุ</th><th style="font-weight:400">สี</th><th style="font-weight:400">IMEI/SN</th><th style="font-weight:400">สภาพ</th><th style="font-weight:400">แบต</th><th style="font-weight:400">ประกัน</th><th style="font-weight:400">อุปกรณ์</th><th style="font-weight:400;text-align:right">ทุน</th><th style="font-weight:400;padding-left:16px">ราคาขาย</th><th style="font-weight:400">อายุ</th><th style="font-weight:400;padding-right:16px">PEAK</th></tr></thead>
       <tbody><sc-for list="{{ stockRows }}" as="r"><tr onClick="{{ r.open }}" style="border-top:1px solid #F3F2EE;cursor:pointer" style-hover="background:#FAF9F6">
-        <td style="padding:12px 16px;font-weight:500">{{ r.model }}</td><td>{{ r.cap }}</td><td>{{ r.color }}</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13px">{{ r.imei }}</td><td>{{ r.cond }}</td><td>{{ r.bat }}</td><td>{{ r.war }}</td><td>{{ r.acc }}</td><td style="text-align:right">{{ r.cost }}</td>
+        <td style="padding:12px 16px;font-weight:500">{{ r.model }}</td><td>{{ r.cap }}</td><td>{{ r.color }}</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13px">{{ r.imei }}</td><td><span style="padding:2px 10px;border-radius:999px;background:{{ r.gbg }};color:{{ r.gfg }};font-size:13px;font-weight:500">{{ r.cond }}</span></td><td>{{ r.bat }}</td><td>{{ r.war }}</td><td>{{ r.acc }}</td><td style="text-align:right">{{ r.cost }}</td>
         <td style="padding-left:16px"><sc-if value="{{ r.unpriced }}"><span style="padding:3px 10px;border-radius:999px;background:#FFF1D6;color:#7A4A00;font-size:13px;white-space:nowrap">ยังไม่ตั้งราคา</span></sc-if><sc-if value="{{ r.priced }}"><span style="white-space:nowrap">{{ r.sale }}</span></sc-if></td>
         <td><span style="color:{{ r.ageFg }};font-weight:{{ r.ageFw }}">{{ r.age }}</span></td>
         <td style="padding-right:16px"><span style="padding:3px 10px;border-radius:999px;font-size:13px;background:{{ r.pbg }};color:{{ r.pfg }};white-space:nowrap">{{ r.peak }}</span></td>
@@ -378,21 +388,41 @@ table{border-collapse:collapse}
 <sc-if value="{{ is.b08 }}">
   <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
     <div style="flex:2 1 560px;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="padding:16px;border-radius:20px;background:#fff;display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end">
-        <label style="flex:1;min-width:220px;display:flex;flex-direction:column;gap:6px;font-size:14px">พิมพ์ IMEI/SN<input value="{{ imeiIn }}" onInput="{{ setImeiIn }}" onKeyDown="{{ imeiKey }}" placeholder="เช่น 353104270923416" style="height:48px;border-radius:14px;border:1.5px solid #111;padding:0 14px;font-size:16px;font-family:'IBM Plex Mono',monospace"></label>
-        <button onClick="{{ addCart }}" style="height:48px;padding:0 20px;border:none;border-radius:999px;background:#111;color:#fff;font-size:15px;cursor:pointer">ใส่ตะกร้า</button>
-        <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">หรือเลือกจากสต็อก<select onChange="{{ pickStock }}" value="" style="height:48px;border-radius:14px;border:1.5px solid #D6D3CB;background:#fff;padding:0 10px;font-size:14px;max-width:260px"><option value="">เลือกเครื่อง</option><sc-for list="{{ stockOpts }}" as="o"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></label>
-        <sc-if value="{{ cartErr }}"><div style="width:100%;padding:10px 14px;border-radius:12px;background:#FDECEC;color:#B3261E;font-size:14px">{{ cartErr }}</div></sc-if>
-      </div>
-      <div style="background:#fff;border-radius:20px;overflow-x:auto">
+      <section style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:12px">
+        <h2 style="margin:0;display:flex;align-items:center;gap:10px;font-size:18px;font-weight:500"><span style="width:28px;height:28px;border-radius:50%;background:#111;color:#FAD20D;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex:none">1</span>ค้นหาเครื่อง</h2>
+        <div role="search" style="display:flex;flex-wrap:wrap;gap:10px">
+          <input class="tf" type="search" value="{{ searchIn }}" onInput="{{ setSearchIn }}" onKeyDown="{{ searchKey }}" placeholder="พิมพ์ IMEI/SN หรือชื่อรุ่น เช่น iPhone 12" aria-label="ค้นหาเครื่องด้วย IMEI/SN หรือชื่อรุ่น" style="flex:1;min-width:220px;height:48px;font-size:16px">
+          <button onClick="{{ doSearch }}" style="height:48px;padding:0 22px;border:none;border-radius:999px;background:#111;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;gap:8px">{{ ic.search }}ค้นหา</button>
+        </div>
+        <sc-if value="{{ searchIdle }}"><div style="font-size:14px;color:#5C5A55">พิมพ์ IMEI/SN หรือชื่อรุ่น แล้วกดค้นหา เลือกเครื่องที่ต้องการใส่ตะกร้า</div></sc-if>
+        <sc-if value="{{ searchNone }}"><div style="padding:12px 14px;border-radius:12px;background:#F7F6F2;font-size:14px">ไม่พบเครื่องที่ตรงกับ “{{ searchQ }}” ในสต็อก</div></sc-if>
+        <sc-if value="{{ searchHas }}">
+          <div style="font-size:14px;color:#5C5A55">พบ {{ resultCount }} เครื่อง ราคาตามกลุ่ม{{ tierName }}</div>
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ results }}" as="x"><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0;border-top:1px solid #F3F2EE">
+              <div style="flex:1;min-width:200px"><div style="font-size:15px;font-weight:500">{{ x.model }}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#5C5A55">{{ x.imei }}</div></div>
+              <span style="padding:2px 10px;border-radius:999px;background:{{ x.gbg }};color:{{ x.gfg }};font-size:13px;font-weight:500">เกรด {{ x.cond }}</span>
+              <span style="font-size:14px;color:#5C5A55;min-width:64px">แบต {{ x.bat }}</span>
+              <span style="min-width:96px;text-align:right;font-size:15px;font-weight:500">{{ x.price }}</span>
+              <sc-if value="{{ x.canAdd }}"><button onClick="{{ x.add }}" style="height:40px;padding:0 16px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px;min-width:120px;justify-content:center" style-hover="background:#FAD20D">{{ ic.plus }}ใส่ตะกร้า</button></sc-if>
+              <sc-if value="{{ x.inCart }}"><span style="height:40px;padding:0 14px;border-radius:999px;background:#E3F5EA;color:#17663A;font-size:14px;display:flex;align-items:center;gap:6px;min-width:120px;justify-content:center;box-sizing:border-box">{{ ic.check }}อยู่ในตะกร้า</span></sc-if>
+              <sc-if value="{{ x.unpriced }}"><button onClick="{{ x.toStock }}" style="height:40px;padding:0 14px;border:none;border-radius:999px;background:#FFF1D9;color:#8A5300;font-size:14px;cursor:pointer;min-width:120px">ตั้งราคาก่อน</button></sc-if>
+            </div></sc-for>
+          </div>
+        </sc-if>
+      </section>
+      <section style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:12px;min-width:0">
+        <h2 style="margin:0;display:flex;align-items:center;gap:10px;font-size:18px;font-weight:500"><span style="width:28px;height:28px;border-radius:50%;background:#111;color:#FAD20D;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex:none">2</span>ตะกร้า<span style="font-size:14px;font-weight:400;color:#5C5A55">{{ cartCount }} เครื่อง</span></h2>
+        <div style="overflow-x:auto">
         <table style="width:100%;min-width:640px;font-size:14px">
-          <thead><tr style="text-align:left;color:#5C5A55;background:#FAF9F6"><th style="font-weight:400;padding:12px 16px">เครื่อง</th><th style="font-weight:400">เกรด</th><th style="font-weight:400">แบต</th><th style="font-weight:400;text-align:right">ราคา</th><th style="font-weight:400;text-align:right">ทุน</th><th style="font-weight:400;text-align:right">กำไร</th><th style="width:56px"></th></tr></thead>
+          <thead><tr style="text-align:left;color:#5C5A55"><th style="font-weight:400;padding:8px 0">เครื่อง</th><th style="font-weight:400">เกรด</th><th style="font-weight:400">แบต</th><th style="font-weight:400;text-align:right">ราคา</th><th style="font-weight:400;text-align:right">ทุน</th><th style="font-weight:400;text-align:right">กำไร</th><th style="width:56px"></th></tr></thead>
           <tbody>
-            <sc-for list="{{ cart }}" as="c"><tr style="border-top:1px solid #F3F2EE"><td style="padding:12px 16px"><div style="font-weight:500">{{ c.model }}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5C5A55">{{ c.imei }}</div></td><td>{{ c.cond }}</td><td>{{ c.bat }}</td><td style="text-align:right">{{ c.price }}</td><td style="text-align:right">{{ c.cost }}</td><td style="text-align:right;color:#1B6B33">{{ c.profit }}</td><td><button aria-label="เอาออก" onClick="{{ c.remove }}" style="width:40px;height:40px;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:#F3F2EE">{{ ic.x }}</button></td></tr></sc-for>
-            <sc-if value="{{ cartEmpty }}"><tr><td colspan="7" style="padding:20px 16px;color:#5C5A55">ยังไม่มีเครื่องในตะกร้า</td></tr></sc-if>
+            <sc-for list="{{ cart }}" as="c"><tr style="border-top:1px solid #F3F2EE"><td style="padding:12px 0"><div style="font-weight:500">{{ c.model }}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5C5A55">{{ c.imei }}</div></td><td><span style="padding:2px 10px;border-radius:999px;background:{{ c.gbg }};color:{{ c.gfg }};font-size:13px;font-weight:500">{{ c.cond }}</span></td><td>{{ c.bat }}</td><td style="text-align:right">{{ c.price }}</td><td style="text-align:right">{{ c.cost }}</td><td style="text-align:right;color:#1B6B33">{{ c.profit }}</td><td><button aria-label="เอา {{ c.model }} ออกจากตะกร้า" onClick="{{ c.remove }}" style="width:44px;height:44px;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-left:auto" style-hover="background:#F3F2EE">{{ ic.x }}</button></td></tr></sc-for>
+            <sc-if value="{{ cartEmpty }}"><tr><td colspan="7" style="padding:16px 0;color:#5C5A55;border-top:1px solid #F3F2EE">ยังไม่มีเครื่องในตะกร้า ค้นหาเครื่องด้านบนแล้วกด “ใส่ตะกร้า”</td></tr></sc-if>
           </tbody>
         </table>
-      </div>
+        </div>
+      </section>
       <div style="padding:16px 20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px">
         <div style="display:flex;align-items:center;gap:8px"><div style="flex:1;font-size:16px;font-weight:500">บิลล่าสุด</div><button onClick="{{ exportX }}" style="height:36px;padding:0 14px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F7F6F2">{{ ic.download }}ส่งออก Excel</button></div>
         <div style="overflow-x:auto"><table style="width:100%;min-width:760px;font-size:14px"><thead><tr style="text-align:left;color:#5C5A55"><th style="font-weight:400;padding:6px 0">เลขที่</th><th style="font-weight:400">วันที่</th><th style="font-weight:400">ลูกค้า</th><th style="font-weight:400">กลุ่มราคา</th><th style="font-weight:400">ชำระ</th><th style="font-weight:400;text-align:right">เครื่อง</th><th style="font-weight:400;text-align:right">ยอดขาย</th><th style="font-weight:400;text-align:right">กำไร</th><th style="font-weight:400;padding-left:16px">PEAK</th></tr></thead>
@@ -400,6 +430,7 @@ table{border-collapse:collapse}
       </div>
     </div>
     <div style="flex:1 1 300px;min-width:0;padding:20px;border-radius:24px;background:#fff;display:flex;flex-direction:column;gap:14px;position:sticky;top:16px">
+      <h2 style="margin:0;display:flex;align-items:center;gap:10px;font-size:18px;font-weight:500"><span style="width:28px;height:28px;border-radius:50%;background:#111;color:#FAD20D;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex:none">3</span>สรุปบิล</h2>
       <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">ลูกค้า<input value="{{ buyer }}" onInput="{{ setBuyer }}" placeholder="เลขผู้เสียภาษีหรือเบอร์โทร" inputmode="numeric" style="height:48px;border-radius:14px;border:1.5px solid #D6D3CB;padding:0 14px;font-size:15px"></label>
       <div style="display:flex;flex-direction:column;gap:6px;font-size:14px">กลุ่มราคา<div role="radiogroup" style="display:flex;background:#F3F2EE;border-radius:999px;padding:3px"><sc-for list="{{ tiers }}" as="t"><button role="radio" aria-checked="{{ t.on }}" onClick="{{ t.pick }}" style="flex:1;height:40px;border:none;border-radius:999px;background:{{ t.bg }};color:{{ t.fg }};font-size:14px;cursor:pointer">{{ t.k }}</button></sc-for></div></div>
       <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">ส่วนลด (บาท)<input inputmode="numeric" value="{{ discount }}" onInput="{{ setDiscount }}" style="height:48px;border-radius:14px;border:1.5px solid #D6D3CB;padding:0 14px;font-size:15px"></label>
@@ -447,35 +478,35 @@ table{border-collapse:collapse}
 </sc-if>
 
 <sc-if value="{{ is.b10 }}">
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;align-items:start">
-    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:12px">
-      <div style="font-size:17px;font-weight:500">ยืนยันราคาทางโทร</div>
-      <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">เบอร์ที่ปุ่ม “โทรหาหลังบ้าน” โทรไป<input value="02-114-5500" inputmode="tel" style="height:44px;border-radius:12px;border:1.5px solid #D6D3CB;padding:0 12px;font-size:15px;font-family:'IBM Plex Mono',monospace"></label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:14px">เตือนหลังบ้านเมื่อรอยืนยันเกิน<input value="5" inputmode="numeric" style="width:64px;height:44px;border-radius:12px;border:1.5px solid #D6D3CB;padding:0 12px;font-size:15px">นาที</label>
-    </div>
-    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:12px">
-      <div style="font-size:17px;font-weight:500">เชื่อมต่อและอื่น ๆ</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;font-size:15px"><span>PEAK</span><span style="padding:3px 10px;border-radius:999px;background:#E4F4E8;color:#1B6B33;font-size:13px">เชื่อมต่อแล้ว</span></div>
-      <sc-for list="{{ peakToggles }}" as="t"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:15px;min-height:44px"><span>{{ t.k }}</span><button role="switch" aria-checked="{{ t.on }}" aria-label="{{ t.k }}" onClick="{{ t.toggle }}" style="width:52px;height:30px;border:none;border-radius:999px;background:{{ t.bg }};position:relative;cursor:pointer;flex:none;transition:background 150ms"><span style="position:absolute;top:3px;left:{{ t.knob }};width:24px;height:24px;border-radius:50%;background:#fff;transition:left 150ms"></span></button></div></sc-for>
-      <label style="display:flex;align-items:center;gap:8px;font-size:15px">อายุ QR ขายเครื่อง<input value="30" inputmode="numeric" style="width:64px;height:44px;border-radius:12px;border:1.5px solid #D6D3CB;padding:0 12px;font-size:15px">นาที</label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:15px">เก็บรูปลูกค้าถือบัตร<input value="5" inputmode="numeric" style="width:64px;height:44px;border-radius:12px;border:1.5px solid #D6D3CB;padding:0 12px;font-size:15px">ปี</label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:15px">เตือนสต็อกค้างเกิน<input value="30" inputmode="numeric" style="width:64px;height:44px;border-radius:12px;border:1.5px solid #D6D3CB;padding:0 12px;font-size:15px">วัน</label>
-    </div>
-    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px">
-      <div style="display:flex;align-items:center"><div style="flex:1;font-size:17px;font-weight:500">ที่มาของเครื่อง</div><button onClick="{{ addSource }}" style="height:36px;padding:0 14px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:13px;cursor:pointer">เพิ่มช่องทาง</button></div>
-      <table style="width:100%;font-size:14px"><thead><tr style="color:#5C5A55;text-align:left"><th style="font-weight:400;padding:6px 0">ช่องทาง</th><th style="font-weight:400">บังคับเลขอ้างอิง</th></tr></thead>
-        <tbody><sc-for list="{{ srcRows }}" as="r"><tr style="border-top:1px solid #F3F2EE"><td style="padding:8px 0">{{ r.k }}</td><td><button role="switch" aria-checked="{{ r.on }}" aria-label="{{ r.aria }}" onClick="{{ r.toggle }}" style="width:52px;height:30px;border:none;border-radius:999px;background:{{ r.bg }};position:relative;cursor:pointer;transition:background 150ms"><span style="position:absolute;top:3px;left:{{ r.knob }};width:24px;height:24px;border-radius:50%;background:#fff;transition:left 150ms"></span></button></td></tr></sc-for></tbody></table>
-    </div>
-    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px;min-width:0">
-      <div style="display:flex;align-items:center"><div style="flex:1;font-size:17px;font-weight:500">พนักงาน</div><button onClick="{{ addStaff }}" style="height:36px;padding:0 14px;border:none;border-radius:999px;background:#111;color:#fff;font-size:13px;cursor:pointer">เพิ่มพนักงาน</button></div>
-      <div style="overflow-x:auto"><table style="width:100%;min-width:520px;font-size:14px"><thead><tr style="color:#5C5A55;text-align:left"><th style="font-weight:400;padding:6px 0">ชื่อ</th><th style="font-weight:400">สาขา/ทีม</th><th style="font-weight:400">บทบาท</th><th style="font-weight:400">ใช้ล่าสุด</th><th style="font-weight:400">ใช้งาน</th></tr></thead>
-        <tbody><sc-for list="{{ staffRows }}" as="r"><tr style="border-top:1px solid #F3F2EE"><td style="padding:8px 0">{{ r.n }}</td><td>{{ r.t }}</td><td>{{ r.r }}</td><td style="color:#5C5A55">{{ r.l }}</td><td><button role="switch" aria-checked="{{ r.on }}" aria-label="{{ r.aria }}" onClick="{{ r.toggle }}" style="width:52px;height:30px;border:none;border-radius:999px;background:{{ r.bg }};position:relative;cursor:pointer;transition:background 150ms"><span style="position:absolute;top:3px;left:{{ r.knob }};width:24px;height:24px;border-radius:50%;background:#fff;transition:left 150ms"></span></button></td></tr></sc-for></tbody></table></div>
-    </div>
-    <div style="grid-column:1/-1;padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px;min-width:0">
-      <div style="font-size:17px;font-weight:500">สิทธิ์ตามบทบาท</div>
-      <div style="overflow-x:auto"><table style="width:100%;min-width:720px;font-size:14px"><thead><tr style="color:#5C5A55"><th style="font-weight:400;text-align:left;padding:6px 0">ทำอะไรได้</th><th style="font-weight:400">ผู้ดูแล</th><th style="font-weight:400">ผู้ยืนยันราคา</th><th style="font-weight:400">พนักงานรับซื้อ</th><th style="font-weight:400">คลัง/ขาย</th></tr></thead>
+  <div style="display:flex;flex-direction:column;gap:16px;max-width:1040px;width:100%">
+    <section style="padding:20px 24px;border-radius:20px;background:#fff;display:flex;flex-direction:column;min-width:0">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-bottom:12px"><div style="flex:1;min-width:220px"><h2 style="margin:0;font-size:18px;font-weight:500">ยืนยันราคาทางโทร</h2><div style="font-size:14px;color:#5C5A55">เบอร์ที่พนักงานเห็นในปุ่ม "โทรหาหลังบ้าน" ใส่ได้หลายเบอร์</div></div><button onClick="{{ addPhone }}" style="height:40px;padding:0 16px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px">{{ ic.plus }}เพิ่มเบอร์</button></div>
+      <sc-for list="{{ phones }}" as="ph"><div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px solid #F3F2EE;flex-wrap:wrap"><label style="flex:2 1 220px;display:flex;flex-direction:column;gap:4px;font-size:13px;color:#5C5A55">ชื่อที่แสดง<input value="{{ ph.n }}" onInput="{{ ph.setN }}" placeholder="เช่น ทีมยืนยันราคา" class="tf"></label><label style="flex:1 1 180px;display:flex;flex-direction:column;gap:4px;font-size:13px;color:#5C5A55">เบอร์โทร<input value="{{ ph.t }}" onInput="{{ ph.setT }}" inputmode="tel" placeholder="02-000-0000" class="tf mono"></label><button onClick="{{ ph.del }}" aria-label="ลบเบอร์ {{ ph.n }}" style="align-self:flex-end;width:44px;height:44px;border:none;border-radius:999px;background:transparent;color:#B3261E;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:#FDECEC">{{ ic.x }}</button></div></sc-for>
+      <sc-if value="{{ noPhones }}"><div style="padding:12px 0;border-top:1px solid #F3F2EE;font-size:14px;color:#B3261E">ยังไม่มีเบอร์ พนักงานจะโทรหาหลังบ้านไม่ได้</div></sc-if>
+      <div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px solid #F3F2EE;flex-wrap:wrap"><div style="flex:1;min-width:200px;font-size:15px">เตือนหลังบ้านเมื่อรอยืนยันเกิน</div><label style="display:flex;align-items:center;gap:8px;font-size:15px"><input value="5" inputmode="numeric" aria-label="นาที" class="tf" style="width:80px;text-align:right">นาที</label></div>
+    </section>
+    <section style="padding:20px 24px;border-radius:20px;background:#fff;display:flex;flex-direction:column;min-width:0">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-bottom:12px"><div style="flex:1;min-width:220px"><h2 style="margin:0;font-size:18px;font-weight:500">ที่มาของเครื่อง</h2><div style="font-size:14px;color:#5C5A55">ช่องทางที่พนักงานเลือกได้ และช่องทางไหนต้องใส่เลขอ้างอิง</div></div><button onClick="{{ addSource }}" style="height:40px;padding:0 16px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px">{{ ic.plus }}เพิ่มช่องทาง</button></div>
+      <sc-for list="{{ srcRows }}" as="r"><div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px solid #F3F2EE;flex-wrap:wrap"><div style="flex:1;min-width:200px;font-size:15px">{{ r.k }}</div><span style="font-size:14px;color:#5C5A55">บังคับเลขอ้างอิง</span><button role="switch" aria-checked="{{ r.on }}" aria-label="{{ r.aria }}" onClick="{{ r.toggle }}" style="width:52px;height:30px;border:none;border-radius:999px;background:{{ r.bg }};position:relative;cursor:pointer;flex:none;transition:background 150ms"><span style="position:absolute;top:3px;left:{{ r.knob }};width:24px;height:24px;border-radius:50%;background:#fff;transition:left 150ms"></span></button></div></sc-for>
+    </section>
+    <section style="padding:20px 24px;border-radius:20px;background:#fff;display:flex;flex-direction:column;min-width:0">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-bottom:12px"><div style="flex:1;min-width:220px"><h2 style="margin:0;font-size:18px;font-weight:500">พนักงาน</h2><div style="font-size:14px;color:#5C5A55">บัญชีสร้างที่นี่ พนักงานสมัครเองไม่ได้</div></div><button onClick="{{ addStaff }}" style="height:40px;padding:0 16px;border:none;border-radius:999px;background:#111;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px">{{ ic.plus }}เพิ่มพนักงาน</button></div>
+      <div style="overflow-x:auto"><table style="width:100%;min-width:560px;font-size:15px;border-collapse:collapse"><thead><tr style="color:#5C5A55;text-align:left;font-size:14px"><th style="font-weight:400;padding:10px 0">ชื่อ</th><th style="font-weight:400">สาขา/ทีม</th><th style="font-weight:400">บทบาท</th><th style="font-weight:400">ใช้ล่าสุด</th><th style="font-weight:400;text-align:right">ใช้งาน</th></tr></thead>
+        <tbody><sc-for list="{{ staffRows }}" as="r"><tr style="border-top:1px solid #F3F2EE"><td style="padding:10px 0;font-weight:500">{{ r.n }}</td><td>{{ r.t }}</td><td>{{ r.r }}</td><td style="color:#5C5A55">{{ r.l }}</td><td style="text-align:right"><button role="switch" aria-checked="{{ r.on }}" aria-label="{{ r.aria }}" onClick="{{ r.toggle }}" style="width:52px;height:30px;border:none;border-radius:999px;background:{{ r.bg }};position:relative;cursor:pointer;flex:none;transition:background 150ms"><span style="position:absolute;top:3px;left:{{ r.knob }};width:24px;height:24px;border-radius:50%;background:#fff;transition:left 150ms"></span></button></td></tr></sc-for></tbody></table></div>
+    </section>
+    <section style="padding:20px 24px;border-radius:20px;background:#fff;display:flex;flex-direction:column;min-width:0">
+      <div style="padding-bottom:12px"><h2 style="margin:0;font-size:18px;font-weight:500">สิทธิ์ตามบทบาท</h2></div>
+      <div style="overflow-x:auto"><table style="width:100%;min-width:640px;font-size:15px;border-collapse:collapse"><thead><tr style="color:#5C5A55;font-size:14px"><th style="font-weight:400;text-align:left;padding:10px 0">ทำอะไรได้</th><th style="font-weight:400">ผู้ดูแล</th><th style="font-weight:400">ผู้ยืนยันราคา</th><th style="font-weight:400">พนักงานรับซื้อ</th><th style="font-weight:400">คลัง/ขาย</th></tr></thead>
         <tbody><sc-for list="{{ permRows }}" as="r"><tr style="border-top:1px solid #F3F2EE"><td style="padding:10px 0">{{ r.k }}</td><sc-for list="{{ r.cells }}" as="c"><td><span style="display:flex;justify-content:center" aria-label="{{ c.aria }}">{{ c.el }}</span></td></sc-for></tr></sc-for></tbody></table></div>
-    </div>
+    </section>
+    <section style="padding:20px 24px;border-radius:20px;background:#fff;display:flex;flex-direction:column;min-width:0">
+      <div style="padding-bottom:12px"><h2 style="margin:0;font-size:18px;font-weight:500">เชื่อมต่อและอื่น ๆ</h2></div>
+      <div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px solid #F3F2EE;flex-wrap:wrap"><div style="flex:1;min-width:200px;font-size:15px">PEAK</div><span style="padding:3px 12px;border-radius:999px;background:#E4F4E8;color:#1B6B33;font-size:14px">เชื่อมต่อแล้ว</span></div>
+      <sc-for list="{{ peakToggles }}" as="t"><div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px solid #F3F2EE;flex-wrap:wrap"><div style="flex:1;min-width:200px;font-size:15px">{{ t.k }}</div><button role="switch" aria-checked="{{ t.on }}" aria-label="{{ t.k }}" onClick="{{ t.toggle }}" style="width:52px;height:30px;border:none;border-radius:999px;background:{{ t.bg }};position:relative;cursor:pointer;flex:none;transition:background 150ms"><span style="position:absolute;top:3px;left:{{ t.knob }};width:24px;height:24px;border-radius:50%;background:#fff;transition:left 150ms"></span></button></div></sc-for>
+      <div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px solid #F3F2EE;flex-wrap:wrap"><div style="flex:1;min-width:200px;font-size:15px">อายุ QR ขายเครื่อง</div><label style="display:flex;align-items:center;gap:8px;font-size:15px"><input value="30" inputmode="numeric" aria-label="นาที" class="tf" style="width:80px;text-align:right">นาที</label></div>
+      <div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px solid #F3F2EE;flex-wrap:wrap"><div style="flex:1;min-width:200px;font-size:15px">เก็บรูปลูกค้าถือบัตร</div><label style="display:flex;align-items:center;gap:8px;font-size:15px"><input value="5" inputmode="numeric" aria-label="ปี" class="tf" style="width:80px;text-align:right">ปี</label></div>
+      <div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px solid #F3F2EE;flex-wrap:wrap"><div style="flex:1;min-width:200px;font-size:15px">เตือนสต็อกค้างเกิน</div><label style="display:flex;align-items:center;gap:8px;font-size:15px"><input value="30" inputmode="numeric" aria-label="วัน" class="tf" style="width:80px;text-align:right">วัน</label></div>
+    </section>
   </div>
 </sc-if>
 
@@ -543,7 +574,7 @@ table{border-collapse:collapse}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 const P = {
-  x:['M6 6l12 12M18 6L6 18'], check:['M5 12.5l4.5 4.5L19 7.5'], minus:['M6 12h12'], plus:['M12 5v14M5 12h14'], menu:['M4 7h16M4 12h16M4 17h16'],
+  x:['M6 6l12 12M18 6L6 18'], check:['M5 12.5l4.5 4.5L19 7.5'], minus:['M6 12h12'], plus:['M12 5v14M5 12h14'], menu:['M4 7h16M4 12h16M4 17h16'], back:['M15 6l-6 6 6 6'], search:['M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z','M20 20l-4-4'],
   download:['M12 4v11','M7 10l5 5 5-5','M5 20h14'], upload:['M12 16V4','M7 9l5-5 5 5','M5 20h14'],
   call:['M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z'],
   home:['M3 11l9-7 9 7','M5 10v10h14V10'], route:['M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4z','M18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4z','M8 17h7a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h7'],
@@ -566,13 +597,25 @@ function qrSvg(seed) {
 const fmt = n => Number(n || 0).toLocaleString('en-US');
 const SCREENS = [['b02', 'B-02', 'หน้าหลัก', 'home'], ['b03', 'B-03', 'เส้นทางเครื่อง', 'route'], ['b05', 'B-05', 'ยืนยันราคา', 'tag'], ['b11', 'B-11', 'รอโอนเงิน', 'bank'], ['b06', 'B-06', 'ราคารับซื้อ', 'table'], ['b07', 'B-07', 'สต็อก', 'box'], ['b08', 'B-08', 'ขายออก', 'cart'], ['b09', 'B-09', 'รายงาน', 'chart'], ['b10', 'B-10', 'ตั้งค่า', 'gear'], ['b04', 'B-04', 'Device Passport', null]];
 const TITLES = { b02: 'หน้าหลัก', b03: 'เส้นทางเครื่อง', b04: 'Device Passport', b05: 'คิวยืนยันราคา', b11: 'คิวรอโอนเงิน', b06: 'ตารางราคารับซื้อ', b07: 'สต็อก', b08: 'ขายออก', b09: 'รายงาน', b10: 'ตั้งค่า' };
+const GC = {
+  A: { s: '#1F9D55', t: '#E3F5EA', f: '#17663A', c: '#F6FBF8', r: 'rgba(31,157,85,.18)' },
+  B: { s: '#2F6FD6', t: '#E6EEFC', f: '#1D4F91', c: '#F6F9FE', r: 'rgba(47,111,214,.18)' },
+  C: { s: '#E08A00', t: '#FFF1D9', f: '#8A5300', c: '#FFFBF3', r: 'rgba(224,138,0,.2)' },
+  D: { s: '#D64545', t: '#FCE9E9', f: '#A12E2E', c: '#FEF7F7', r: 'rgba(214,69,69,.18)' }
+};
+const gcol = g => GC[g] ? [GC[g].t, GC[g].f] : ['#F3F2EE', '#444'];
+const STC = [['#EEF0F3', '#3F4A5A', '#8A94A6'], ['#E6EEFC', '#1D4F91', '#2F6FD6'], ['#FFF1D9', '#8A5300', '#E08A00'], ['#F0E9FB', '#5B2E9E', '#8B5CD6'], ['#E3F5EA', '#17663A', '#1F9D55'], ['#F6E8E6', '#8E2B22', '#C2574C']];
 const FLOWP = ['b02', 'b03', 'b04', 'b05', 'b11', 'b06', 'b07', 'b08', 'b09', 'b10'];
 const COLS = ['รอสแกน QR', 'ตรวจเครื่อง', 'รอยืนยันราคา', 'รอโอนเงิน', 'รับซื้อแล้ว', 'ไม่ขาย หรือหมดอายุ'];
 const JOBS = [
   ['DC-2610-0489', 'iPhone 12 128GB', 0, 'ประเมิน 9,800', 'ทีมบางแค', 'YelloBe', 'QR หมดอายุใน 6 นาที', 'w'],
   ['DC-2610-0491', 'Galaxy S22 256GB', 0, 'ประเมิน 10,400', 'ทีมบางนา', 'Shopee', 'QR เหลือ 22 นาที', ''],
   ['DC-2610-0486', 'iPhone 14 128GB', 1, '17,500', 'ทีมบางนา', 'Shopee', 'คุณกิตติกำลังตรวจ', ''],
+  ['DC-2610-0493', 'Galaxy S24 256GB', 2, '21,500', 'ทีมบางนา', 'Shopee', 'รอยืนยัน 4 นาที', 'w'],
+  ['DC-2610-0495', 'OPPO Reno12 5G 256GB', 2, '8,100', 'ทีมบางแค', 'YelloBe', 'รอยืนยัน 3 นาที', 'w'],
   ['DC-2610-0484', 'iPhone 11 64GB', 2, '3,100', 'ทีมรามอินทรา', 'AIS', 'รอยืนยัน 2 นาที', 'w'],
+  ['DC-2610-0497', 'iPhone 14 Pro 256GB', 2, '15,700', 'ทีมรามอินทรา', 'ติดต่อตรง', 'รอยืนยัน 1 นาที', 'w'],
+  ['DC-2610-0499', 'Xiaomi 14T 256GB', 2, '9,400', 'ทีมลาดพร้าว', 'True', 'รอยืนยัน 1 นาที', 'w'],
   ['DC-2610-0466', 'Galaxy S23 256GB', 3, '14,200', 'ทีมลาดพร้าว', 'True', 'คุณวรรณกำลังโอน', ''],
   ['DC-2610-0450', 'iPhone 14 Pro 256GB', 4, '22,600', 'ทีมลาดพร้าว', 'YelloBe', '', ''],
   ['DC-2610-0471', 'iPhone 12 64GB', 4, '9,200', 'ทีมลาดพร้าว', 'ติดต่อตรง', '', ''],
@@ -581,7 +624,12 @@ const JOBS = [
 ];
 const PRICE = {
   Apple: [['iPhone 15 Pro', '256GB', [27500, 25000, 21000, 16000], true], ['iPhone 15', '128GB', [19800, 18000, 15200, 11500], true], ['iPhone 14 Pro', '256GB', [23800, 22600, 19000, 14500], true], ['iPhone 14', '128GB', [15800, 14500, 12200, 9000], true], ['iPhone 13', '128GB', [13800, 12500, 10500, 7800], true], ['iPhone 13', '256GB', [15000, 13600, 11400, 8500], true], ['iPhone 12', '64GB', [10200, 9200, 7600, 5500], true], ['iPhone 11', '64GB', [7400, 6600, 5400, 3800], true]],
-  Samsung: [['Galaxy S24', '256GB', [21500, 19800, 16500, 12000], true], ['Galaxy S23', '256GB', [15800, 14200, 11800, 8500], true], ['Galaxy S22', '256GB', [11800, 10400, 8600, 6200], true], ['Galaxy A54', '128GB', [6800, 5800, 4600, 3200], true]]
+  Samsung: [['Galaxy S24', '256GB', [21500, 19800, 16500, 12000], true], ['Galaxy S23', '256GB', [15800, 14200, 11800, 8500], true], ['Galaxy S22', '256GB', [11800, 10400, 8600, 6200], true], ['Galaxy Z Flip5', '256GB', [14500, 12800, 10200, 7200], true], ['Galaxy A55', '128GB', [7800, 6800, 5500, 3900], true], ['Galaxy A54', '128GB', [6800, 5800, 4600, 3200], true]],
+  OPPO: [['OPPO Find X8 Pro', '512GB', [25500, 23000, 19000, 14000], true], ['OPPO Reno12 5G', '256GB', [9800, 8600, 7000, 5000], true], ['OPPO Reno11 5G', '256GB', [7900, 6900, 5600, 4000], true], ['OPPO A79 5G', '128GB', [3900, 3300, 2600, 1800], true]],
+  vivo: [['vivo X100 Pro', '512GB', [21000, 19000, 15800, 11500], true], ['vivo V30 5G', '256GB', [8900, 7800, 6300, 4500], true], ['vivo Y36', '128GB', [3200, 2700, 2100, 1500], true]],
+  Xiaomi: [['Xiaomi 14T', '256GB', [10500, 9400, 7800, 5600], true], ['Redmi Note 13 Pro 5G', '256GB', [6200, 5400, 4400, 3100], true], ['Redmi 13C', '128GB', [2300, 1900, 1500, 1000], false]],
+  realme: [['realme 12 Pro+ 5G', '256GB', [7800, 6800, 5500, 3900], true], ['realme C67', '128GB', [2900, 2400, 1900, 1300], true]],
+  HONOR: [['HONOR Magic6 Pro', '512GB', [19500, 17500, 14500, 10500], true], ['HONOR X9b 5G', '256GB', [5200, 4500, 3600, 2600], true]]
 };
 const RULES = [['รอยขนแมว', 500], ['รอยชัด', 1500], ['บุบ', 2500], ['ร้าว', 4000], ['หน้าจอมีปัญหา', 3000], ['Face ID ใช้ไม่ได้', 3000], ['แบตต่ำกว่า 80%', 800], ['ปุ่มมีปัญหา', 800]];
 const STOCK = [
@@ -602,57 +650,77 @@ class Component extends DCLogic {
   bare = this.q.get('bare') === '1';
   state = {
     screen: TITLES[this.q.get('screen')] ? this.q.get('screen') : 'b02', narrow: false, drawerNav: false, toast: '', playing: false, grid: false,
-    stage: 'confirm', passCase: '0450', price0482: 12300, view: 'board', srcFilter: '', sel5: '0482', finalPrice: '12300', callNote: 'ลูกค้าต่อรอง เครื่องสภาพดี เพิ่มให้ 300', confirmedToday: 11, rejected: [],
+    stage: 'confirm', passCase: '0450', passFrom: 'b03', price0482: 12300, view: 'table', srcFilter: '', sel5: '0482', finalPrice: '12300', callNote: 'ลูกค้าต่อรอง เครื่องสภาพดี เพิ่มให้ 300', confirmedToday: 11, rejected: [],
     sel11: '0482', claimed: { '0466': 'คุณวรรณ' }, slip: false, slipRef: '', paidToday: 9, closed: [],
-    brand: 'Apple', edits: {}, open: {}, rules: RULES.map(r => r[1]), simModel: 4, simDef: [0],
+    brand: 'Apple', edits: {}, open: {}, rules: RULES.map(r => ({ k: r[0], v: r[1] })), phones: [{ n: 'ทีมยืนยันราคา', t: '02-114-5500' }, { n: 'คุณนภา มือถือ', t: '081-552-0198' }], depth: 0, simModel: 4, simDef: [0],
     age: -1, drawer: this.q.get('state') === 'drawer' ? 0 : null, retail: '', whole: '', priced: {}, dlg: null,
-    cart: [2, 3], imeiIn: '', cartErr: '', buyer: '0105561234567', tier: 'ปลีก', discount: '500', pay: 'โอน', bills: [],
+    cart: [2, 3], imeiIn: '', cartErr: '', searchIn: '', searchQ: '', buyer: '0105561234567', tier: 'ปลีก', discount: '500', pay: 'โอน', bills: [],
     rep2: 'วิธีชำระ', peakT: [true, true], srcReq: [false, true, false, true, true, false], staffOn: [true, true, true, true, false]
   };
   componentDidMount() {
     this.onResize = () => this.setState({ narrow: innerWidth < 1024 });
     this.onResize(); addEventListener('resize', this.onResize);
     if (this.state.screen === 'b11' && this.state.stage === 'confirm') this.setState({ stage: 'transfer' });
+    if (!this.bare) {
+      try { history.replaceState({ screen: this.state.screen, d: 0 }, ''); } catch (e) {}
+      this.onPop = e => { const st = e.state || {}; const sid = st.screen || new URLSearchParams(location.search).get('screen') || 'b02'; if (!TITLES[sid]) return; this.go(sid, true); this.setState({ depth: st.d || 0 }); };
+      addEventListener('popstate', this.onPop);
+    }
   }
-  componentWillUnmount() { removeEventListener('resize', this.onResize); clearInterval(this.playIv); }
+  componentWillUnmount() { removeEventListener('resize', this.onResize); removeEventListener('popstate', this.onPop); clearInterval(this.playIv); }
   toastMsg(m) { this.setState({ toast: m }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2400); }
-  go(id) {
+  go(id, fromPop) {
     const o = { screen: id, drawerNav: false, drawer: null, dlg: null };
     if (id === 'b11' && this.state.stage === 'confirm') o.stage = 'transfer';
+    if (!fromPop && !this.bare && id !== this.state.screen) {
+      const d = (this.state.depth || 0) + 1; o.depth = d;
+      try { const u = new URL(location.href); u.searchParams.set('screen', id); u.searchParams.delete('state'); history[this.state.playing ? 'replaceState' : 'pushState']({ screen: id, d }, '', u.toString()); } catch (e) {}
+      if (this.state.playing) o.depth = this.state.depth;
+    }
     this.setState(o); try { window.scrollTo(0, 0); } catch (e) {}
   }
 
   renderVals() {
     const s = this.state, id = s.screen; const is = {}; is[id] = true;
     const ic = {}; Object.keys(P).forEach(k => ic[k] = I(k));
-    const q5raw = [['0482', 'iPhone 13 128GB', 6, 'ทีมลาดพร้าว', 'คุณสมชาย', '12,000', 'B', 'ติดต่อตรง', '081-234-5678', 12000], ['0484', 'iPhone 11 64GB', 2, 'ทีมรามอินทรา', 'คุณอนันต์', '3,100', 'C', 'AIS', '089-554-1200', 3100]]
+    const q5raw = [
+      ['0482', 'iPhone 13 128GB', 6, 'ทีมลาดพร้าว', 'คุณสมชาย', '12,000', 'B', 'ติดต่อตรง', '081-234-5678', 12000, 'ผ่าน 21 จาก 23 ข้าม ซิม การชาร์จ', 'รอยขนแมว ซิมและชาร์จผ่าน ทุกข้อปกติ', [['ราคาเกรด B', '12,500'], ['รอยขนแมว', '−500']]],
+      ['0493', 'Galaxy S24 256GB', 4, 'ทีมบางนา', 'คุณกิตติ', '21,500', 'A', 'Shopee', '086-410-2231', 21500, 'ผ่าน 23 จาก 23', 'ไม่มีรอย กล่องครบ ทุกข้อปกติ', [['ราคาเกรด A', '21,500'], ['รายการหัก', 'ไม่มี']]],
+      ['0495', 'OPPO Reno12 5G 256GB', 3, 'ทีมบางแค', 'คุณประวิทย์', '8,100', 'B', 'YelloBe', '092-118-6640', 8100, 'ผ่าน 22 จาก 23 ข้าม NFC ไม่มีบัตร', 'รอยขนแมว ทุกข้ออื่นปกติ', [['ราคาเกรด B', '8,600'], ['รอยขนแมว', '−500']]],
+      ['0484', 'iPhone 11 64GB', 2, 'ทีมรามอินทรา', 'คุณอนันต์', '3,100', 'C', 'AIS', '089-554-1200', 3100, 'ผ่าน 19 จาก 23 Face ID ไม่ผ่าน', 'รอยชัด แบต 76%', [['ราคาเกรด C', '5,400'], ['รอยชัด', '−1,500'], ['แบตต่ำกว่า 80%', '−800']]],
+      ['0497', 'iPhone 14 Pro 256GB', 1, 'ทีมรามอินทรา', 'คุณธีรพงษ์', '15,700', 'C', 'ติดต่อตรง', '095-336-7781', 15700, 'ผ่าน 20 จาก 23 ลำโพงสนทนาไม่ผ่าน', 'บุบมุมล่างขวา แบต 78%', [['ราคาเกรด C', '19,000'], ['บุบ', '−2,500'], ['แบตต่ำกว่า 80%', '−800']]],
+      ['0499', 'Xiaomi 14T 256GB', 1, 'ทีมลาดพร้าว', 'คุณวิชัย', '9,400', 'B', 'True', '083-902-4417', 9400, 'ผ่าน 22 จาก 23 ข้าม ซิม', 'ใส่ซิมทดสอบผ่าน ขอบมีรอยเล็กน้อย', [['ราคาเกรด B', '9,400'], ['รายการหัก', 'ไม่มี']]]
+    ]
       .filter(x => !(x[0] === '0482' && s.stage !== 'confirm') && !s.rejected.includes(x[0]));
     const q11raw = [['0466', 'Galaxy S23 256GB', '14,200', 'ทีมลาดพร้าว', 'คุณสมชาย', 4], ['0482', 'iPhone 13 128GB', fmt(s.price0482), 'ทีมลาดพร้าว', 'คุณสมชาย', 1]]
       .filter(x => !(x[0] === '0482' && s.stage !== 'transfer') && !s.closed.includes(x[0]));
     const nav = [['h', 'งานวันนี้'], ['b02'], ['b03'], ['b05', q5raw.length], ['b11', q11raw.length], ['h', 'ตั้งราคา'], ['b06'], ['h', 'หลังรับซื้อ'], ['b07'], ['b08'], ['b09'], ['h', 'ระบบ'], ['b10']].map(n => {
       if (n[0] === 'h') return { isHead: true, label: n[1] };
-      const sc = SCREENS.find(x => x[0] === n[0]); const cur = id === n[0] || (id === 'b04' && n[0] === 'b03');
+      const sc = SCREENS.find(x => x[0] === n[0]); const cur = id === n[0] || (id === 'b04' && n[0] === (s.passFrom || 'b03'));
       return { isItem: true, label: sc[2], icon: I(sc[3], 20, cur ? '#111' : '#fff'), bg: cur ? '#FAD20D' : 'transparent', fg: cur ? '#111' : '#fff', cur: cur ? 'page' : 'false', hasBadge: !!n[1], badge: n[1], go: () => this.go(n[0]) };
     });
     const stageCol = s.stage === 'confirm' ? 2 : s.stage === 'transfer' ? 3 : 4;
     const jobs = [['DC-2610-0482', 'iPhone 13 128GB', stageCol, s.stage === 'confirm' ? '12,000' : fmt(s.price0482), 'ทีมลาดพร้าว', 'ติดต่อตรง', s.stage === 'confirm' ? 'รอยืนยัน 6 นาที' : s.stage === 'transfer' ? 'รอคนรับงานโอน' : '', s.stage === 'confirm' ? 'w' : '']].concat(JOBS)
       .filter(j => !s.srcFilter || j[5] === s.srcFilter);
-    const toCard = j => ({ qr: j[0], model: j[1], price: j[3], team: j[4], src: j[5], note: j[6], hasNote: !!j[6], status: COLS[j[2]], nbg: j[7] === 'w' ? '#FFF1D6' : '#F3F2EE', nfg: j[7] === 'w' ? '#7A4A00' : '#444', open: () => { if (j[0] === 'DC-2610-0482' || j[0] === 'DC-2610-0450') { this.setState({ passCase: j[0].slice(-4) }); this.go('b04'); } else this.toastMsg('ตัวอย่างนี้เปิด Passport ได้เฉพาะ DC-2610-0450 และ DC-2610-0482'); } });
+    const toCard = j => ({ qr: j[0], model: j[1], price: j[3], team: j[4], src: j[5], note: j[6], hasNote: !!j[6], status: COLS[j[2]], sbg: STC[j[2]][0], sfg: STC[j[2]][1], sdot: STC[j[2]][2], nbg: j[7] === 'w' ? '#FFF1D6' : '#F3F2EE', nfg: j[7] === 'w' ? '#7A4A00' : '#444', open: () => { if (j[0] === 'DC-2610-0482' || j[0] === 'DC-2610-0450') { this.setState({ passCase: j[0].slice(-4), passFrom: 'b03' }); this.go('b04'); } else this.toastMsg('ตัวอย่างนี้เปิด Passport ได้เฉพาะ DC-2610-0450 และ DC-2610-0482'); } });
     const sel5 = q5raw.find(x => x[0] === s.sel5) || q5raw[0];
     const fin = parseInt(String(s.finalPrice).replace(/\D/g, ''), 10) || 0;
     const sel11 = q11raw.find(x => x[0] === s.sel11) || q11raw[0];
     const sw = on => ({ bg: on ? '#1B6B33' : '#B5B2AA', knob: on ? '25px' : '3px' });
     const rows = PRICE[s.brand] || [];
     const editList = []; Object.keys(s.edits).forEach(k => { const [b, r, g] = k.split('|'); const row = PRICE[b][+r]; editList.push({ t: row[0] + ' ' + row[1] + ' เกรด ' + 'ABCD'[+g] + ' ' + fmt(row[2][+g]) + ' → ' + fmt(s.edits[k]) }); });
-    const simRows = PRICE.Apple.concat(PRICE.Samsung); const simRow = simRows[s.simModel] || simRows[0];
-    const gradeIdx = Math.min(3, s.simDef.filter(i => i >= 2 && i <= 5).length + (s.simDef.includes(1) ? 1 : 0) + (s.simDef.length ? 1 : 0));
-    const simPrice = simRow[2][gradeIdx] - s.simDef.reduce((a, i) => a + (+s.rules[i] || 0), 0);
+    const simRows = Object.keys(PRICE).reduce((a, b) => a.concat(PRICE[b]), []); const simRow = simRows[s.simModel] || simRows[0];
+    const simSel = s.simDef.filter(i => s.rules[i]);
+    const gradeIdx = Math.min(3, simSel.length);
+    const simPrice = simRow[2][gradeIdx] - simSel.reduce((a, i) => a + (+s.rules[i].v || 0), 0);
     const ages = [['0–7 วัน', 48, 'ทุน 512,300', 0, 7], ['8–14 วัน', 31, 'ทุน 338,900', 8, 14], ['15–30 วัน', 26, 'ทุน 274,100', 15, 30], ['เกิน 30 วัน', 7, 'ทุน 58,200', 31, 999], ['ระหว่างโอน', 3, 'TR-2610-0031', -2, -2], ['ยังไม่ตั้งราคา', STOCK.filter((x, i) => x[9] === null && !s.priced[i]).length, 'ขายไม่ได้จนกว่าจะตั้ง', -3, -3]];
     const stockIdx = STOCK.map((r, i) => i).filter(i => { if (s.age < 0) return true; const a = ages[s.age]; if (a[3] === -3) return STOCK[i][9] === null && !s.priced[i]; if (a[3] === -2) return false; return STOCK[i][11] >= a[3] && STOCK[i][11] <= a[4]; });
     const priceOf = i => s.priced[i] || (STOCK[i][9] !== null ? { r: STOCK[i][9], w: STOCK[i][10] } : null);
     const det = s.drawer !== null ? STOCK[s.drawer] : null;
     const cartRows = s.cart.map(i => { const pr = priceOf(i); const p = pr ? (s.tier === 'ปลีก' ? pr.r : pr.w) : 0; return { i, p, cost: STOCK[i][8] }; });
     const sub = cartRows.reduce((a, c) => a + c.p, 0), cost = cartRows.reduce((a, c) => a + c.cost, 0), disc = parseInt(String(s.discount).replace(/\D/g, ''), 10) || 0, net = Math.max(0, sub - disc), profit = net - cost;
+    const qn = s.searchQ.toLowerCase().replace(/\s+/g, '');
+    const found = qn ? STOCK.map((r, i) => i).filter(i => { const r = STOCK[i]; return (r[0] + r[1] + r[2]).toLowerCase().replace(/\s+/g, '').includes(qn) || r[3].toLowerCase().replace(/\s+|sn/g, '').includes(qn.replace(/^sn/, '')); }) : [];
     const addByImei = v => {
       const k = STOCK.findIndex(r => r[3].replace(/\D|SN /g, '') === v.replace(/\D/g, '') || r[3] === v.trim());
       if (k < 0) return this.setState({ cartErr: 'ไม่พบ IMEI/SN นี้ในสต็อก' });
@@ -686,11 +754,12 @@ class Component extends DCLogic {
       ev: EV.concat(conf ? ['รูปถือบัตร (เบลอ)', 'รูปบัญชีรับเงิน'] : [], dn ? ['สลิปโอน'] : [])
     };
     return {
-      pp, ppLines: pp.lines.map(l => ({ k: l[0], v: l[1], fs: l[2] === 2 ? '16px' : '15px', fw: l[2] === 2 ? 500 : 400, bd: l[2] ? '#F3F2EE' : 'transparent' })),
+      pp: Object.assign({}, pp, { gbg: gcol(pp.grade)[0], gfg: gcol(pp.grade)[1] }), ppLines: pp.lines.map(l => ({ k: l[0], v: l[1], fs: l[2] === 2 ? '16px' : '15px', fw: l[2] === 2 ? 500 : 400, bd: l[2] ? '#F3F2EE' : 'transparent' })),
       passTl: pp.tl.map(t => ({ k: t[0], s: t[1], c: t[2] ? '#1B6B33' : '#E2E0D9' })),
       mustKnow: pp.must.map(m => ({ k: m[0], v: m[1] })), health: pp.health.map(m => ({ k: m[0], v: m[1] })),
       seller: pp.seller.map(m => ({ k: m[0], v: m[1], ff: m[2] ? "'IBM Plex Mono',monospace" : 'inherit' })),
       evidence: pp.ev.map(k => ({ k, open: () => this.toastMsg('เปิดรูป ' + k) })), evidenceCount: pp.ev.length,
+      canBack: id === 'b04', backLabel: TITLES[s.passFrom || 'b03'], goBack: () => this.go(s.passFrom || 'b03'),
       is, ic, screen: id, pageTitle: TITLES[id], narrow: s.narrow, navInline: !s.narrow, drawerNav: s.narrow && s.drawerNav, nav,
       openDrawer: () => this.setState({ drawerNav: true }), closeDrawer: () => this.setState({ drawerNav: false }),
       showProto: !this.bare, screenOpts: FLOWP.map(k => { const sc = SCREENS.find(x => x[0] === k); return { id: k, label: sc[1] + ' ' + sc[2] }; }),
@@ -715,21 +784,19 @@ class Component extends DCLogic {
       teams: [['ลาดพร้าว', 5, '71%'], ['บางนา', 4, '67%'], ['รามอินทรา', 3, '60%'], ['บางแค', 2, '50%']].map(r => ({ k: r[0], n: r[1], p: r[2] })),
       boardView: s.view === 'board', tableView: s.view === 'table', tabBoardBg: s.view === 'board' ? '#fff' : 'transparent', tabTableBg: s.view === 'table' ? '#fff' : 'transparent',
       setBoard: () => this.setState({ view: 'board' }), setTable: () => this.setState({ view: 'table' }), srcFilter: s.srcFilter, setSrcFilter: e => this.setState({ srcFilter: e.target.value }),
-      columns: COLS.map((c, i) => { const cards = jobs.filter(j => j[2] === i).map(toCard); return { name: c, n: cards.length, cards }; }), rows3: jobs.map(toCard),
+      columns: COLS.map((c, i) => { const cards = jobs.filter(j => j[2] === i).map(toCard); return { name: c, n: cards.length, cards, bg: STC[i][0], fg: STC[i][1], dot: STC[i][2] }; }), rows3: jobs.map(toCard),
       exportX: () => this.toastMsg('ดาวน์โหลดไฟล์ Excel แล้ว'), importX: () => this.toastMsg('เลือกไฟล์ Excel เพื่อนำเข้า'),
       printReceipt: () => this.toastMsg('เปิดหน้าพิมพ์ใบรับซื้อ'), toStock: () => this.go('b07'),
       askViewId: () => this.setState({ dlg: { isText: true, title: 'ดูรูปถือบัตรเต็ม', body: 'ระบบจะบันทึกว่าคุณนภาเปิดดูรูปถือบัตรของรายการ ' + pp.qr + ' เวลา ' + new Date().toTimeString().slice(0, 5), okLabel: 'เปิดดูรูป', okBg: '#111', ok: () => { this.setState({ dlg: null }); this.toastMsg('บันทึกการเปิดดูแล้ว'); } } }),
 
-      confirmedToday: s.confirmedToday, q5: q5raw.map(x => ({ model: x[1], wait: x[2], team: x[3], staff: x[4], price: x[5], grade: x[6], bd: sel5 && sel5[0] === x[0] ? '#111' : 'transparent', pick: () => this.setState({ sel5: x[0], finalPrice: String(x[9] + (x[0] === '0482' ? 300 : 0)) }) })),
+      confirmedToday: s.confirmedToday, q5: q5raw.map(x => ({ model: x[1], wait: x[2], team: x[3], staff: x[4], price: x[5], grade: x[6], gbg: gcol(x[6])[0], gfg: gcol(x[6])[1], bd: sel5 && sel5[0] === x[0] ? '#111' : 'transparent', pick: () => this.setState({ sel5: x[0], finalPrice: String(x[9] + (x[0] === '0482' ? 300 : 0)), callNote: x[0] === '0482' ? 'ลูกค้าต่อรอง เครื่องสภาพดี เพิ่มให้ 300' : '' }) })),
       q5Empty: !q5raw.length, q5Has: !!q5raw.length,
-      sel5: sel5 ? { model: sel5[1], qr: 'DC-2610-' + sel5[0], src: sel5[7], grade: sel5[6], price: sel5[5], staff: sel5[4], phone: sel5[8],
-        app: sel5[0] === '0482' ? 'ผ่าน 21 จาก 23 ข้าม ซิม การชาร์จ' : 'ผ่าน 19 จาก 23 Face ID ไม่ผ่าน', insp: sel5[0] === '0482' ? 'รอยขนแมว ซิมและชาร์จผ่าน ทุกข้อปกติ' : 'รอยชัด แบต 76%',
-        lines: (sel5[0] === '0482' ? [['ราคาเกรด B', '12,500'], ['รอยขนแมว', '−500']] : [['ราคาเกรด C', '5,400'], ['รอยชัด', '−1,500'], ['แบตต่ำกว่า 80%', '−800']]).map(l => ({ k: l[0], v: l[1] })) } : {},
+      sel5: sel5 ? { model: sel5[1], qr: 'DC-2610-' + sel5[0], src: sel5[7], grade: sel5[6], gbg: gcol(sel5[6])[0], gfg: gcol(sel5[6])[1], price: sel5[5], staff: sel5[4], phone: sel5[8],
+        app: sel5[10], insp: sel5[11], lines: sel5[12].map(l => ({ k: l[0], v: l[1] })) } : {},
       mk: (() => { const sys = sel5 ? sel5[9] : 0, lo = Math.round(sys * 0.8), hi = Math.round(sys * 1.15), rlo = Math.round(sys * 0.9), rhi = Math.round(sys * 1.1); const pct = v => Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100)) + '%';
         return { lo: fmt(lo), hi: fmt(hi), rlo: fmt(rlo), rhi: fmt(rhi), sys: fmt(sys), fin: fmt(fin), sysL: pct(sys), finL: pct(fin), rangeL: pct(rlo), rangeW: ((rhi - rlo) / (hi - lo) * 100) + '%' }; })(),
       finalPrice: s.finalPrice, finalFmt: fmt(fin), setFinal: e => this.setState({ finalPrice: e.target.value.replace(/\D/g, '') }), callNote: s.callNote, setNote: e => this.setState({ callNote: e.target.value }),
-      callStaff: () => this.toastMsg('กำลังโทรหา ' + (sel5 ? sel5[4] : '')),
-      toPassport: () => { if (sel5 && sel5[0] === '0482') { this.setState({ passCase: '0482' }); this.go('b04'); } else this.toastMsg('ตัวอย่างนี้เปิด Passport ได้เฉพาะ DC-2610-0482'); },
+      toPassport: () => { if (sel5 && sel5[0] === '0482') { this.setState({ passCase: '0482', passFrom: 'b05' }); this.go('b04'); } else this.toastMsg('ตัวอย่างนี้เปิด Passport ได้เฉพาะ DC-2610-0482'); },
       confirmPrice: () => { if (!fin) return this.toastMsg('ใส่ราคาสุดท้ายก่อน'); const k = sel5[0]; this.setState(k === '0482' ? { stage: 'transfer', price0482: fin, confirmedToday: s.confirmedToday + 1 } : { rejected: s.rejected.concat([k]), confirmedToday: s.confirmedToday + 1 }); this.toastMsg('ยืนยัน ' + fmt(fin) + ' บาทแล้ว แอปพนักงานได้แจ้งเตือน'); },
       useSystem: () => { this.setState({ finalPrice: String(sel5[9]) }); this.toastMsg('ใส่ราคาระบบแล้ว กดยืนยันเพื่อส่ง'); },
       rejectBuy: () => this.setState({ dlg: { isText: true, title: 'ไม่รับซื้อเครื่องนี้', body: sel5[1] + ' แอปพนักงานจะขึ้นว่าหลังบ้านไม่รับซื้อ พร้อมบันทึกจากสาย', okLabel: 'ยืนยันไม่รับซื้อ', okBg: '#B3261E', ok: () => { this.setState({ dlg: null, rejected: s.rejected.concat([sel5[0]]) }); this.toastMsg('บันทึกไม่รับซื้อแล้ว'); } } }),
@@ -744,20 +811,26 @@ class Component extends DCLogic {
       closeJob: () => { const k = sel11[0]; this.setState(Object.assign({ closed: s.closed.concat([k]), slip: false, slipRef: '', paidToday: s.paidToday + 1 }, k === '0482' ? { stage: 'done' } : {})); this.toastMsg('ปิดงานแล้ว แอปพนักงานขึ้นรับซื้อสำเร็จ'); },
       reportAcct: () => this.setState({ dlg: { isText: true, hasReason: true, title: 'แจ้งปัญหาบัญชีกลับไปที่พนักงาน', body: 'พนักงานจะได้แจ้งเตือนให้ขอรูปบัญชีใหม่จากลูกค้า', okLabel: 'ส่งแจ้งเตือน', okBg: '#111', ok: () => { this.setState({ dlg: null }); this.toastMsg('แจ้งพนักงานแล้ว'); } } }),
       brands: Object.keys(PRICE).map(b => ({ name: b, on: s.brand === b, bg: s.brand === b ? '#fff' : 'transparent', pick: () => this.setState({ brand: b }) })),
+      gradeHeads: 'ABCD'.split('').map(k => ({ k, solid: GC[k].s, tint: GC[k].c })),
       priceRows: rows.map((r, ri) => { const okey = s.brand + '|' + ri; const open = s.open[okey] !== undefined ? s.open[okey] : r[3]; const o = sw(open);
         return { model: r[0], cap: r[1], op: open ? 1 : 0.55, open, aria: 'รับซื้อ ' + r[0] + ' ' + r[1], swBg: o.bg, knob: o.knob, toggle: () => this.setState({ open: Object.assign({}, s.open, { [okey]: !open }) }),
-          cells: r[2].map((v, gi) => { const k = s.brand + '|' + ri + '|' + gi; const ed = s.edits[k]; return { v: ed !== undefined ? fmt(ed) : fmt(v), aria: r[0] + ' ' + r[1] + ' เกรด ' + 'ABCD'[gi], bd: ed !== undefined ? '#7A4A00' : '#ECEAE4', bg: ed !== undefined ? '#FFF7CC' : '#fff', from: ed !== undefined ? 'จาก ' + fmt(v) : '',
+          cells: r[2].map((v, gi) => { const k = s.brand + '|' + ri + '|' + gi; const ed = s.edits[k]; const G = GC['ABCD'[gi]]; return { gc: G.s, gr: G.r, tint: G.c, ed: ed !== undefined ? 'ed' : '', v: ed !== undefined ? fmt(ed) : fmt(v), aria: r[0] + ' ' + r[1] + ' เกรด ' + 'ABCD'[gi], bd: ed !== undefined ? '#7A4A00' : '#ECEAE4', bg: ed !== undefined ? '#FFF7CC' : '#fff', from: ed !== undefined ? 'จาก ' + fmt(v) : '',
             set: e => { const n = parseInt(e.target.value.replace(/\D/g, ''), 10); const ne = Object.assign({}, s.edits); if (!n || n === v) delete ne[k]; else ne[k] = n; this.setState({ edits: ne }); } }; }) }; }),
       hasEdits: Object.keys(s.edits).length > 0, editCount: Object.keys(s.edits).length, editList,
       cancelEdits: () => this.setState({ edits: {} }),
       saveEdits: () => { Object.keys(s.edits).forEach(k => { const [b, r, g] = k.split('|'); PRICE[b][+r][2][+g] = s.edits[k]; }); this.setState({ edits: {} }); this.toastMsg('บันทึกราคาแล้ว มีผลกับการเช็กครั้งถัดไป'); },
       addModel: () => this.toastMsg('เปิดฟอร์มเพิ่มรุ่น'),
-      rules: RULES.map((r, i) => ({ k: r[0], v: fmt(s.rules[i]), set: e => { const a = s.rules.slice(); a[i] = parseInt(e.target.value.replace(/\D/g, ''), 10) || 0; this.setState({ rules: a }); } })),
+      rules: s.rules.map((r, i) => ({ k: r.k, v: fmt(r.v),
+        setName: e => { const a = s.rules.slice(); a[i] = Object.assign({}, r, { k: e.target.value }); this.setState({ rules: a }); },
+        set: e => { const a = s.rules.slice(); a[i] = Object.assign({}, r, { v: parseInt(e.target.value.replace(/\D/g, ''), 10) || 0 }); this.setState({ rules: a }); },
+        del: () => this.setState({ dlg: { isText: true, title: 'ลบกติกา' + (r.k ? ' “' + r.k + '”' : '') + ' ใช่ไหม', body: 'ราคาที่คำนวณครั้งถัดไปจะไม่หักรายการนี้' + (r.v ? ' (เดิมหัก ' + fmt(r.v) + ' บาท)' : '') + ' ย้อนกลับไม่ได้', okLabel: 'ลบกติกา', okBg: '#B3261E', ok: () => { this.setState(st => ({ dlg: null, rules: st.rules.filter((x, j) => j !== i), simDef: st.simDef.filter(j => j !== i).map(j => j > i ? j - 1 : j) })); this.toastMsg('ลบกติกาแล้ว'); } } }) })),
+      noRules: !s.rules.length,
+      addRule: () => this.setState({ rules: s.rules.concat([{ k: '', v: 0 }]) }),
       simModels: simRows.map((r, i) => ({ i, n: r[0] + ' ' + r[1] })), simModel: s.simModel, setSimModel: e => this.setState({ simModel: +e.target.value }),
-      simDefects: RULES.map((r, i) => { const on = s.simDef.includes(i); return { k: r[0], on, bg: on ? '#111' : '#fff', fg: on ? '#fff' : '#111', bd: on ? '#111' : '#D6D3CB', toggle: () => this.setState({ simDef: on ? s.simDef.filter(x => x !== i) : s.simDef.concat([i]) }) }; }),
+      simDefects: s.rules.map((r, i) => ({ r, i })).filter(x => x.r.k).map(({ r, i }) => { const on = s.simDef.includes(i); return { k: r.k, on, bg: on ? '#111' : '#fff', fg: on ? '#fff' : '#111', bd: on ? '#111' : '#D6D3CB', toggle: () => this.setState({ simDef: on ? s.simDef.filter(x => x !== i) : s.simDef.concat([i]) }) }; }),
       sim: { grade: 'ABCD'[gradeIdx], price: fmt(Math.max(0, simPrice)) },
       ageTiles: ages.map((a, i) => { const on = s.age === i; const warn = i === 3, unp = i === 5; return { k: a[0], n: a[1], s: a[2], bd: on ? '#111' : 'transparent', bg: warn ? '#FDECEC' : unp ? '#FFF1D6' : '#fff', fg: warn ? '#B3261E' : unp ? '#7A4A00' : '#111', pick: () => this.setState({ age: on ? -1 : i }) }; }),
-      stockRows: stockIdx.map(i => { const r = STOCK[i]; const pr = priceOf(i); const pk = r[12]; return { model: r[0], cap: r[1], color: r[2], imei: r[3], cond: r[4], bat: r[5], war: r[6], acc: r[7], cost: fmt(r[8]), unpriced: !pr, priced: !!pr, sale: pr ? 'ปลีก ' + fmt(pr.r) + ' ส่ง ' + fmt(pr.w) : '',
+      stockRows: stockIdx.map(i => { const r = STOCK[i]; const pr = priceOf(i); const pk = r[12]; return { model: r[0], cap: r[1], color: r[2], imei: r[3], cond: r[4], bat: r[5], war: r[6], acc: r[7], cost: fmt(r[8]), gbg: gcol(r[4])[0], gfg: gcol(r[4])[1], unpriced: !pr, priced: !!pr, sale: pr ? 'ปลีก ' + fmt(pr.r) + ' ส่ง ' + fmt(pr.w) : '',
         age: r[11] === 0 ? 'วันนี้' : r[11] + ' วัน', ageFg: r[11] > 30 ? '#B3261E' : '#111', ageFw: r[11] > 30 ? 500 : 400, peak: pk, pbg: pk === 'ผิดพลาด' ? '#FDECEC' : pk === 'รอส่ง' ? '#F3F2EE' : '#E4F4E8', pfg: pk === 'ผิดพลาด' ? '#B3261E' : pk === 'รอส่ง' ? '#444' : '#1B6B33',
         open: () => { const p = priceOf(i); this.setState({ drawer: i, retail: p ? String(p.r) : '', whole: p ? String(p.w) : '' }); } }; }),
       exportPrice: () => this.toastMsg('ดาวน์โหลด Excel เครื่องที่ยังไม่ตั้งราคา ' + STOCK.filter((x, i) => !priceOf(i)).length + ' เครื่อง'),
@@ -774,10 +847,17 @@ class Component extends DCLogic {
       drawerTf: det ? 'translateX(0)' : 'translateX(105%)', ovOp: det || s.dlg ? 1 : 0, ovPe: det || s.dlg ? 'auto' : 'none',
       dlg, dlgOp: s.dlg ? 1 : 0, dlgPe: s.dlg ? 'auto' : 'none', dlgTf: s.dlg ? 'translate(-50%,-50%)' : 'translate(-50%,calc(-50% + 12px))',
       closeAll: () => this.setState({ drawer: null, dlg: null }),
+      searchIn: s.searchIn, setSearchIn: e => this.setState({ searchIn: e.target.value }),
+      doSearch: () => this.setState({ searchQ: s.searchIn.trim() }), searchKey: e => { if (e.key === 'Enter') this.setState({ searchQ: s.searchIn.trim() }); },
+      searchQ: s.searchQ, searchIdle: !s.searchQ, searchNone: !!s.searchQ && !found.length, searchHas: !!found.length, resultCount: found.length, tierName: s.tier,
+      results: found.map(i => { const r = STOCK[i]; const pr = priceOf(i); const inCart = s.cart.includes(i); return { model: r[0] + ' ' + r[1] + ' ' + r[2], imei: r[3], cond: r[4], bat: r[5], gbg: gcol(r[4])[0], gfg: gcol(r[4])[1],
+        price: pr ? fmt(s.tier === 'ปลีก' ? pr.r : pr.w) : 'ยังไม่ตั้งราคา', canAdd: !!pr && !inCart, inCart, unpriced: !pr,
+        add: () => { this.setState({ cart: s.cart.concat([i]) }); this.toastMsg('ใส่ ' + r[0] + ' ' + r[1] + ' ลงตะกร้าแล้ว'); },
+        toStock: () => { this.go('b07'); this.setState({ drawer: i, retail: '', whole: '' }); } }; }),
       imeiIn: s.imeiIn, setImeiIn: e => this.setState({ imeiIn: e.target.value }), imeiKey: e => { if (e.key === 'Enter') addByImei(s.imeiIn); }, addCart: () => addByImei(s.imeiIn), cartErr: s.cartErr,
       stockOpts: STOCK.map((r, i) => ({ v: i, n: r[0] + ' ' + r[1] + (priceOf(i) ? '' : ' (ยังไม่ตั้งราคา)') })).filter(o => !s.cart.includes(o.v)),
       pickStock: e => { if (e.target.value === '') return; addByImei(STOCK[+e.target.value][3]); },
-      cart: cartRows.map(c => { const r = STOCK[c.i]; return { model: r[0] + ' ' + r[1], imei: r[3], cond: r[4], bat: r[5], price: fmt(c.p), cost: fmt(c.cost), profit: fmt(c.p - c.cost), remove: () => this.setState({ cart: s.cart.filter(x => x !== c.i) }) }; }),
+      cart: cartRows.map(c => { const r = STOCK[c.i]; return { model: r[0] + ' ' + r[1], imei: r[3], cond: r[4], gbg: gcol(r[4])[0], gfg: gcol(r[4])[1], bat: r[5], price: fmt(c.p), cost: fmt(c.cost), profit: fmt(c.p - c.cost), remove: () => this.setState({ cart: s.cart.filter(x => x !== c.i) }) }; }),
       cartEmpty: !cartRows.length, cartCount: cartRows.length, subTotal: fmt(sub), discount: s.discount, discountFmt: fmt(disc), setDiscount: e => this.setState({ discount: e.target.value.replace(/\D/g, '') }),
       netTotal: fmt(net), profitTotal: fmt(profit), profitPct: net ? (profit / net * 100).toFixed(1) + '%' : '0%',
       buyer: s.buyer, setBuyer: e => this.setState({ buyer: e.target.value }),
@@ -793,6 +873,12 @@ class Component extends DCLogic {
       rep4: [['0–7 วัน', '512,300', 100, '#1B6B33'], ['8–14 วัน', '338,900', 66, '#FAD20D'], ['15–30 วัน', '274,100', 54, '#E0A800'], ['เกิน 30 วัน', '58,200', 11, '#B3261E']].map(r => ({ k: r[0], v: r[1] + ' บาท', w: r[2] + '%', c: r[3] })),
       peakToggles: ['ส่งสินค้าที่รับซื้อเข้า PEAK', 'ส่งบิลขายรอบสิ้นเดือน'].map((k, i) => { const o = sw(s.peakT[i]); return { k, on: s.peakT[i], bg: o.bg, knob: o.knob, toggle: () => { const a = s.peakT.slice(); a[i] = !a[i]; this.setState({ peakT: a }); } }; }),
       srcRows: ['ติดต่อตรง (โทร หรือ LINE)', 'Shopee', 'YelloBe (เว็บหรือแอป)', 'True', 'AIS', 'อื่น ๆ'].map((k, i) => { const o = sw(s.srcReq[i]); return { k, on: s.srcReq[i], aria: 'บังคับเลขอ้างอิง ' + k, bg: o.bg, knob: o.knob, toggle: () => { const a = s.srcReq.slice(); a[i] = !a[i]; this.setState({ srcReq: a }); } }; }),
+      phones: s.phones.map((ph, i) => ({ n: ph.n, t: ph.t,
+        setN: e => { const a = s.phones.slice(); a[i] = Object.assign({}, ph, { n: e.target.value }); this.setState({ phones: a }); },
+        setT: e => { const a = s.phones.slice(); a[i] = Object.assign({}, ph, { t: e.target.value }); this.setState({ phones: a }); },
+        del: () => this.setState({ dlg: { isText: true, title: 'ลบเบอร์' + (ph.n ? ' “' + ph.n + '”' : '') + ' ใช่ไหม', body: (ph.t ? ph.t + ' ' : '') + 'จะไม่แสดงในปุ่ม “โทรหาหลังบ้าน” ของแอปพนักงานอีก', okLabel: 'ลบเบอร์', okBg: '#B3261E', ok: () => { this.setState(st => ({ dlg: null, phones: st.phones.filter((x, j) => j !== i) })); this.toastMsg('ลบเบอร์แล้ว'); } } }) })),
+      noPhones: !s.phones.length,
+      addPhone: () => this.setState({ phones: s.phones.concat([{ n: '', t: '' }]) }),
       addSource: () => this.toastMsg('เพิ่มช่องทางใหม่'), addStaff: () => this.toastMsg('เปิดฟอร์มเพิ่มพนักงาน'),
       staffRows: [['คุณนภา', 'สำนักงานใหญ่', 'ผู้ยืนยันราคา', 'ตอนนี้'], ['คุณวรรณ', 'สำนักงานใหญ่', 'ผู้ยืนยันราคา', '2 นาทีที่แล้ว'], ['คุณสมชาย', 'ทีมลาดพร้าว', 'พนักงานรับซื้อ', '5 นาทีที่แล้ว'], ['คุณมาลี', 'คลังกลาง', 'คลัง/ขาย', 'เมื่อวาน'], ['คุณประวิทย์', 'ทีมบางแค', 'พนักงานรับซื้อ', '12 ก.ย.']].map((r, i) => { const o = sw(s.staffOn[i]); return { n: r[0], t: r[1], r: r[2], l: r[3], on: s.staffOn[i], aria: 'เปิดใช้งาน ' + r[0], bg: o.bg, knob: o.knob, toggle: () => { const a = s.staffOn.slice(); a[i] = !a[i]; this.setState({ staffOn: a }); } }; }),
       permRows: PERM.map(p => ({ k: p[0], cells: p[1].map(v => ({ aria: v ? 'ได้' : 'ไม่ได้', el: v ? I('check', 20, '#1B6B33', 2.4) : I('minus', 20, '#B5B2AA') })) })),

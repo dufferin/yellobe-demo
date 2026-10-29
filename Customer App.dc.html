@@ -590,14 +590,20 @@ class Component extends DCLogic {
     this.onResize(); addEventListener('resize', this.onResize);
     this.iv = setInterval(() => { if (this.state.screen === 'c12' && this.state.qrLeft > 0) this.setState(s => ({ qrLeft: s.qrLeft - 1 })); }, 1000);
     this.enter(this.state.screen);
+    if (!this.bare) {
+      try { history.replaceState({ screen: this.state.screen }, ''); } catch (e) {}
+      this.onPop = e => { const sid = (e.state && e.state.screen) || new URLSearchParams(location.search).get('screen'); if (!sid || IDX(sid) < 0) return; this._pop = true; this.go(sid, -1); this._pop = false; };
+      addEventListener('popstate', this.onPop);
+    }
   }
-  componentWillUnmount() { removeEventListener('resize', this.onResize); clearInterval(this.iv); clearInterval(this.playIv); clearInterval(this.touchIv); this.timers.forEach(clearTimeout); }
+  componentWillUnmount() { removeEventListener('resize', this.onResize); removeEventListener('popstate', this.onPop); clearInterval(this.iv); clearInterval(this.playIv); clearInterval(this.touchIv); this.timers.forEach(clearTimeout); }
   t(ms, fn) { this.timers.push(setTimeout(fn, ms)); }
   toastMsg(m) { this.setState({ toast: m }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2000); }
 
   go(id, dir) {
     if (dir === undefined) dir = 1;
     if (IDX(id) < 0 || id === this.state.screen) return;
+    if (!this.bare && !this._pop && !this.state.playing) { try { const u = new URL(location.href); u.searchParams.set('screen', id); u.searchParams.delete('state'); history.pushState({ screen: id }, '', u.toString()); } catch (e) {} }
     this.timers.forEach(clearTimeout); this.timers = [];
     const old = this.screenRef.current, layer = this.layerRef.current;
     let clone = null;

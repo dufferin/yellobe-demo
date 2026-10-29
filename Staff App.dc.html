@@ -651,6 +651,11 @@ class Component extends DCLogic {
       this.setState({ scale: Math.min(1, h / 868, w / 414) });
     };
     this.onResize(); addEventListener('resize', this.onResize); this.enter(this.state.screen); this.applyQ();
+    if (!this.bare) {
+      try { history.replaceState({ screen: this.state.screen }, ''); } catch (e) {}
+      this.onPop = e => { const sid = (e.state && e.state.screen) || new URLSearchParams(location.search).get('screen'); if (!sid || IDX(sid) < 0) return; this._pop = true; this.go(sid, -1); this._pop = false; };
+      addEventListener('popstate', this.onPop);
+    }
   }
   applyQ() {
     const st = this.q.get('state'), id = this.state.screen; if (!st) return;
@@ -659,13 +664,14 @@ class Component extends DCLogic {
     if (id === 's11' && st === 'signed') { this.setF({ signed: true }); setTimeout(() => this.drawSample(), 80); }
     if (id === 's12' && st === 'uploaded') this.setF({ bankImg: true, acctOk: true });
   }
-  componentWillUnmount() { removeEventListener('resize', this.onResize); clearInterval(this.playIv); this.timers.forEach(clearTimeout); }
+  componentWillUnmount() { removeEventListener('resize', this.onResize); removeEventListener('popstate', this.onPop); clearInterval(this.playIv); this.timers.forEach(clearTimeout); }
   t(ms, fn) { this.timers.push(setTimeout(fn, ms)); }
   toastMsg(m) { this.setState({ toast: m }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2000); }
   setF(o) { this.setState(s => ({ f: Object.assign({}, s.f, o) })); }
   go(id, dir) {
     if (dir === undefined) dir = 1;
     if (IDX(id) < 0 || id === this.state.screen) return;
+    if (!this.bare && !this._pop && !this.state.playing) { try { const u = new URL(location.href); u.searchParams.set('screen', id); u.searchParams.delete('state'); history.pushState({ screen: id }, '', u.toString()); } catch (e) {} }
     this.timers.forEach(clearTimeout); this.timers = [];
     const old = this.screenRef.current, layer = this.layerRef.current; let clone = null;
     if (old && layer && !this.bare) { layer.innerHTML = ''; clone = old.cloneNode(true); clone.style.position = 'absolute'; clone.style.inset = '0'; layer.appendChild(clone); }
