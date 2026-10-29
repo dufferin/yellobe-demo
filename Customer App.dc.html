@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Kanit,sans-serif;color:#111;background:#E8E6DF;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit;color:inherit}
+a{color:#111}a:hover{color:#5C5A55}
+@keyframes ybspin{to{transform:rotate(360deg)}}
+@keyframes ybpop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion: reduce){*{transition-duration:1ms !important}}
+</style>
+</helmet>
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;font-family:Kanit,sans-serif;color:#111">
+<sc-if value="{{ showPanel }}" hint-placeholder-val="{{ true }}">
+<aside style="width:300px;flex:none;background:#FFFFFF;border-right:1px solid #E2E0D9;display:flex;flex-direction:column;height:100vh;position:sticky;top:0;box-sizing:border-box">
+  <div style="padding:20px 20px 12px;display:flex;flex-direction:column;gap:12px">
+    <img src="assets/logo.svg" alt="YelloBe" style="width:112px;height:auto">
+    <div>
+      <div style="font-size:18px;font-weight:500">Customer App</div>
+      <div style="font-size:13px;color:#5C5A55">แอปลูกค้า 390×844 กดผ่าน flow ได้จริง</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button onClick="{{ togglePlay }}" style="flex:1.4;white-space:nowrap;height:44px;border:none;border-radius:999px;background:#111;color:#fff;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">{{ playIcon }}{{ playLabel }}</button>
+      <button onClick="{{ openGrid }}" style="flex:1;height:44px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">{{ ic.grid }}ดูทุกจอ</button>
+    </div>
+    <div style="display:flex;gap:8px;font-size:13px">
+      <a href="Staff%20App.dc.html" style="padding:6px 10px;border-radius:999px;background:#F3F2EE;text-decoration:none">Staff App</a>
+      <a href="Back-office.dc.html" style="padding:6px 10px;border-radius:999px;background:#F3F2EE;text-decoration:none">Back-office</a>
+    </div>
+  </div>
+  <sc-if value="{{ hasDemos }}">
+  <div style="margin:0 16px 8px;padding:12px;border-radius:16px;background:#FFF7CC;display:flex;flex-direction:column;gap:8px">
+    <div style="font-size:12px;color:#5C4A00">ทางลัดเดโมของจอนี้</div>
+    <sc-for list="{{ demos }}" as="d"><button onClick="{{ d.fn }}" style="min-height:36px;border:1px solid #111;border-radius:999px;background:#fff;font-size:13px;cursor:pointer">{{ d.label }}</button></sc-for>
+  </div>
+  </sc-if>
+  <div style="flex:1;overflow-y:auto;padding:4px 12px 20px">
+    <sc-for list="{{ screens }}" as="s" hint-placeholder-count="12">
+      <button onClick="{{ s.go }}" style="display:flex;gap:10px;align-items:center;width:100%;min-height:38px;padding:6px 10px;border:none;border-radius:10px;background:{{ s.bg }};text-align:left;cursor:pointer">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5C5A55;width:38px;flex:none">{{ s.code }}</span>
+        <span style="font-size:14px;font-weight:{{ s.fw }}">{{ s.name }}</span>
+      </button>
+    </sc-for>
+  </div>
+</aside>
+</sc-if>
+<main style="flex:1;min-width:0;display:flex;align-items:center;justify-content:center;padding:{{ mainPad }};box-sizing:border-box;min-height:100vh">
+<div style="width:{{ frameW }}px;height:{{ frameH }}px;flex:none">
+<div style="width:414px;height:868px;transform:scale({{ scale }});transform-origin:top left;border-radius:60px;background:#111;padding:12px;box-sizing:border-box;box-shadow:0 30px 60px rgba(0,0,0,.18)">
+<div style="position:relative;width:390px;height:844px;border-radius:48px;overflow:hidden;background:#F7F6F2">
+  <div ref="{{ layerRef }}" style="position:absolute;inset:0;z-index:0;pointer-events:none"></div>
+  <div ref="{{ screenRef }}" style="position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;background:#F7F6F2;padding-top:{{ padTop }}px;box-sizing:border-box">
+
+<sc-if value="{{ isCheck }}">
+  <div style="padding:0 8px;flex:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:52px;gap:4px">
+      <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
+      <div style="text-align:center;flex:1">
+        <div style="font-size:15px;color:#5C5A55;line-height:1.2">{{ hdr.group }}</div>
+        <div style="font-size:16px;font-weight:500;line-height:1.3">ข้อ {{ hdr.n }} จาก 23</div>
+      </div>
+      <button onClick="{{ skip }}" style="min-height:44px;min-width:44px;padding:0 10px;border:none;background:transparent;font-size:15px;text-decoration:underline;text-underline-offset:3px;cursor:pointer">{{ hdr.skip }}</button>
+    </div>
+    <div style="display:flex;gap:4px;padding:4px 16px 8px">
+      <sc-for list="{{ segs }}" as="g"><div style="flex:{{ g.flex }};height:6px;border-radius:3px;background:#E2E0D9;overflow:hidden"><div style="height:100%;width:{{ g.fill }};background:#111;transition:width 300ms ease-out"></div></div></sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.c00 }}">
+  <div style="flex:1;background:#FAD20D;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+    <img src="assets/logo.svg" alt="YelloBe" style="width:200px;height:auto">
+    <div style="width:36px;height:3px;border-radius:2px;background:#111"></div>
+    <div style="font-size:18px;font-weight:400">เช็กเครื่อง รับซื้อถึงบ้าน</div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.c01 }}">
+  <div style="display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 12px 0 24px;flex:none">
+    <img src="assets/logo.svg" alt="YelloBe" style="width:96px;height:auto">
+    <a href="Staff%20App.dc.html" style="min-height:44px;display:flex;align-items:center;padding:0 12px;font-size:15px;text-underline-offset:3px">สำหรับพนักงาน</a>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:12px 24px 24px;display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h1 style="margin:0;font-size:30px;font-weight:500;line-height:1.25">ก่อนเริ่มเช็กเครื่อง</h1>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <span style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#FFFFFF;font-size:15px">{{ ic.clock }}ราว 6 นาที</span>
+        <span style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#FFFFFF;font-size:15px">{{ ic.user }}ไม่ต้องสมัครสมาชิก</span>
+        <span style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#FFFFFF;font-size:15px">{{ ic.home }}รับเครื่องถึงบ้าน</span>
+      </div>
+    </div>
+    <div style="font-size:16px;font-weight:500">สิ่งที่ต้องเตรียม</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ prep }}" as="p" hint-placeholder-count="4">
+        <div style="display:flex;align-items:center;gap:14px;padding:16px;border-radius:20px;background:#FFFFFF">
+          <div style="width:48px;height:48px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center;flex:none">{{ p.icon }}</div>
+          <div style="font-size:16px;line-height:1.4;text-wrap:pretty">{{ p.text }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <button onClick="{{ toC02 }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">เริ่มเช็ก</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.c02 }}">
+  <div style="display:flex;align-items:center;height:56px;padding:0 8px;gap:4px;flex:none">
+    <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
+    <div style="font-size:17px;font-weight:500">ขั้นตอนการเช็ก</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:18px">
+    <div style="padding:16px;border-radius:24px;background:#111;color:#fff;display:flex;align-items:center;gap:14px;min-height:56px">
+      <div style="width:48px;height:48px;border-radius:14px;background:#FAD20D;color:#111;display:flex;align-items:center;justify-content:center;flex:none">{{ ic.phone }}</div>
+      <div style="flex:1">
+        <div style="font-size:15px;color:#D9D7D0">เครื่องของคุณ</div>
+        <sc-if value="{{ devReading }}"><div style="display:flex;align-items:center;gap:8px;font-size:16px">{{ spinW }}กำลังอ่านรุ่นเครื่อง</div></sc-if>
+        <sc-if value="{{ devOk }}"><div style="font-size:20px;font-weight:500">iPhone 13 128GB</div><div style="font-size:15px;color:#D9D7D0">Midnight</div></sc-if>
+      </div>
+    </div>
+    <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">เช็ก 5 ขั้นตอน ใช้เวลาราว 6 นาที</h1>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ steps5 }}" as="st" hint-placeholder-count="5">
+        <div style="display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:20px;background:#FFFFFF">
+          <div style="width:32px;height:32px;border-radius:50%;background:#F3F2EE;display:flex;align-items:center;justify-content:center;font-weight:500;flex:none">{{ st.n }}</div>
+          <div><div style="font-size:16px;font-weight:500">{{ st.t }}</div><div style="font-size:15px;color:#5C5A55;line-height:1.4">{{ st.d }}</div></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">เริ่มเลย</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.c03 }}">
+  <div style="display:flex;align-items:center;height:56px;padding:0 8px;gap:4px;flex:none">
+    <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
+    <div style="font-size:17px;font-weight:500">เปิดสิทธิ์</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:16px">
+    <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">แตะทีละแถวเพื่อเปิดสิทธิ์</h1>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ perms }}" as="p" hint-placeholder-count="4">
+        <button onClick="{{ p.tap }}" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:20px;background:#FFFFFF;border:none;text-align:left;cursor:pointer;min-height:72px;transition:transform 100ms" style-active="transform:scale(0.98)">
+          <div style="width:44px;height:44px;border-radius:50%;background:#F3F2EE;display:flex;align-items:center;justify-content:center;flex:none">{{ p.icon }}</div>
+          <div style="flex:1"><div style="font-size:16px;font-weight:500">{{ p.name }}</div><div style="font-size:15px;color:#5C5A55">{{ p.desc }}</div></div>
+          <span style="padding:6px 12px;border-radius:999px;font-size:15px;white-space:nowrap;background:{{ p.bg }};color:{{ p.fg }};border:1px solid {{ p.bd }}">{{ p.status }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div style="display:flex;gap:10px;padding:14px 16px;border-radius:20px;background:#F3F2EE;font-size:15px;line-height:1.5;color:#444">
+      {{ ic.shield }}
+      <div>ใช้ตรวจเครื่องเท่านั้น ไม่บันทึกเสียงและไม่เก็บตำแหน่ง ข้อไหนไม่เปิด จะข้ามไป และพนักงานตรวจให้ตอนรับเครื่อง</div>
+    </div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">{{ permCta }}</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.auto }}">
+  <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:16px">
+    <div style="height:120px;border-radius:24px;background:#FFFFFF;position:relative;overflow:hidden;flex:none">
+      <div style="position:absolute;left:24px;right:24px;bottom:30px;height:6px;border-radius:3px;background:#D6D3CB"></div>
+      <div style="position:absolute;left:50%;bottom:36px;width:150px;margin-left:-75px;height:16px;border-radius:8px;background:#111"></div>
+      <div style="position:absolute;left:50%;bottom:52px;width:120px;margin-left:-60px;height:4px;border-radius:2px;background:#FAD20D"></div>
+    </div>
+    <div>
+      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">วางเครื่องหงายจอบนโต๊ะ</h1>
+      <p style="margin:6px 0 0;font-size:16px;color:#5C5A55;line-height:1.45">ไม่ต้องจับเครื่องราว 40 วินาที ระบบตรวจให้ทีละข้อ</p>
+    </div>
+    <div style="border-radius:20px;background:#FFFFFF;padding:4px 16px">
+      <sc-for list="{{ autoRows }}" as="r" hint-placeholder-count="8">
+        <div style="display:flex;align-items:center;gap:12px;min-height:48px;border-bottom:1px solid {{ r.line }}">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5C5A55;width:18px">{{ r.n }}</span>
+          <div style="flex:1;font-size:15px">{{ r.name }}<div style="font-size:15px;color:{{ r.vc }}">{{ r.val }}</div></div>
+          {{ r.el }}
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">ระบบกำลังตรวจ วางเครื่องไว้</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.ear }}">
+  <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;justify-content:center;padding:8px 0"><div style="width:112px;height:112px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center">{{ icL.ear }}</div></div>
+    <div>
+      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">แนบเครื่องที่หู แล้วฟังชื่อสี</h1>
+      <p style="margin:6px 0 0;font-size:16px;color:#5C5A55;line-height:1.45">รอบข้างเสียงดัง ระบบวัดเองไม่ได้ แตะสีที่ได้ยินจากลำโพงสนทนา</p>
+    </div>
+    <div style="display:flex;justify-content:center">
+      <button aria-label="ฟังอีกครั้ง" onClick="{{ replay }}" style="width:56px;height:56px;border-radius:50%;border:1.5px solid #111;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.95)">{{ ic.refresh }}</button>
+    </div>
+    <sc-if value="{{ ear.wrong }}"><div style="padding:12px 16px;border-radius:16px;background:#FFF1D6;color:#7A4A00;font-size:15px">ยังไม่ตรง แตะฟังอีกครั้งแล้วเลือกใหม่</div></sc-if>
+    <sc-if value="{{ ear.ok }}"><div style="padding:12px 16px;border-radius:16px;background:#E4F4E8;color:#1B6B33;font-size:15px;display:flex;gap:8px;align-items:center">{{ okBadge }}ลำโพงสนทนาใช้งานได้</div></sc-if>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <sc-for list="{{ earColors }}" as="c" hint-placeholder-count="4">
+        <button onClick="{{ c.pick }}" style="height:72px;border-radius:20px;border:none;background:#FFFFFF;display:flex;align-items:center;gap:12px;padding:0 16px;font-size:17px;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">
+          <span style="width:28px;height:28px;border-radius:50%;background:{{ c.c }};border:1px solid #CFCCC4;flex:none"></span>{{ c.n }}
+        </button>
+      </sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isGen }}">
+  <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:18px">
+    <div style="display:flex;justify-content:center;padding:12px 0"><div style="width:120px;height:120px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center">{{ gen.icon }}</div></div>
+    <div>
+      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3;text-wrap:pretty">{{ gen.title }}</h1>
+      <p style="margin:6px 0 0;font-size:16px;color:#5C5A55;line-height:1.45;text-wrap:pretty">{{ gen.instr }}</p>
+    </div>
+    <sc-if value="{{ gen.busy }}"><div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;background:#FFFFFF;font-size:16px;min-height:56px;box-sizing:border-box">{{ spin }}{{ gen.text }}</div></sc-if>
+    <sc-if value="{{ gen.passed }}"><div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;background:#E4F4E8;color:#1B6B33;font-size:16px;min-height:56px;box-sizing:border-box">{{ okBadge }}{{ gen.text }}</div></sc-if>
+    <sc-if value="{{ gen.warned }}"><div style="display:flex;gap:12px;padding:16px;border-radius:20px;background:#FFF1D6;color:#7A4A00;min-height:56px;box-sizing:border-box">{{ ic.info }}<div><div style="font-size:16px;font-weight:500">{{ gen.warn }}</div><div style="font-size:15px">{{ gen.warnSub }}</div></div></div></sc-if>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <sc-if value="{{ gen.bPrimary }}"><button onClick="{{ gen.bClick }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">{{ gen.bLabel }}</button></sc-if>
+    <sc-if value="{{ gen.bOutline }}"><button onClick="{{ skip }}" style="width:100%;height:56px;border:1.5px solid #111;border-radius:999px;background:transparent;font-size:17px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">{{ gen.bLabel }}</button></sc-if>
+    <sc-if value="{{ gen.bDisabled }}"><button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">{{ gen.bLabel }}</button></sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.i14a }}">
+  <div ref="{{ touchRef }}" onPointerDown="{{ tDown }}" onPointerMove="{{ tMove }}" onPointerUp="{{ tUp }}" onPointerLeave="{{ tUp }}" style="position:absolute;inset:0;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(16,1fr);background:#FFFFFF;touch-action:none;cursor:crosshair;user-select:none">
+    <sc-for list="{{ cells }}" as="c"><div style="background:{{ c.bg }};box-shadow:inset 0 0 0 0.5px #E2E0D9;transition:background 120ms"></div></sc-for>
+  </div>
+  <sc-if value="{{ touchFresh }}"><div style="position:absolute;top:56px;left:50%;transform:translateX(-50%);padding:8px 16px;border-radius:999px;background:#111;color:#fff;font-size:15px;font-weight:500;pointer-events:none;white-space:nowrap">{{ touchPill }}</div></sc-if>
+  <sc-if value="{{ touchStale }}"><button onClick="{{ skip }}" style="position:absolute;top:52px;left:50%;transform:translateX(-50%);z-index:2;height:48px;padding:0 22px;border:none;border-radius:999px;background:#111;color:#fff;font-size:16px;font-weight:500;white-space:nowrap;cursor:pointer">ข้ามข้อนี้</button></sc-if>
+  <sc-if value="{{ touchHint }}"><div style="position:absolute;left:40px;right:40px;top:50%;transform:translateY(-50%);padding:20px;border-radius:24px;background:rgba(17,17,17,.88);color:#fff;text-align:center;pointer-events:none"><div style="font-size:20px;font-weight:500">ลากนิ้วให้ทั่วจอ</div><div style="font-size:15px;color:#E2E0D9;margin-top:4px">ลากซิกแซกจากบนลงล่าง จนทุกช่องเป็นสีเหลือง</div></div></sc-if>
+</sc-if>
+
+<sc-if value="{{ is.i14b }}">
+  <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:18px">
+    <div>
+      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">แตะค้าง 2 นิ้วพร้อมกัน</h1>
+      <p style="margin:6px 0 0;font-size:16px;color:#5C5A55;line-height:1.45">วางนิ้วบนวงกลมทั้งสองวง ค้างไว้ 2 วินาที</p>
+    </div>
+    <div style="flex:1;min-height:320px;display:flex;align-items:center;justify-content:space-around">
+      <button aria-label="วงกลมซ้าย" onPointerDown="{{ tfA }}" style="width:120px;height:120px;border-radius:50%;border:2px dashed #111;background:{{ tf.aBg }};cursor:pointer;font-size:15px;transition:background 150ms">{{ tf.aTxt }}</button>
+      <button aria-label="วงกลมขวา" onPointerDown="{{ tfB }}" style="width:120px;height:120px;border-radius:50%;border:2px dashed #111;background:{{ tf.bBg }};cursor:pointer;font-size:15px;transition:background 150ms">{{ tf.bTxt }}</button>
+    </div>
+    <sc-if value="{{ tf.done }}"><div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;background:#E4F4E8;color:#1B6B33;font-size:16px">{{ okBadge }}แตะหลายนิ้วได้ปกติ</div></sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.i15 }}">
+  <div style="position:absolute;inset:0;background:{{ col.c }};transition:background 200ms"></div>
+  <div style="position:absolute;inset:0;background:#000;opacity:{{ col.dim }};pointer-events:none"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:#FFFFFF;border-radius:28px 28px 0 0;transform:{{ col.tf }};transition:transform 280ms cubic-bezier(.2,.8,.2,1);box-shadow:0 -8px 24px rgba(0,0,0,.12)">
+    <button aria-label="ปัดลงเพื่อดูสีเต็มจอ" onPointerDown="{{ sheetDown }}" onPointerUp="{{ sheetUp }}" style="width:100%;height:44px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none"><span style="width:44px;height:5px;border-radius:3px;background:#CFCCC4"></span></button>
+    <div style="padding:0 24px 34px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;margin-left:-12px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
+        <div style="flex:1;font-size:15px;color:#5C5A55">หน้าจอ<span style="color:#111;font-weight:500;margin-left:8px">ข้อ 15 จาก 23</span></div>
+        <button onClick="{{ skip }}" style="min-height:44px;border:none;background:transparent;font-size:15px;text-decoration:underline;text-underline-offset:3px;cursor:pointer">ข้ามข้อนี้</button>
+      </div>
+      <div style="display:flex;gap:4px;margin-top:-6px"><sc-for list="{{ segs }}" as="g"><div style="flex:{{ g.flex }};height:6px;border-radius:3px;background:#E2E0D9;overflow:hidden"><div style="height:100%;width:{{ g.fill }};background:#111;transition:width 300ms ease-out"></div></div></sc-for></div>
+      <sc-if value="{{ col.isColor }}">
+        <div><div style="font-size:22px;font-weight:500">จอแสดงสีนี้ปกติไหม</div><div style="font-size:15px;color:#5C5A55">สีที่ {{ col.no }} จาก 5 {{ col.n }} ปัดแผงนี้ลงเพื่อดูเต็มจอ</div></div>
+        <button onClick="{{ colBad }}" style="height:48px;border:none;background:transparent;font-size:16px;text-decoration:underline;text-underline-offset:3px;cursor:pointer">เห็นจุดผิดปกติ</button>
+        <button onClick="{{ colOk }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">จอปกติ</button>
+      </sc-if>
+      <sc-if value="{{ col.isBright }}">
+        <div><div style="font-size:22px;font-weight:500">ลากปรับความสว่าง</div><div style="font-size:15px;color:#5C5A55">ลากไปต่ำสุด แล้วลากไปสูงสุด</div></div>
+        <label style="display:flex;align-items:center;gap:12px">{{ ic.sun }}<input type="range" min="0" max="100" value="{{ col.bright }}" onInput="{{ brightIn }}" aria-label="ความสว่าง" style="flex:1;height:44px;accent-color:#111"></label>
+        <div style="display:flex;gap:8px;font-size:15px"><span style="padding:6px 12px;border-radius:999px;background:{{ col.minBg }};color:{{ col.minFg }}">ต่ำสุด</span><span style="padding:6px 12px;border-radius:999px;background:{{ col.maxBg }};color:{{ col.maxFg }}">สูงสุด</span></div>
+        <button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">{{ col.btn }}</button>
+      </sc-if>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.i20 }}">
+  <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:18px">
+    <div style="display:flex;justify-content:center;padding:12px 0"><div style="width:120px;height:120px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center">{{ icL.buttons }}</div></div>
+    <div>
+      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">กดปุ่มข้างเครื่องทีละปุ่ม</h1>
+      <p style="margin:6px 0 0;font-size:16px;color:#5C5A55;line-height:1.45">Power ให้ล็อกจอ แล้วปลดล็อกกลับมาที่แอป</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ btnRows }}" as="b" hint-placeholder-count="3">
+        <button onClick="{{ b.press }}" style="display:flex;align-items:center;gap:12px;padding:0 16px;height:60px;border-radius:20px;border:none;background:{{ b.bg }};color:{{ b.fg }};font-size:16px;text-align:left;cursor:pointer">
+          <span style="flex:1">{{ b.name }}</span><span style="font-size:15px">{{ b.st }}</span>{{ b.el }}
+        </button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">{{ btnCta }}</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isShot }}">
+  <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:16px">
+    <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">{{ shot.title }}</h1>
+    <sc-if value="{{ shot.isGuide }}">
+      <div style="padding:16px;border-radius:20px;background:#FFFFFF;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;gap:12px;align-items:flex-start"><span style="width:28px;height:28px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;flex:none">1</span><div style="font-size:16px;line-height:1.45">ไปที่ <b style="font-weight:500">{{ shot.path }}</b></div></div>
+        <div style="display:flex;gap:12px;align-items:flex-start"><span style="width:28px;height:28px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;flex:none">2</span><div style="font-size:16px;line-height:1.45">แคปหน้าจอ แล้วกลับมาที่แอปนี้</div></div>
+        <div style="display:flex;gap:12px;align-items:flex-start"><span style="width:28px;height:28px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;flex:none">3</span><div style="font-size:16px;line-height:1.45">ระบบหยิบภาพแคปล่าสุดให้เอง</div></div>
+      </div>
+      <div style="font-size:15px;color:#5C5A55;line-height:1.5">ถ้าแอปหาภาพไม่เจอ แตะเลือกภาพแคปล่าสุดเอง 1 ครั้ง</div>
+    </sc-if>
+    <sc-if value="{{ shot.isReading }}"><div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;background:#FFFFFF;font-size:16px">{{ spin }}กำลังอ่านค่าจากภาพแคป</div></sc-if>
+    <sc-if value="{{ shot.isNotFound }}"><div style="display:flex;gap:12px;padding:16px;border-radius:20px;background:#FFF1D6;color:#7A4A00">{{ ic.info }}<div><div style="font-size:16px;font-weight:500">แอปหยิบภาพแคปเองไม่ได้</div><div style="font-size:15px">เลือกภาพแคปล่าสุดจากรูปภาพ 1 ครั้ง</div></div></div></sc-if>
+    <sc-if value="{{ shot.isPicker }}"><div style="display:flex;flex-direction:column;gap:10px"><div style="font-size:16px;font-weight:500">รูปภาพล่าสุด</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><sc-for list="{{ pickTiles }}" as="p"><button onClick="{{ p.pick }}" aria-label="{{ p.label }}" style="height:130px;border:{{ p.bd }};border-radius:12px;background:{{ p.bg }};padding:8px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;cursor:pointer;font-size:15px;text-align:left">{{ p.label }}</button></sc-for></div></div></sc-if>
+    <sc-if value="{{ shot.isResult }}">
+      <div style="display:flex;gap:14px;align-items:stretch">
+        <div style="width:108px;height:200px;border-radius:16px;background:#FFFFFF;border:1px solid #E2E0D9;padding:12px 10px;box-sizing:border-box;display:flex;flex-direction:column;gap:6px;flex:none">
+          <div style="height:6px;width:50%;border-radius:3px;background:#D6D3CB"></div>
+          <div style="font-size:10px;font-weight:500;margin-top:6px">{{ shot.mockTitle }}</div>
+          <div style="height:5px;border-radius:3px;background:#ECEAE4"></div>
+          <div style="padding:6px;border-radius:6px;background:#FFF7CC;font-size:10px;font-family:'IBM Plex Mono',monospace;word-break:break-all">{{ shot.mockVal }}</div>
+          <div style="height:5px;border-radius:3px;background:#ECEAE4"></div>
+          <div style="height:5px;width:70%;border-radius:3px;background:#ECEAE4"></div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:8px;min-width:0">
+          <div style="font-size:15px;color:#5C5A55">ค่าที่อ่านได้</div>
+          <sc-for list="{{ shot.rows }}" as="r">
+            <div style="display:flex;justify-content:space-between;gap:8px;padding:10px 12px;border-radius:14px;background:#FFFFFF;font-size:15px"><span style="color:#5C5A55">{{ r.k }}</span><span style="font-weight:500;font-family:{{ r.ff }};word-break:break-all;text-align:right">{{ r.v }}</span></div>
+          </sc-for>
+          <sc-if value="{{ shot.note }}"><div style="display:flex;gap:6px;align-items:center;font-size:15px;color:#1B6B33">{{ ic.check }}{{ shot.note }}</div></sc-if>
+        </div>
+      </div>
+      <div style="font-size:15px;color:#5C5A55">ภาพนี้แนบไปกับผลเช็กให้พนักงานดู</div>
+    </sc-if>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none;display:flex;flex-direction:column;gap:4px">
+    <sc-if value="{{ shot.isGuide }}"><button onClick="{{ openShot }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">{{ shot.open }}</button></sc-if>
+    <sc-if value="{{ shot.isNotFound }}"><button onClick="{{ toPicker }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">เลือกภาพแคปล่าสุด</button></sc-if>
+    <sc-if value="{{ shot.isPicker }}"><button onClick="{{ cancelPicker }}" style="width:100%;height:56px;border:1.5px solid #111;border-radius:999px;background:transparent;font-size:17px;font-weight:500;cursor:pointer">ยกเลิก</button></sc-if>
+    <sc-if value="{{ shot.isReading }}"><button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">รอสักครู่</button></sc-if>
+    <sc-if value="{{ shot.isResult }}">
+      <button onClick="{{ otherShot }}" style="height:48px;border:none;background:transparent;font-size:16px;text-decoration:underline;text-underline-offset:3px;cursor:pointer">เลือกภาพอื่น</button>
+      <button onClick="{{ useShot }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">ใช้ภาพนี้</button>
+    </sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.unsup }}">
+  <div style="flex:1;padding:8px 24px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center">
+    <div style="width:120px;height:120px;border-radius:50%;background:#F3F2EE;display:flex;align-items:center;justify-content:center">{{ icL.nfc }}</div>
+    <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">รุ่นนี้ไม่รองรับ<br>ข้ามข้อนี้ให้แล้ว</h1>
+    <p style="margin:0;font-size:16px;color:#5C5A55">NFC ไม่นับเป็นข้อไม่ผ่าน</p>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">กำลังไปข้อถัดไป</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.c11 }}">
+  <div style="display:flex;align-items:center;height:56px;padding:0 8px 0 24px;flex:none">
+    <div style="font-size:17px;font-weight:500">ผลเช็กเครื่อง</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:4px 24px 24px;display:flex;flex-direction:column;gap:14px">
+    <div style="padding:20px;border-radius:28px;background:#FFFFFF;display:flex;align-items:center;gap:18px">
+      <div style="position:relative;width:120px;height:120px;flex:none">
+        <svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" fill="none" stroke="#F3F2EE" stroke-width="12"></circle><circle cx="60" cy="60" r="52" fill="none" stroke="#1B6B33" stroke-width="12" stroke-linecap="round" stroke-dasharray="298 400" transform="rotate(-90 60 60)"></circle></svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-size:15px;color:#5C5A55">ผ่าน</div><div style="font-size:30px;font-weight:600;line-height:1">21</div><div style="font-size:15px;color:#5C5A55">จาก 23</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+        <div style="font-size:18px;font-weight:500">iPhone 13 128GB</div>
+        <span style="align-self:flex-start;padding:6px 12px;border-radius:999px;background:#FAD20D;font-size:15px;font-weight:500">เกรดเบื้องต้น B</span>
+        <span style="align-self:flex-start;padding:6px 12px;border-radius:999px;background:#F3F2EE;color:#444;font-size:15px">เช็กต่อตอนรับเครื่อง 2 ข้อ</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="5">
+        <div style="border-radius:20px;background:#FFFFFF;overflow:hidden">
+          <button onClick="{{ g.toggle }}" aria-expanded="{{ g.open }}" style="width:100%;display:flex;align-items:center;gap:12px;padding:14px 16px;border:none;background:transparent;text-align:left;cursor:pointer;min-height:64px">
+            <div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:500">{{ g.name }}</div><div style="font-size:15px;color:#5C5A55">{{ g.note }}</div></div>
+            <span style="font-size:16px;font-weight:500">{{ g.score }}</span>
+            <span style="display:flex;transform:{{ g.rot }};transition:transform 200ms">{{ ic.down }}</span>
+          </button>
+          <sc-if value="{{ g.open }}">
+            <div style="padding:0 16px 12px;display:flex;flex-direction:column">
+              <sc-for list="{{ g.items }}" as="it">
+                <div style="display:flex;align-items:center;gap:10px;min-height:40px;border-top:1px solid #F3F2EE;font-size:15px"><span style="flex:1">{{ it.n }}</span><span style="color:#5C5A55;font-size:15px">{{ it.v }}</span>{{ it.el }}</div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;gap:10px;padding:14px 16px;border-radius:20px;background:#F3F2EE;font-size:15px;color:#444;line-height:1.5">{{ ic.info }}<div>ราคาและเกรดสุดท้าย พนักงานแจ้งหลังดูตัวเครื่อง</div></div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">รับ QR ขายเครื่อง</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.c12 }}">
+  <div style="display:flex;align-items:center;height:56px;padding:0 8px;gap:4px;flex:none">
+    <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
+    <div style="font-size:17px;font-weight:500">QR ขายเครื่อง</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:4px 24px 24px;display:flex;flex-direction:column;gap:14px">
+    <div style="padding:24px 20px;border-radius:28px;background:#FFFFFF;display:flex;flex-direction:column;align-items:center;gap:12px">
+      <div style="font-size:16px;text-align:center">ให้พนักงานสแกน QR นี้ตอนมารับเครื่อง</div>
+      <div style="width:220px;height:220px;padding:12px;border-radius:20px;border:1px solid #E2E0D9;box-sizing:border-box">{{ qr }}</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500;letter-spacing:1px">DC-2610-0482</div>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:{{ qrBg }};color:{{ qrFg }};font-size:15px">{{ ic.clock }}ใช้ได้อีก <span style="font-family:'IBM Plex Mono',monospace;font-weight:500">{{ qrTime }}</span></div>
+    </div>
+    <div style="padding:16px;border-radius:20px;background:#FFFFFF;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;font-size:15px"><span style="color:#5C5A55">เครื่อง</span><span style="font-weight:500">iPhone 13 128GB Midnight</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:15px"><span style="color:#5C5A55">ผลเช็ก</span><span style="font-weight:500">ผ่าน 21 จาก 23</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:15px"><span style="color:#5C5A55">เกรดเบื้องต้น</span><span style="font-weight:500">B</span></div>
+    </div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <button onClick="{{ saveQr }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#111;color:#fff;font-size:18px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform 100ms" style-active="transform:scale(0.97)">{{ ic.download }}บันทึก QR ลงรูปภาพ</button>
+  </div>
+</sc-if>
+
+  </div>
+  <sc-if value="{{ showSB }}">
+  <div style="position:absolute;top:0;left:0;right:0;height:47px;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 36px;pointer-events:none;color:#111">
+    <span style="font-size:15px;font-weight:600">9:41</span>
+    <svg width="68" height="12" viewBox="0 0 68 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1" fill="#111"></rect><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="#111"></rect><rect x="10" y="3" width="3" height="9" rx="1" fill="#111"></rect><rect x="15" y="0" width="3" height="12" rx="1" fill="#111"></rect><path d="M27 4.5a8 8 0 0 1 11 0M29.3 7a4.6 4.6 0 0 1 6.4 0M32.5 10.2h.01" stroke="#111" stroke-width="1.8" fill="none" stroke-linecap="round"></path><rect x="44" y="1" width="21" height="10" rx="3" fill="none" stroke="#111" stroke-width="1.2"></rect><rect x="46" y="3" width="13" height="6" rx="1.5" fill="#111"></rect><rect x="66" y="4" width="1.6" height="4" rx=".8" fill="#111"></rect></svg>
+  </div>
+  </sc-if>
+  <sc-if value="{{ alertOpen }}">
+  <div style="position:absolute;inset:0;z-index:6;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center">
+    <div role="dialog" aria-modal="true" style="width:270px;border-radius:14px;background:#F2F2F2;text-align:center;overflow:hidden">
+      <div style="padding:18px 16px 14px"><div style="font-size:16px;font-weight:500;line-height:1.35">“YelloBe” ต้องการใช้{{ alert.name }}</div><div style="font-size:15px;margin-top:4px;line-height:1.4;color:#333">{{ alert.desc }}</div></div>
+      <div style="display:flex;border-top:1px solid #C8C7CC">
+        <button onClick="{{ deny }}" style="flex:1;height:44px;border:none;border-right:1px solid #C8C7CC;background:transparent;font-size:16px;color:#0A60D6;cursor:pointer">ไม่อนุญาต</button>
+        <button onClick="{{ allow }}" style="flex:1;height:44px;border:none;background:transparent;font-size:16px;font-weight:600;color:#0A60D6;cursor:pointer">อนุญาต</button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+  <div style="position:absolute;left:50%;bottom:112px;z-index:7;transform:translateX(-50%);padding:10px 18px;border-radius:999px;background:#111;color:#fff;font-size:15px;white-space:nowrap;pointer-events:none;opacity:{{ toastOp }};transition:opacity 200ms">{{ toast }}</div>
+</div>
+</div>
+</div>
+</main>
+<sc-if value="{{ grid }}">
+<div style="position:fixed;inset:0;z-index:50;background:#E8E6DF;overflow:auto;padding:24px;box-sizing:border-box">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+    <div style="font-size:22px;font-weight:500">ทุกจอ Customer App</div>
+    <button onClick="{{ closeGrid }}" style="height:44px;padding:0 20px;border:none;border-radius:999px;background:#111;color:#fff;font-size:15px;cursor:pointer">ปิด</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:24px">
+    <sc-for list="{{ gridItems }}" as="g">
+      <button onClick="{{ g.go }}" style="border:none;background:transparent;padding:0;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:8px">
+        <div style="width:174px;height:365px;border-radius:26px;overflow:hidden;background:#111"><iframe src="{{ g.src }}" title="{{ g.name }}" loading="lazy" style="width:414px;height:868px;border:none;transform:scale(0.42);transform-origin:top left;pointer-events:none"></iframe></div>
+        <div style="font-size:13px"><span style="font-family:'IBM Plex Mono',monospace;color:#5C5A55;margin-right:6px">{{ g.code }}</span>{{ g.name }}</div>
+      </button>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const P = {
+  back:['M15 18l-6-6 6-6'], down:['M6 9l6 6 6-6'], check:['M5 12.5l4.5 4.5L19 7.5'], x:['M6 6l12 12M18 6L6 18'], minus:['M6 12h12'],
+  camera:['M4 8h3l2-3h6l2 3h3v11H4z','M12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z'],
+  mic:['M12 3a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z','M5 11a7 7 0 0 0 14 0','M12 18v3'],
+  pin:['M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z','M12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z'],
+  bt:['M7 7l10 10-5 4V3l5 4L7 17'],
+  wifi:['M2.5 9a14 14 0 0 1 19 0','M5.5 12.5a9.5 9.5 0 0 1 13 0','M8.8 16a5 5 0 0 1 6.4 0','M12 19.5h.01'],
+  phone:['M7 2.5h10a1.5 1.5 0 0 1 1.5 1.5v16a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 20V4A1.5 1.5 0 0 1 7 2.5z','M10.5 18.5h3'],
+  battery:['M3 7.5h15v9H3z','M21 10.5v3','M6 10.5v3M9 10.5v3'],
+  bolt:['M13 2L5 14h6l-1 8 8-12h-6l1-8z'],
+  sim:['M6 3h8l4 4v14H6z','M9 11h6v6H9z'],
+  nfc:['M6 8.5a5 5 0 0 1 0 7','M9.5 6a9 9 0 0 1 0 12','M13 3.5a13 13 0 0 1 0 17'],
+  hand:['M8 13V5.5a1.5 1.5 0 0 1 3 0V12','M11 11V4a1.5 1.5 0 0 1 3 0v7','M14 11V5.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-.5a6 6 0 0 1-5-2.7L3 15.5a1.5 1.5 0 0 1 2.4-1.8L8 16'],
+  sun:['M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z','M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'],
+  face:['M4 8V5a1 1 0 0 1 1-1h3','M16 4h3a1 1 0 0 1 1 1v3','M20 16v3a1 1 0 0 1-1 1h-3','M8 20H5a1 1 0 0 1-1-1v-3','M9 9.5v1M15 9.5v1','M12 9.5v3.5h-1','M9 15.5a4 4 0 0 0 6 0'],
+  buttons:['M8 2.5h9a1.5 1.5 0 0 1 1.5 1.5v16a1.5 1.5 0 0 1-1.5 1.5H8A1.5 1.5 0 0 1 6.5 20V4A1.5 1.5 0 0 1 8 2.5z','M3.5 6.5v3','M3.5 11.5v3','M21.5 8v4'],
+  ear:['M7 9a5 5 0 0 1 10 0c0 3-3 4-3 7a3 3 0 0 1-6 0','M10 9.5a2 2 0 0 1 4 0'],
+  refresh:['M20 11a8 8 0 1 0-2.3 5.7','M20 4v7h-7'],
+  download:['M12 4v11','M7 10l5 5 5-5','M5 20h14'],
+  clock:['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z','M12 7v5l3 2'],
+  user:['M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z','M4 21a8 8 0 0 1 16 0'],
+  home:['M3 11l9-7 9 7','M5 10v10h14V10'],
+  speaker:['M4 9h4l5-4v14l-5-4H4z','M16.5 9a4 4 0 0 1 0 6','M19 6.5a8 8 0 0 1 0 11'],
+  shield:['M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z','M9 12l2 2 4-4'],
+  info:['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z','M12 11v5','M12 7.8h.01'],
+  grid:['M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z'],
+  play:['M7 5l12 7-12 7z'], stop:['M7 7h10v10H7z']
+};
+function I(n, s, c, w) {
+  return React.createElement('svg', { width: s || 24, height: s || 24, viewBox: '0 0 24 24', fill: 'none', stroke: c || 'currentColor', strokeWidth: w || 1.8, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': 'true', style: { display: 'block', flex: 'none' } },
+    (P[n] || []).map((d, i) => React.createElement('path', { key: i, d })));
+}
+function badge(bg, fg, n, anim) {
+  return React.createElement('span', { style: { width: 26, height: 26, borderRadius: '50%', background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', animation: anim && !RM ? 'ybpop 200ms ease-out' : 'none' } }, I(n, 16, fg, 2.4));
+}
+function spinner(light) {
+  return React.createElement('span', { role: 'status', 'aria-label': 'กำลังตรวจ', style: { width: 22, height: 22, borderRadius: '50%', border: '2.5px solid ' + (light ? 'rgba(255,255,255,.3)' : '#E2E0D9'), borderTopColor: light ? '#fff' : '#111', boxSizing: 'border-box', animation: RM ? 'ybspin 2.4s linear infinite' : 'ybspin .8s linear infinite', flex: 'none', display: 'block' } });
+}
+function stEl(st) {
+  if (st === 'run') return spinner();
+  if (st === 'p') return badge('#E4F4E8', '#1B6B33', 'check', true);
+  if (st === 's') return badge('#F3F2EE', '#444', 'minus');
+  if (st === 'f') return badge('#FDECEC', '#B3261E', 'x');
+  if (st === 'w') return badge('#FFF1D6', '#7A4A00', 'ear', true);
+  return React.createElement('span', { style: { width: 26, height: 26, borderRadius: '50%', border: '2px solid #D6D3CB', boxSizing: 'border-box', display: 'block', flex: 'none' } });
+}
+function qrSvg(seed) {
+  const N = 25; let a = seed; const rnd = () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const rects = []; const inF = (x, y) => (x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16);
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) { if (!inF(x, y) && rnd() > 0.52) rects.push(React.createElement('rect', { key: x + '-' + y, x, y, width: 1, height: 1 })); }
+  [[0, 0], [18, 0], [0, 18]].forEach(([fx, fy], i) => {
+    rects.push(React.createElement('rect', { key: 'fo' + i, x: fx + 0.5, y: fy + 0.5, width: 6, height: 6, fill: 'none', stroke: '#111', strokeWidth: 1 }));
+    rects.push(React.createElement('rect', { key: 'fi' + i, x: fx + 2, y: fy + 2, width: 3, height: 3 }));
+  });
+  return React.createElement('svg', { viewBox: '0 0 25 25', width: '100%', height: '100%', fill: '#111', shapeRendering: 'crispEdges', role: 'img', 'aria-label': 'QR ขายเครื่อง DC-2610-0482' }, rects);
+}
+const FLOW = [
+  ['c00','C-00','Splash'],['c01','C-01','หน้าเตรียมตัว'],['c02','C-02','ขั้นตอนการเช็ก'],['c03','C-03','เปิดสิทธิ์'],
+  ['auto','C-05','ข้อ 1–8 ตรวจอัตโนมัติ'],['ear','C-06','ข้อ 4 ทางสำรอง ฟังสี'],
+  ['i9','C-07','ข้อ 9 Wi-Fi'],['i10','C-07','ข้อ 10 Bluetooth'],['i11','C-07','ข้อ 11 GPS'],['i12','C-07','ข้อ 12 ซิมและสัญญาณ'],['i13','C-07','ข้อ 13 NFC'],
+  ['i14a','C-08','ข้อ 14 ทัชสกรีน'],['i14b','C-08','ข้อ 14 แตะ 2 นิ้ว'],['i15','C-08','ข้อ 15 สีและความสว่าง'],['i16','C-08','ข้อ 16 เซ็นเซอร์ระยะใกล้'],['i17','C-08','ข้อ 17 เซ็นเซอร์แสง'],
+  ['i18','C-09','ข้อ 18 Face ID'],['i19','C-09','ข้อ 19 การชาร์จ'],['i20','C-09','ข้อ 20 ปุ่มกด'],
+  ['i21','C-10','ข้อ 21 สุขภาพแบต'],['i22','C-10','ข้อ 22 IMEI'],['i23','C-10','ข้อ 23 ประวัติอะไหล่'],
+  ['c11','C-11','สรุปผล'],['c12','C-12','QR ขายเครื่อง'],
+  ['unsup','C-04','จอมาตรฐาน รุ่นไม่รองรับ', true]
+];
+const IDX = id => FLOW.findIndex(f => f[0] === id);
+const N = { ear:4, i9:9, i10:10, i11:11, i12:12, i13:13, i14a:14, i14b:14, i15:15, i16:16, i17:17, i18:18, i19:19, i20:20, i21:21, i22:22, i23:23, unsup:13 };
+const GNAME = n => n <= 8 ? 'ระบบตรวจอัตโนมัติ' : n <= 13 ? 'การเชื่อมต่อ' : n <= 17 ? 'หน้าจอ' : n <= 20 ? 'สแกน ชาร์จ และปุ่ม' : 'ข้อมูลเสริม';
+const GEN = {
+  i9:{icon:'wifi',title:'เปิด Wi-Fi ไว้',instr:'ระบบเช็กว่าเชื่อมต่อและออกอินเทอร์เน็ตได้',mode:'auto',seq:['กำลังเช็ก Wi-Fi'],result:'เชื่อมต่อแล้ว ออกอินเทอร์เน็ตได้'},
+  i10:{icon:'bt',title:'รอค้นหา Bluetooth',instr:'ไม่ต้องจับคู่ และไม่เก็บชื่ออุปกรณ์',mode:'auto',seq:['กำลังค้นหาสัญญาณรอบตัว'],result:'พบอุปกรณ์รอบตัว 6 เครื่อง'},
+  i11:{icon:'pin',title:'รอจับตำแหน่ง GPS',instr:'ใช้เวลาไม่เกิน 30 วินาที ไม่ส่งตำแหน่งขึ้นระบบ',mode:'auto',seq:['กำลังจับตำแหน่ง'],result:'แม่นยำ 8 เมตร ใช้เวลา 6 วินาที'},
+  i12:{icon:'sim',title:'เช็กซิมและสัญญาณ',instr:'อ่านชื่อเครือข่ายและระดับสัญญาณ ไม่อ่านเบอร์โทร',mode:'warn',seq:['กำลังอ่านซิม'],warn:'ไม่พบซิมในเครื่อง',warnSub:'ข้ามได้ พนักงานทดสอบให้ตอนรับเครื่อง',skip:'ไม่มีซิม ข้ามได้',result:'AIS สัญญาณ 4 ขีด'},
+  i13:{icon:'nfc',title:'แตะบัตรที่ด้านหลังเครื่อง',instr:'ใช้บัตรที่มีชิป เช่น บัตรรถไฟฟ้าหรือบัตรเดบิต ระบบไม่อ่านข้อมูลบัตร',mode:'wait',wait:'รอแตะบัตร',result:'อ่านชิปบัตรได้',skip:'ไม่มีบัตร ข้ามได้'},
+  i16:{icon:'hand',title:'เอามือบังลำโพงด้านบน',instr:'จอจะดับ แล้วยกมือออก ทำ 2 ครั้ง',mode:'auto',seq:['ครั้งที่ 1 จาก 2 เหลือเวลา 15 วินาที','ครั้งที่ 2 จาก 2 เหลือเวลา 12 วินาที'],result:'จอดับและติดกลับครบ 2 ครั้ง'},
+  i17:{icon:'sun',title:'บังด้านบนจอ 2 วินาที แล้วยกออก',instr:'iPhone ใช้ความสว่างอัตโนมัติวัดแทน ถ้าวัดไม่ได้ พนักงานเช็กให้',mode:'auto',seq:['รอบังด้านบนจอ','ความสว่างลดเหลือ 12% ยกมือออกได้'],result:'ความสว่างเปลี่ยนจาก 12% เป็น 70%'},
+  i18:{icon:'face',title:'สแกน Face ID',instr:'ใช้ระบบของเครื่อง แอปรู้แค่ผ่านหรือไม่ ไม่เห็นใบหน้า',mode:'action',cta:'สแกน Face ID',seq:['มองหน้าจอ กำลังสแกน'],result:'Face ID ใช้งานได้'},
+  i19:{icon:'bolt',title:'เสียบสายชาร์จ',instr:'เสียบเข้าปลั๊กหรือ power bank ระบบดูว่าเข้าโหมดชาร์จ',mode:'wait',wait:'รอเสียบสาย แบตตอนนี้ 64%',result:'กำลังชาร์จ แบต 64%',skip:'ไม่มีสาย ข้ามได้',noAuto:true}
+};
+const SHOT = {
+  i21:{title:'แคปหน้าสุขภาพแบตเตอรี่',path:'การตั้งค่า › แบตเตอรี่ › สุขภาพแบตเตอรี่',open:'เปิดการตั้งค่า',mockTitle:'สุขภาพแบตเตอรี่',mockVal:'ความจุสูงสุด 87%',rows:[['ความจุสูงสุด','87%']]},
+  i22:{title:'แคปหน้าเลข IMEI',path:'แอปโทรศัพท์ แล้วกด *#06#',open:'เปิดแอปโทรศัพท์',mockTitle:'IMEI',mockVal:'354071152084632',rows:[['IMEI','354071152084632']],mono:true,note:'รูปแบบถูกต้อง 15 หลัก'},
+  i23:{title:'แคปหน้าเกี่ยวกับ',path:'การตั้งค่า › ทั่วไป › เกี่ยวกับ',open:'เปิดการตั้งค่า',mockTitle:'เกี่ยวกับ',mockVal:'ชิ้นส่วนของแท้',rows:[['จอ','ของแท้'],['แบตเตอรี่','ของแท้'],['กล้อง','ของแท้'],['Face ID','ของแท้']]}
+};
+const AUTO = [['รุ่น ความจุ และ RAM','iPhone 13 128GB RAM 4GB'],['กล้องทุกเลนส์','เปิดได้ครบ 3 เลนส์'],['ไมโครโฟน','ไมค์ล่าง หน้า หลัง ได้ยินเสียงทดสอบ'],['ลำโพงและลำโพงสนทนา','ลำโพงสนทนา ต้องฟังเอง'],['ระบบสั่น','วัดแรงสั่นได้'],['ไฟฉาย','เปิดปิดได้'],['เซ็นเซอร์การเคลื่อนไหว','เข็มทิศ ไจโร หมุนจอ'],['การดัดแปลงระบบ','ไม่พบ Jailbreak']];
+const EARC = [['แดง','#D93025'],['เขียว','#1E8E3E'],['น้ำเงิน','#1A56DB'],['ขาว','#FFFFFF']];
+const COLS = [['ขาว','#FFFFFF'],['ดำ','#000000'],['แดง','#FF0000'],['เขียว','#00FF00'],['น้ำเงิน','#0000FF']];
+const PERMS = [['cam','กล้อง','ใช้เช็กกล้องทุกเลนส์','camera'],['mic','ไมโครโฟน','ฟังเสียงทดสอบ ไม่บันทึกเสียง','mic'],['loc','ตำแหน่ง','เช็ก GPS ไม่เก็บตำแหน่ง Android ใช้ค้นหา Bluetooth ด้วย','pin'],['bt','Bluetooth','ค้นหาสัญญาณรอบตัว','bt']];
+const GROUPS = [
+  ['ระบบตรวจอัตโนมัติ','8/8','ผ่านทุกข้อ',[['รุ่น ความจุ และ RAM','p'],['กล้องทุกเลนส์','p'],['ไมโครโฟน','p'],['ลำโพงและลำโพงสนทนา','p'],['ระบบสั่น','p'],['ไฟฉาย','p'],['เซ็นเซอร์การเคลื่อนไหว','p'],['การดัดแปลงระบบ','p']]],
+  ['การเชื่อมต่อ','4/5','ไม่มีซิม พนักงานทดสอบให้',[['Wi-Fi','p'],['Bluetooth','p'],['GPS','p'],['ซิมและสัญญาณ','s'],['NFC','p']]],
+  ['หน้าจอ','4/4','ผ่านทุกข้อ',[['ทัชสกรีน','p'],['สีและความสว่าง','p'],['เซ็นเซอร์ระยะใกล้','p'],['เซ็นเซอร์แสง','p']]],
+  ['สแกน ชาร์จ และปุ่ม','2/3','ไม่มีสายชาร์จ พนักงานทดสอบให้',[['Face ID','p'],['การชาร์จ','s'],['ปุ่มกด','p']]],
+  ['ข้อมูลเสริม','3/3','แบต 87%',[['สุขภาพแบตเตอรี่','p','87%'],['IMEI','p'],['ประวัติอะไหล่','p','ของแท้']]]
+];
+const pickEar = ex => { const o = EARC.filter(c => c[0] !== ex); return o[Math.floor(Math.random() * o.length)][0]; };
+
+class Component extends DCLogic {
+  q = new URLSearchParams(location.search);
+  bare = this.q.get('bare') === '1';
+  reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  timers = [];
+  screenRef = React.createRef(); layerRef = React.createRef(); touchRef = React.createRef();
+  state = Object.assign({ screen: IDX(this.q.get('screen')) >= 0 ? this.q.get('screen') : 'c00', scale: 1, perm: { cam: false, mic: false, loc: false, bt: false }, expand: this.q.get('state') === 'open1' ? { 0: true } : {}, qrLeft: 1800, toast: '', playing: false, grid: false }, this.reset(), this.q.get('state') === 'result' ? { shot: 'result' } : {});
+
+  reset() {
+    return { gen: { phase: 'idle', text: '' }, autoIdx: -1, ear: { answer: pickEar(), wrong: false, ok: false }, cells: new Array(128).fill(0), tf: { a: false, b: false, done: false },
+      col: { idx: 0, step: 'color', collapsed: false, bright: 50, minSeen: false, done: false }, btn: [0, 0, 0], btnDone: false, shot: 'guide', shotPassed: false, touchStale: false, alert: null, dev: 'reading' };
+  }
+  componentDidMount() {
+    this.onResize = () => {
+      if (this.bare) return this.setState({ scale: 1 });
+      const narrow = innerWidth < 760;
+      const w = narrow ? innerWidth - 32 : innerWidth - 300 - 48, h = narrow ? innerHeight - 32 : innerHeight - 40;
+      this.setState({ scale: Math.min(1, h / 868, w / 414) });
+    };
+    this.onResize(); addEventListener('resize', this.onResize);
+    this.iv = setInterval(() => { if (this.state.screen === 'c12' && this.state.qrLeft > 0) this.setState(s => ({ qrLeft: s.qrLeft - 1 })); }, 1000);
+    this.enter(this.state.screen);
+  }
+  componentWillUnmount() { removeEventListener('resize', this.onResize); clearInterval(this.iv); clearInterval(this.playIv); clearInterval(this.touchIv); this.timers.forEach(clearTimeout); }
+  t(ms, fn) { this.timers.push(setTimeout(fn, ms)); }
+  toastMsg(m) { this.setState({ toast: m }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2000); }
+
+  go(id, dir) {
+    if (dir === undefined) dir = 1;
+    if (IDX(id) < 0 || id === this.state.screen) return;
+    this.timers.forEach(clearTimeout); this.timers = [];
+    const old = this.screenRef.current, layer = this.layerRef.current;
+    let clone = null;
+    if (old && layer && !this.bare) { layer.innerHTML = ''; clone = old.cloneNode(true); clone.style.position = 'absolute'; clone.style.inset = '0'; layer.appendChild(clone); }
+    this.setState(Object.assign({ screen: id }, this.reset()), () => { this.animate(clone, layer, dir); this.enter(id); });
+  }
+  animate(clone, layer, dir) {
+    const el = this.screenRef.current; if (!el) return;
+    const done = () => { if (layer) layer.innerHTML = ''; };
+    if (!clone) return;
+    if (this.reduce || dir === 0) {
+      layer.style.zIndex = 3;
+      const a = clone.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: 'ease-out', fill: 'forwards' }); a.onfinish = done; return;
+    }
+    const o = { duration: 300, easing: 'cubic-bezier(0.2,0.8,0.2,1)', fill: 'forwards' };
+    if (dir > 0) {
+      layer.style.zIndex = 0;
+      el.animate([{ transform: 'translateX(100%)' }, { transform: 'translateX(0)' }], Object.assign({}, o, { fill: 'none' }));
+      const a = clone.animate([{ transform: 'translateX(0)', opacity: 1 }, { transform: 'translateX(-30%)', opacity: 0.5 }], o); a.onfinish = done;
+    } else {
+      layer.style.zIndex = 3;
+      el.animate([{ transform: 'translateX(-30%)', opacity: 0.6 }, { transform: 'translateX(0)', opacity: 1 }], Object.assign({}, o, { fill: 'none' }));
+      const a = clone.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(100%)' }], o); a.onfinish = done;
+    }
+  }
+  enter(id) {
+    const G = GEN[id];
+    if (id === 'c00' && !this.bare) this.t(1200, () => { if (!this.state.playing) this.go('c01', 0); });
+    if (id === 'c02') this.t(900, () => this.setState({ dev: 'ok' }));
+    if (id === 'auto') {
+      if (this.bare) return this.setState({ autoIdx: 3 });
+      for (let k = 0; k <= 8; k++) this.t(500 + k * 650, () => this.setState({ autoIdx: k }));
+      this.autoNext(500 + 8 * 650 + 600);
+    }
+    if (G) this.runGen(G, false);
+    if (id === 'i14a') { this.lastProgT = Date.now(); clearInterval(this.touchIv); this.touchIv = setInterval(() => { if (this.state.screen !== 'i14a') return clearInterval(this.touchIv); if (!this.state.touchStale && !this.state.cells.every(Boolean) && Date.now() - this.lastProgT > 5000) this.setState({ touchStale: true }); }, 500); }
+    if (id === 'i20') [0, 1, 2].forEach(k => this.t(1400 + k * 1200, () => this.press(k)));
+    if (id === 'unsup') this.t(1800, () => { if (!this.state.playing && !this.bare) this.go('i14a', 1); });
+    if (id === 'c12') this.setState({ qrLeft: 1800 });
+  }
+  autoNext(ms) { this.t(ms, () => { if (!this.state.playing && !this.bare) this.next(); }); }
+  next() { const s = this.state.screen; if (s === 'unsup') return this.go('i14a', 1); const nx = FLOW[IDX(s) + 1]; if (nx && !nx[3]) this.go(nx[0], 1); }
+  back() { const s = this.state.screen; if (s === 'unsup') return this.go('i13', -1); const i = IDX(s); if (i > 0) this.go(FLOW[i - 1][0], -1); }
+  runGen(G, fromCta) {
+    if (G.mode === 'action' && !fromCta) return this.setState({ gen: { phase: 'idle', text: '' } });
+    if (G.mode === 'wait') { this.setState({ gen: { phase: 'wait', text: G.wait } }); if (!G.noAuto) this.t(2800, () => this.passGen(G)); return; }
+    this.setState({ gen: { phase: 'check', text: G.seq[0] } });
+    G.seq.forEach((tx, i) => { if (i) this.t(i * 1400, () => this.setState({ gen: { phase: 'check', text: tx } })); });
+    this.t(G.seq.length * 1400, () => G.mode === 'warn' ? this.setState({ gen: { phase: 'warn', text: '' } }) : this.passGen(G));
+  }
+  passGen(G) { this.setState({ gen: { phase: 'pass', text: G.result } }); this.autoNext(500); }
+  press(k) { const b = this.state.btn.slice(); if (b[k]) return; b[k] = 1; const all = b.every(Boolean); this.setState({ btn: b, btnDone: all }); if (all) this.autoNext(500); }
+  paintAt(x, y) {
+    const el = this.touchRef.current; if (!el) return;
+    const r = el.getBoundingClientRect(); const pts = [];
+    const last = this.lastPt || { x, y }; const dist = Math.hypot(x - last.x, y - last.y); const steps = Math.max(1, Math.ceil(dist / 8));
+    for (let i = 0; i <= steps; i++) pts.push([last.x + (x - last.x) * i / steps, last.y + (y - last.y) * i / steps]);
+    this.lastPt = { x, y };
+    const cells = this.state.cells.slice(); let ch = false;
+    pts.forEach(([px, py]) => { const c = Math.floor((px - r.left) / r.width * 8), rr = Math.floor((py - r.top) / r.height * 16); if (c < 0 || c > 7 || rr < 0 || rr > 15) return; const i = rr * 8 + c; if (!cells[i]) { cells[i] = 1; ch = true; } });
+    if (!ch) return; this.lastProgT = Date.now(); this.setState({ cells, touchStale: false }); if (cells.every(Boolean)) this.autoNext(500);
+  }
+  fillTouch() { this.setState({ cells: new Array(128).fill(1) }); this.autoNext(500); }
+  colOk() { const c = this.state.col; if (c.idx < 4) this.setState({ col: Object.assign({}, c, { idx: c.idx + 1 }) }); else this.setState({ col: Object.assign({}, c, { step: 'bright', collapsed: false }) }); }
+  brightIn(v) {
+    const c = Object.assign({}, this.state.col, { bright: v }); if (v <= 0) c.minSeen = true;
+    if (c.minSeen && v >= 100 && !c.done) { c.done = true; this.autoNext(500); }
+    this.setState({ col: c });
+  }
+
+  renderVals() {
+    const s = this.state, id = s.screen, G = GEN[id], SH = SHOT[id];
+    const is = {}; is[id] = true;
+    const ic = {}; Object.keys(P).forEach(k => ic[k] = I(k));
+    const icL = { ear: I('ear', 56, '#111', 1.6), buttons: I('buttons', 56, '#111', 1.6), nfc: I('nfc', 56, '#444', 1.6) };
+    let n = id === 'auto' ? Math.min(Math.max(s.autoIdx, 0), 7) + 1 : N[id];
+    const passed = (G && s.gen.phase === 'pass') || (id === 'ear' && s.ear.ok) || (id === 'i14b' && s.tf.done) || (id === 'i15' && s.col.done) || (id === 'i20' && s.btnDone) || (SH && s.shotPassed) || id === 'unsup' || (id === 'i14a' && s.cells.every(Boolean));
+    let done = id === 'auto' ? Math.max(s.autoIdx, 0) : id === 'ear' ? 7 + (s.ear.ok ? 1 : 0) : n ? n - 1 + (passed ? 1 : 0) : 0;
+    if (id === 'i14b' || id === 'i15') done = id === 'i14b' ? 13 + (s.tf.done ? 1 : 0) : 14 + (s.col.done ? 1 : 0);
+    const starts = [0, 8, 13, 17, 20], counts = [8, 5, 4, 3, 3];
+    const segs = counts.map((c, i) => ({ flex: c, fill: Math.max(0, Math.min(1, (done - starts[i]) / c)) * 100 + '%' }));
+    const isCheck = !!n && id !== 'i14a' && id !== 'i15';
+    const hdr = { n, group: n ? GNAME(n) : '', skip: (G && G.skip) || 'ข้ามข้อนี้' };
+
+    let gen = {};
+    if (G) {
+      const ph = s.gen.phase;
+      gen = { icon: I(G.icon, 56, '#111', 1.6), title: G.title, instr: G.instr, text: s.gen.text, busy: ph === 'check' || ph === 'wait', passed: ph === 'pass', warned: ph === 'warn', warn: G.warn, warnSub: G.warnSub };
+      if (ph === 'idle') Object.assign(gen, { bPrimary: true, bLabel: G.cta, bClick: () => this.runGen(G, true) });
+      else if (ph === 'warn') Object.assign(gen, { bPrimary: true, bLabel: 'ข้ามข้อนี้', bClick: () => this.next() });
+      else if (ph === 'wait') Object.assign(gen, { bOutline: true, bLabel: G.skip.replace(' ข้ามได้', '') + ' ข้ามข้อนี้' });
+      else Object.assign(gen, { bDisabled: true, bLabel: ph === 'pass' ? 'ผ่านแล้ว ไปข้อถัดไป' : 'ระบบกำลังเช็ก' });
+    }
+    const autoRows = AUTO.map((a, k) => {
+      const st = s.autoIdx > k ? (k === 3 ? 'w' : 'p') : s.autoIdx === k ? 'run' : 'wait';
+      return { n: k + 1, name: a[0], val: st === 'run' ? 'กำลังตรวจ' : st === 'wait' ? 'รอ' : a[1], vc: k === 3 && st === 'w' ? '#7A4A00' : '#5C5A55', el: stEl(st), line: k === 7 ? 'transparent' : '#F3F2EE' };
+    });
+    const c = s.col;
+    const col = { c: COLS[c.idx][1], n: COLS[c.idx][0], no: c.idx + 1, isColor: c.step === 'color', isBright: c.step === 'bright', bright: c.bright,
+      dim: c.step === 'bright' ? ((100 - c.bright) / 100 * 0.75).toFixed(2) : 0, tf: c.collapsed ? 'translateY(calc(100% - 44px))' : 'translateY(0)',
+      minBg: c.minSeen ? '#E4F4E8' : '#F3F2EE', minFg: c.minSeen ? '#1B6B33' : '#444', maxBg: c.done ? '#E4F4E8' : '#F3F2EE', maxFg: c.done ? '#1B6B33' : '#444',
+      btn: c.done ? 'ผ่านแล้ว ไปข้อถัดไป' : 'ลากให้สุดทั้งสองทาง' };
+    const covered = s.cells.filter(Boolean).length, pct = Math.round(covered / 128 * 100);
+    const shot = SH ? { title: SH.title, path: SH.path, open: SH.open, mockTitle: SH.mockTitle, mockVal: SH.mockVal, note: SH.note || '', isGuide: s.shot === 'guide', isReading: s.shot === 'reading', isResult: s.shot === 'result', isNotFound: s.shot === 'notfound', isPicker: s.shot === 'picker',
+      rows: SH.rows.map(r => ({ k: r[0], v: r[1], ff: SH.mono ? "'IBM Plex Mono',monospace" : 'inherit' })) } : {};
+    const mm = Math.floor(s.qrLeft / 60), ss = s.qrLeft % 60;
+    const demos = [];
+    if (id === 'c03') demos.push({ label: 'เปิดสิทธิ์ทั้งหมด', fn: () => this.setState({ perm: { cam: true, mic: true, loc: true, bt: true } }) });
+    if (id === 'i14a') demos.push({ label: 'เติมให้ครบทั้งจอ', fn: () => this.fillTouch() });
+    if (id === 'i15') demos.push({ label: 'ข้ามไปขั้นความสว่าง', fn: () => this.setState({ col: Object.assign({}, c, { step: 'bright', idx: 4 }) }) });
+    if (id === 'i19') demos.push({ label: 'จำลองเสียบสาย', fn: () => this.passGen(G) });
+    if (id === 'i13' && s.gen.phase === 'wait') demos.push({ label: 'จำลองแตะบัตร', fn: () => this.passGen(G) });
+    if (SH && s.shot === 'guide') demos.push({ label: 'จำลองแอปหาภาพไม่เจอ', fn: () => this.setState({ shot: 'notfound' }) });
+    if (id === 'ear') demos.push({ label: 'สีที่สุ่มได้: ' + s.ear.answer, fn: () => this.toastMsg('ระบบพูดว่า ' + s.ear.answer) });
+    const mkSrc = sid => { try { const u = new URL(location.href); u.searchParams.set('bare', '1'); u.searchParams.set('screen', sid); u.hash = ''; return u.toString(); } catch (e) { return '?bare=1&screen=' + sid; } };
+    const full = id === 'i14a' || id === 'i15' || id === 'c00';
+
+    return {
+      is, ic, icL, isCheck, hdr, segs, gen, isGen: !!G, isShot: !!SH, shot, autoRows, col,
+      showPanel: !this.bare, mainPad: this.bare ? '0' : '20px 16px', scale: s.scale, frameW: Math.round(414 * s.scale), frameH: Math.round(868 * s.scale),
+      padTop: full ? 0 : 47, showSB: id !== 'i14a' && id !== 'i15',
+      spin: spinner(), spinW: spinner(true), okBadge: badge('#1B6B33', '#fff', 'check', true),
+      playLabel: s.playing ? 'หยุด' : 'เล่น flow', playIcon: I(s.playing ? 'stop' : 'play', 16, '#fff'),
+      togglePlay: () => {
+        if (this.state.playing) { clearInterval(this.playIv); return this.setState({ playing: false }); }
+        this.setState({ playing: true }); if (id === 'c12' || id === 'unsup') this.go('c00', 0);
+        this.playIv = setInterval(() => { const cur = this.state.screen; if (cur === 'c12') { clearInterval(this.playIv); return this.setState({ playing: false }); } this.next(); }, 2600);
+      },
+      openGrid: () => this.setState({ grid: true }), closeGrid: () => this.setState({ grid: false }),
+      gridItems: FLOW.map(f => ({ code: f[1], name: f[2], src: mkSrc(f[0]), go: () => { this.setState({ grid: false }); this.go(f[0], 0); } })),
+      screens: FLOW.map(f => ({ code: f[1], name: f[2], bg: f[0] === id ? '#FAD20D' : 'transparent', fw: f[0] === id ? 500 : 400, go: () => { clearInterval(this.playIv); this.setState({ playing: false }); this.go(f[0], IDX(f[0]) > IDX(id) ? 1 : -1); } })),
+      demos, hasDemos: demos.length > 0 && !this.bare,
+      next: () => this.next(), back: () => this.back(), skip: () => this.next(), toC02: () => this.go('c02', 1),
+      prep: [['battery', 'ชาร์จแบตเกิน 20% และเตรียมสายชาร์จ'], ['wifi', 'ต่อ Wi-Fi'], ['speaker', 'อยู่ในที่เงียบ มีโต๊ะวางเครื่อง'], ['phone', 'ถอดเคสและฟิล์มกันมอง']].map(p => ({ icon: I(p[0], 24, '#111'), text: p[1] })),
+      devReading: s.dev === 'reading', devOk: s.dev !== 'reading',
+      steps5: [['ระบบตรวจอัตโนมัติ', 'วางเครื่องหงายจอบนโต๊ะ ระบบตรวจให้เอง'], ['การเชื่อมต่อ', 'Wi-Fi, Bluetooth, GPS, ซิม และ NFC'], ['หน้าจอ', 'ลากนิ้ว ดูสี และบังเซ็นเซอร์'], ['สแกน ชาร์จ และปุ่ม', 'Face ID เสียบสาย และกดปุ่ม'], ['ข้อมูลเสริม', 'แคปหน้าจอแบต IMEI และอะไหล่']].map((x, i) => ({ n: i + 1, t: x[0], d: x[1] })),
+      perms: PERMS.map(p => { const on = s.perm[p[0]]; return { name: p[1], desc: p[2], icon: I(p[3]), status: on ? 'เปิดแล้ว' : 'แตะเพื่อเปิด', bg: on ? '#E4F4E8' : '#FFFFFF', fg: on ? '#1B6B33' : '#111', bd: on ? '#E4F4E8' : '#111', tap: () => { if (!on) this.setState({ alert: p[0] }); } }; }),
+      permCta: Object.values(s.perm).every(Boolean) ? 'ต่อไป' : 'ต่อไป ข้ามที่ยังไม่เปิด',
+      alertOpen: !!s.alert, alert: s.alert ? { name: PERMS.find(p => p[0] === s.alert)[1], desc: PERMS.find(p => p[0] === s.alert)[2] } : {},
+      allow: () => this.setState({ perm: Object.assign({}, s.perm, { [s.alert]: true }), alert: null }), deny: () => this.setState({ alert: null }),
+      ear: s.ear, replay: () => this.toastMsg('กำลังเล่นเสียงอีกครั้ง'),
+      earColors: EARC.map(e => ({ n: e[0], c: e[1], pick: () => { if (s.ear.ok) return; if (e[0] === s.ear.answer) { this.setState({ ear: Object.assign({}, s.ear, { ok: true, wrong: false }) }); this.autoNext(500); } else this.setState({ ear: { answer: pickEar(s.ear.answer), wrong: true, ok: false } }); } })),
+      cells: s.cells.map(v => ({ bg: v ? '#FAD20D' : '#FFFFFF' })), touchPill: covered === 128 ? 'ครบแล้ว' : 'ครอบคลุม ' + pct + '%', touchHint: covered === 0, touchFresh: !s.touchStale, touchStale: !!s.touchStale,
+      tDown: e => { this.drawing = true; this.lastPt = null; try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {} this.paintAt(e.clientX, e.clientY); },
+      tMove: e => { if (this.drawing) this.paintAt(e.clientX, e.clientY); }, tUp: () => { this.drawing = false; this.lastPt = null; },
+      tf: { done: s.tf.done, aBg: s.tf.a ? '#FAD20D' : '#FFFFFF', bBg: s.tf.b ? '#FAD20D' : '#FFFFFF', aTxt: s.tf.a ? 'ค้างไว้' : 'นิ้วที่ 1', bTxt: s.tf.b ? 'ค้างไว้' : 'นิ้วที่ 2' },
+      tfA: () => { const tf = Object.assign({}, s.tf, { a: true }); this.setState({ tf }); if (tf.b) this.t(900, () => { this.setState({ tf: Object.assign({}, tf, { done: true }) }); this.autoNext(500); }); },
+      tfB: () => { const tf = Object.assign({}, s.tf, { b: true }); this.setState({ tf }); if (tf.a) this.t(900, () => { this.setState({ tf: Object.assign({}, tf, { done: true }) }); this.autoNext(500); }); },
+      colOk: () => this.colOk(), colBad: () => { this.toastMsg('บันทึกไว้ให้พนักงานดู'); this.colOk(); },
+      brightIn: e => this.brightIn(+e.target.value),
+      sheetDown: e => { this.sy = e.clientY; }, sheetUp: e => { const dy = e.clientY - (this.sy || e.clientY); const cl = dy > 25 ? true : dy < -25 ? false : !c.collapsed; this.setState({ col: Object.assign({}, c, { collapsed: cl }) }); },
+      btnRows: ['เพิ่มเสียง', 'ลดเสียง', 'Power'].map((b, k) => ({ name: b, st: s.btn[k] ? 'กดแล้ว' : 'รอกด', el: stEl(s.btn[k] ? 'p' : 'wait'), bg: s.btn[k] ? '#E4F4E8' : '#FFFFFF', fg: s.btn[k] ? '#1B6B33' : '#111', press: () => this.press(k) })),
+      btnCta: s.btnDone ? 'ผ่านแล้ว ไปข้อถัดไป' : 'รอกดปุ่มให้ครบ',
+      openShot: () => { this.setState({ shot: 'reading' }); this.t(1500, () => this.setState({ shot: 'result' })); },
+      otherShot: () => this.setState({ shot: 'picker' }), toPicker: () => this.setState({ shot: 'picker' }), cancelPicker: () => this.setState({ shot: 'notfound' }),
+      pickTiles: ['ภาพแคปล่าสุด', 'รูป 2', 'รูป 3', 'รูป 4', 'รูป 5', 'รูป 6'].map((l, i) => ({ label: l, bg: i ? '#E7E5DE' : '#FFFFFF', bd: i ? 'none' : '2px solid #111', pick: () => { this.setState({ shot: 'reading' }); this.t(1300, () => this.setState({ shot: 'result' })); } })),
+      useShot: () => { this.setState({ shotPassed: true }); this.next(); },
+      groups: GROUPS.map((g, gi) => { const open = !!s.expand[gi]; return { name: g[0], score: g[1], note: g[2], open, rot: open ? 'rotate(180deg)' : 'none',
+        toggle: () => this.setState({ expand: Object.assign({}, s.expand, { [gi]: !open }) }), items: g[3].map(it => ({ n: it[0], v: it[2] || '', el: stEl(it[1]) })) }; }),
+      qr: qrSvg(482), qrTime: String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0'),
+      qrBg: s.qrLeft < 300 ? '#FFF1D6' : '#F3F2EE', qrFg: s.qrLeft < 300 ? '#7A4A00' : '#444',
+      saveQr: () => this.toastMsg('บันทึก QR ลงรูปภาพแล้ว'),
+      toast: s.toast, toastOp: s.toast ? 1 : 0,
+      layerRef: this.layerRef, screenRef: this.screenRef, touchRef: this.touchRef, grid: s.grid
+    };
+  }
+}
+</script>
+</body>
+</html>

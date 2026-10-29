@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Kanit,sans-serif;color:#111;background:#F3F2EE;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit;color:inherit}
+a{color:#111}a:hover{color:#5C5A55}
+input::placeholder,textarea::placeholder{color:#6B6862}
+table{border-collapse:collapse}
+@media (prefers-reduced-motion: reduce){*{transition-duration:1ms !important}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column;font-family:Kanit,sans-serif;color:#111;background:#F3F2EE">
+<sc-if value="{{ showProto }}" hint-placeholder-val="{{ true }}">
+<div style="flex:none;background:#111;color:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:8px 16px;font-size:13px">
+  <span style="font-weight:500">Back-office prototype</span>
+  <label style="display:flex;align-items:center;gap:6px">จอ<select value="{{ screen }}" onChange="{{ pickScreen }}" style="height:32px;border-radius:8px;border:none;padding:0 8px;font-size:13px;color:#111"><sc-for list="{{ screenOpts }}" as="o"><option value="{{ o.id }}">{{ o.label }}</option></sc-for></select></label>
+  <button onClick="{{ togglePlay }}" style="height:32px;padding:0 14px;border:none;border-radius:999px;background:#FAD20D;color:#111;font-size:13px;font-weight:500;cursor:pointer">{{ playLabel }}</button>
+  <button onClick="{{ openGrid }}" style="height:32px;padding:0 14px;border:1px solid #fff;border-radius:999px;background:transparent;color:#fff;font-size:13px;cursor:pointer">ดูทุกจอ</button>
+  <span style="flex:1"></span>
+  <a href="Customer%20App.dc.html" style="color:#fff">Customer App</a>
+  <a href="Staff%20App.dc.html" style="color:#fff">Staff App</a>
+</div>
+</sc-if>
+<div style="flex:1;display:flex;min-height:0">
+
+<sc-if value="{{ navInline }}" hint-placeholder-val="{{ true }}">
+<nav aria-label="เมนูหลัก" style="width:240px;flex:none;background:#111;color:#fff;display:flex;flex-direction:column;gap:4px;padding:20px 12px;box-sizing:border-box;position:sticky;top:0;height:100vh;overflow-y:auto">
+  <img src="assets/logo-white.svg" alt="YelloBe" style="width:116px;height:auto;margin:0 8px 16px">
+  <sc-for list="{{ nav }}" as="n">
+    <sc-if value="{{ n.isHead }}"><div style="font-size:12px;color:#B5B2AA;padding:14px 10px 4px">{{ n.label }}</div></sc-if>
+    <sc-if value="{{ n.isItem }}">
+      <button onClick="{{ n.go }}" aria-current="{{ n.cur }}" style="display:flex;align-items:center;gap:10px;height:42px;padding:0 10px;border:none;border-radius:12px;background:{{ n.bg }};color:{{ n.fg }};font-size:15px;text-align:left;cursor:pointer;transition:background 150ms" style-hover="background:#2A2927">
+        {{ n.icon }}<span style="flex:1">{{ n.label }}</span>
+        <sc-if value="{{ n.hasBadge }}"><span style="min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#FAD20D;color:#111;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;box-sizing:border-box">{{ n.badge }}</span></sc-if>
+      </button>
+    </sc-if>
+  </sc-for>
+</nav>
+</sc-if>
+
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+  <header style="display:flex;align-items:center;gap:12px;padding:16px 28px;background:#F3F2EE;flex-wrap:wrap">
+    <sc-if value="{{ narrow }}"><button aria-label="เปิดเมนู" onClick="{{ openDrawer }}" style="width:44px;height:44px;border:none;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.menu }}</button></sc-if>
+    <h1 style="margin:0;font-size:24px;font-weight:500;flex:1;min-width:160px">{{ pageTitle }}</h1>
+    <label style="display:flex;align-items:center;gap:8px;font-size:14px;color:#5C5A55">สาขา<select style="height:40px;border-radius:999px;border:1px solid #D6D3CB;background:#fff;padding:0 12px;font-size:14px;color:#111"><option>ทุกสาขา</option><option>ทีมลาดพร้าว</option><option>ทีมบางนา</option><option>ทีมรามอินทรา</option><option>ทีมบางแค</option></select></label>
+    <div style="display:flex;align-items:center;gap:8px;font-size:14px"><span style="width:36px;height:36px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center;font-weight:500">นภ</span>คุณนภา</div>
+  </header>
+  <main style="flex:1;padding:0 28px 40px;display:flex;flex-direction:column;gap:20px;min-width:0">
+
+<sc-if value="{{ is.b02 }}">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px">
+    <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="3">
+      <div style="padding:20px;border-radius:20px;background:#fff"><div style="font-size:14px;color:#5C5A55">{{ k.k }}</div><div style="font-size:30px;font-weight:600;line-height:1.3">{{ k.v }}</div><div style="font-size:14px;color:#5C5A55">{{ k.s }}</div></div>
+    </sc-for>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px">
+    <sc-for list="{{ alerts }}" as="a" hint-placeholder-count="4">
+      <div style="padding:18px 20px;border-radius:20px;background:{{ a.bg }};color:{{ a.fg }};display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:14px">{{ a.k }}</div>
+        <div style="font-size:26px;font-weight:600">{{ a.v }}</div>
+        <div style="font-size:14px">{{ a.s }}</div>
+        <button onClick="{{ a.go }}" style="align-self:flex-start;margin-top:4px;height:40px;padding:0 16px;border:1.5px solid currentColor;border-radius:999px;background:transparent;color:inherit;font-size:14px;cursor:pointer" style-hover="background:rgba(0,0,0,.06)">{{ a.cta }}</button>
+      </div>
+    </sc-for>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px">
+    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:17px;font-weight:500">เส้นทางเครื่องวันนี้</div>
+      <sc-for list="{{ funnel }}" as="f">
+        <div style="display:flex;flex-direction:column;gap:4px"><div style="display:flex;justify-content:space-between;font-size:14px"><span>{{ f.k }}</span><span style="font-weight:500">{{ f.v }}</span></div><div style="height:10px;border-radius:5px;background:#F3F2EE"><div style="height:100%;width:{{ f.w }};border-radius:5px;background:{{ f.c }}"></div></div></div>
+      </sc-for>
+    </div>
+    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:17px;font-weight:500">ยอดตามที่มาของเครื่อง</div>
+      <table style="width:100%;font-size:14px"><thead><tr style="color:#5C5A55;text-align:left"><th style="font-weight:400;padding:6px 0">ที่มา</th><th style="font-weight:400;text-align:right">เครื่อง</th><th style="font-weight:400;text-align:right">มูลค่า</th></tr></thead>
+        <tbody><sc-for list="{{ bySource }}" as="r"><tr style="border-top:1px solid #F3F2EE"><td style="padding:9px 0">{{ r.k }}</td><td style="text-align:right">{{ r.n }}</td><td style="text-align:right">{{ r.v }}</td></tr></sc-for></tbody></table>
+    </div>
+    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:17px;font-weight:500">อันดับทีม</div>
+      <table style="width:100%;font-size:14px"><thead><tr style="color:#5C5A55;text-align:left"><th style="font-weight:400;padding:6px 0">ทีม</th><th style="font-weight:400;text-align:right">รับซื้อ</th><th style="font-weight:400;text-align:right">% ปิดดีล</th></tr></thead>
+        <tbody><sc-for list="{{ teams }}" as="r"><tr style="border-top:1px solid #F3F2EE"><td style="padding:9px 0">{{ r.k }}</td><td style="text-align:right">{{ r.n }}</td><td style="text-align:right">{{ r.p }}</td></tr></sc-for></tbody></table>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.b03 }}">
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+    <div role="tablist" style="display:flex;background:#E7E5DE;border-radius:999px;padding:3px">
+      <button role="tab" aria-selected="{{ boardView }}" onClick="{{ setBoard }}" style="height:36px;padding:0 16px;border:none;border-radius:999px;background:{{ tabBoardBg }};font-size:14px;cursor:pointer">บอร์ด</button>
+      <button role="tab" aria-selected="{{ tableView }}" onClick="{{ setTable }}" style="height:36px;padding:0 16px;border:none;border-radius:999px;background:{{ tabTableBg }};font-size:14px;cursor:pointer">ตาราง</button>
+    </div>
+    <label style="display:flex;align-items:center;gap:6px;font-size:14px">ที่มา<select value="{{ srcFilter }}" onChange="{{ setSrcFilter }}" style="height:40px;border-radius:999px;border:1px solid #D6D3CB;background:#fff;padding:0 12px;font-size:14px"><option value="">ทั้งหมด</option><option>ติดต่อตรง</option><option>Shopee</option><option>YelloBe</option><option>True</option><option>AIS</option></select></label>
+    <label style="display:flex;align-items:center;gap:6px;font-size:14px">วันที่<input type="date" value="2026-10-29" aria-label="ตั้งแต่วันที่" style="height:40px;border-radius:999px;border:1px solid #D6D3CB;background:#fff;padding:0 12px;font-size:14px"></label>
+    <label style="display:flex;align-items:center;gap:6px;font-size:14px">ถึง<input type="date" value="2026-10-29" aria-label="ถึงวันที่" style="height:40px;border-radius:999px;border:1px solid #D6D3CB;background:#fff;padding:0 12px;font-size:14px"></label>
+    <span style="flex:1"></span>
+    <button onClick="{{ exportX }}" style="height:40px;padding:0 16px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F7F6F2">{{ ic.download }}ส่งออก Excel</button>
+  </div>
+  <div style="font-size:13px;color:#5C5A55">สถานะเปลี่ยนตามงานจริงในแอปพนักงาน ลากการ์ดเองไม่ได้</div>
+  <sc-if value="{{ boardView }}">
+    <div style="overflow-x:auto;padding-bottom:8px">
+      <div style="display:grid;grid-template-columns:repeat(6,minmax(240px,1fr));gap:12px;min-width:1500px">
+        <sc-for list="{{ columns }}" as="c">
+          <div style="background:#E9E7E0;border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:10px;min-height:320px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0 4px"><span style="font-size:15px;font-weight:500">{{ c.name }}</span><span style="font-size:13px;padding:2px 10px;border-radius:999px;background:#fff">{{ c.n }}</span></div>
+            <sc-for list="{{ c.cards }}" as="d">
+              <button onClick="{{ d.open }}" style="text-align:left;border:none;border-radius:16px;background:#fff;padding:12px 14px;display:flex;flex-direction:column;gap:4px;cursor:pointer;transition:box-shadow 150ms" style-hover="box-shadow:0 0 0 2px #111">
+                <div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:15px;font-weight:500">{{ d.model }}</span><span style="font-size:15px;font-weight:500">{{ d.price }}</span></div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5C5A55">{{ d.qr }}</div>
+                <div style="font-size:13px;color:#5C5A55">{{ d.team }}<span style="margin-left:8px">{{ d.src }}</span></div>
+                <sc-if value="{{ d.hasNote }}"><div style="font-size:13px;padding:4px 8px;border-radius:8px;background:{{ d.nbg }};color:{{ d.nfg }};align-self:flex-start">{{ d.note }}</div></sc-if>
+              </button>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ tableView }}">
+    <div style="background:#fff;border-radius:20px;overflow-x:auto">
+      <table style="width:100%;min-width:900px;font-size:14px">
+        <thead><tr style="text-align:left;color:#5C5A55;background:#FAF9F6"><th style="font-weight:400;padding:12px 16px">เลข QR</th><th style="font-weight:400">รุ่น</th><th style="font-weight:400">สถานะ</th><th style="font-weight:400;text-align:right">ราคา</th><th style="font-weight:400;padding-left:16px">ทีม</th><th style="font-weight:400">ที่มา</th><th style="font-weight:400">หมายเหตุ</th></tr></thead>
+        <tbody><sc-for list="{{ rows3 }}" as="d"><tr onClick="{{ d.open }}" style="border-top:1px solid #F3F2EE;cursor:pointer" style-hover="background:#FAF9F6"><td style="padding:12px 16px;font-family:'IBM Plex Mono',monospace;font-size:13px">{{ d.qr }}</td><td>{{ d.model }}</td><td>{{ d.status }}</td><td style="text-align:right">{{ d.price }}</td><td style="padding-left:16px">{{ d.team }}</td><td>{{ d.src }}</td><td style="color:#5C5A55">{{ d.note }}</td></tr></sc-for></tbody>
+      </table>
+    </div>
+  </sc-if>
+</sc-if>
+
+<sc-if value="{{ is.b04 }}">
+  <div style="display:flex;flex-wrap:wrap;gap:20px;padding:20px;border-radius:24px;background:#fff;align-items:center">
+    <div style="width:96px;height:120px;border-radius:16px;background:#F3F2EE;display:flex;align-items:center;justify-content:center;font-size:12px;color:#5C5A55;text-align:center">รูปเครื่อง<br>ด้านหน้า</div>
+    <div style="flex:1;min-width:240px;display:flex;flex-direction:column;gap:4px">
+      <div style="font-size:24px;font-weight:500">{{ pp.model }}</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#5C5A55">IMEI {{ pp.imei }}<span style="margin-left:16px">{{ pp.qr }}</span></div>
+      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap"><span style="padding:4px 12px;border-radius:999px;background:#FAD20D;font-size:14px;font-weight:500">เกรด {{ pp.grade }}</span><span style="padding:4px 12px;border-radius:999px;background:#F3F2EE;font-size:14px">{{ pp.priceChip }}</span><span style="padding:4px 12px;border-radius:999px;background:{{ pp.stBg }};color:{{ pp.stFg }};font-size:14px">{{ pp.status }}</span></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button onClick="{{ printReceipt }}" style="height:44px;padding:0 18px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:15px;cursor:pointer" style-hover="background:#F7F6F2">พิมพ์ใบรับซื้อ</button>
+      <button onClick="{{ toStock }}" style="height:44px;padding:0 18px;border:none;border-radius:999px;background:#111;color:#fff;font-size:15px;cursor:pointer">ดูในสต็อก</button>
+    </div>
+  </div>
+  <div style="padding:20px;border-radius:24px;background:#fff;overflow-x:auto">
+    <div style="display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:8px;min-width:860px">
+      <sc-for list="{{ passTl }}" as="t">
+        <div style="display:flex;flex-direction:column;gap:6px"><div style="height:6px;border-radius:3px;background:{{ t.c }}"></div><div style="font-size:14px;font-weight:500">{{ t.k }}</div><div style="font-size:13px;color:#5C5A55">{{ t.s }}</div></div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="padding:20px;border-radius:24px;background:#fff;display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:17px;font-weight:500;margin-bottom:4px">ข้อที่ต้องรู้</div>
+        <sc-for list="{{ mustKnow }}" as="m"><div style="display:flex;gap:12px;padding:8px 0;border-top:1px solid #F3F2EE;font-size:15px"><span style="width:96px;color:#5C5A55;flex:none">{{ m.k }}</span><span>{{ m.v }}</span></div></sc-for>
+      </div>
+      <div style="padding:20px;border-radius:24px;background:#fff;display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:17px;font-weight:500;margin-bottom:4px">สุขภาพเครื่องจากแอป และผลตรวจตัวเครื่อง</div>
+        <sc-for list="{{ health }}" as="h"><div style="display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid #F3F2EE;font-size:15px"><span>{{ h.k }}</span><span style="color:#5C5A55;text-align:right">{{ h.v }}</span></div></sc-for>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="padding:20px;border-radius:24px;background:#fff;display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:17px;font-weight:500;margin-bottom:4px">ที่มาของราคา</div>
+        <sc-for list="{{ ppLines }}" as="l"><div style="display:flex;justify-content:space-between;font-size:{{ l.fs }};font-weight:{{ l.fw }};padding:6px 0;border-top:1px solid {{ l.bd }}"><span>{{ l.k }}</span><span style="font-family:'IBM Plex Mono',monospace">{{ l.v }}</span></div></sc-for>
+        <div style="font-size:14px;color:#5C5A55">{{ pp.priceNote }}</div>
+      </div>
+      <div style="padding:20px;border-radius:24px;background:#fff;display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:17px;font-weight:500">ผู้ขายและการจ่ายเงิน</div>
+        <sc-if value="{{ pp.hasId }}">
+        <div style="display:flex;gap:14px;align-items:center">
+          <div style="position:relative;width:120px;height:90px;border-radius:14px;overflow:hidden;background:#C9C5BC;flex:none"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#B9B5AC,#D6D3CB);filter:blur(6px)"></div><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#111">รูปถือบัตร เบลอ</span></div>
+          <div style="display:flex;flex-direction:column;gap:6px"><button onClick="{{ askViewId }}" style="height:40px;padding:0 14px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer" style-hover="background:#F7F6F2">ดูรูปเต็ม</button><span style="font-size:12px;color:#5C5A55">ระบบบันทึกว่าใครเปิดดู</span></div>
+        </div>
+        </sc-if>
+        <sc-for list="{{ seller }}" as="m"><div style="display:flex;gap:12px;padding:6px 0;border-top:1px solid #F3F2EE;font-size:15px"><span style="width:110px;color:#5C5A55;flex:none">{{ m.k }}</span><span style="font-family:{{ m.ff }}">{{ m.v }}</span></div></sc-for>
+      </div>
+    </div>
+  </div>
+  <div style="padding:20px;border-radius:24px;background:#fff;display:flex;flex-direction:column;gap:12px">
+    <div style="font-size:17px;font-weight:500">รูปหลักฐาน {{ evidenceCount }} รูป</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,120px),1fr));gap:10px">
+      <sc-for list="{{ evidence }}" as="e"><button onClick="{{ e.open }}" style="border:none;border-radius:14px;background:#F3F2EE;height:110px;display:flex;align-items:flex-end;padding:10px;font-size:13px;cursor:pointer;text-align:left" style-hover="box-shadow:0 0 0 2px #111">{{ e.k }}</button></sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.b05 }}">
+  <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <div style="padding:14px 20px;border-radius:20px;background:#fff"><span style="font-size:14px;color:#5C5A55">วันนี้ยืนยันแล้ว</span><span style="font-size:22px;font-weight:600;margin-left:10px">{{ confirmedToday }} รายการ</span></div>
+    <div style="padding:14px 20px;border-radius:20px;background:#fff"><span style="font-size:14px;color:#5C5A55">เวลาเฉลี่ย</span><span style="font-size:22px;font-weight:600;margin-left:10px">4 นาที</span></div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+    <div style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:10px">
+      <sc-if value="{{ q5Empty }}"><div style="padding:20px;border-radius:20px;background:#fff;font-size:15px;color:#5C5A55">ไม่มีงานรอยืนยันราคา</div></sc-if>
+      <sc-for list="{{ q5 }}" as="q">
+        <button onClick="{{ q.pick }}" style="text-align:left;border:2px solid {{ q.bd }};border-radius:20px;background:#fff;padding:14px 16px;display:flex;flex-direction:column;gap:4px;cursor:pointer" style-hover="border-color:#111">
+          <div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:16px;font-weight:500">{{ q.model }}</span><span style="font-size:13px;padding:2px 10px;border-radius:999px;background:#FFF1D6;color:#7A4A00;white-space:nowrap">รอ {{ q.wait }} นาที</span></div>
+          <div style="font-size:14px;color:#5C5A55">{{ q.team }} {{ q.staff }}</div>
+          <div style="font-size:14px">ราคาระบบ {{ q.price }}<span style="margin-left:10px">เกรด {{ q.grade }}</span></div>
+        </button>
+      </sc-for>
+    </div>
+    <sc-if value="{{ q5Has }}">
+    <div style="flex:2 1 560px;min-width:0;display:flex;flex-direction:column;gap:16px">
+      <div style="padding:20px;border-radius:24px;background:#fff;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+          <div style="flex:1;min-width:200px"><div style="font-size:20px;font-weight:500">{{ sel5.model }}</div><div style="font-size:14px;color:#5C5A55"><span style="font-family:'IBM Plex Mono',monospace">{{ sel5.qr }}</span><span style="margin-left:12px">ที่มา {{ sel5.src }}</span></div></div>
+          <span style="padding:4px 12px;border-radius:999px;background:#FAD20D;font-size:14px;font-weight:500">เกรด {{ sel5.grade }}</span>
+          <button onClick="{{ toPassport }}" style="height:40px;padding:0 14px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer" style-hover="background:#F7F6F2">Device Passport</button>
+          <button onClick="{{ callStaff }}" style="height:40px;padding:0 14px;border:none;border-radius:999px;background:#F3F2EE;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px">{{ ic.call }}{{ sel5.staff }} {{ sel5.phone }}</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px">
+          <div style="padding:14px;border-radius:16px;background:#F7F6F2;font-size:14px;line-height:1.6"><div style="font-weight:500">ผลตรวจจากแอป</div>{{ sel5.app }}</div>
+          <div style="padding:14px;border-radius:16px;background:#F7F6F2;font-size:14px;line-height:1.6"><div style="font-weight:500">ผลตรวจตัวเครื่อง</div>{{ sel5.insp }}</div>
+          <div style="padding:14px;border-radius:16px;background:#F7F6F2;font-size:14px;line-height:1.6"><div style="font-weight:500">ที่มาของราคาระบบ</div><sc-for list="{{ sel5.lines }}" as="l"><div style="display:flex;justify-content:space-between"><span>{{ l.k }}</span><span style="font-family:'IBM Plex Mono',monospace">{{ l.v }}</span></div></sc-for></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:15px;font-weight:500">ราคาเทียบตลาด รุ่นนี้ที่รับซื้อจริงใน 7 วัน</div>
+          <div style="position:relative;height:56px;margin:0 8px">
+            <div style="position:absolute;left:0;right:0;top:22px;height:12px;border-radius:6px;background:#F3F2EE"></div>
+            <div style="position:absolute;left:{{ mk.rangeL }};width:{{ mk.rangeW }};top:22px;height:12px;border-radius:6px;background:#D6D3CB"></div>
+            <div style="position:absolute;left:{{ mk.sysL }};top:14px;width:3px;height:28px;background:#111;transform:translateX(-1px)"></div>
+            <div style="position:absolute;left:{{ mk.sysL }};top:44px;font-size:12px;transform:translateX(-50%);white-space:nowrap">ระบบ {{ mk.sys }}</div>
+            <div style="position:absolute;left:{{ mk.finL }};top:10px;width:14px;height:14px;border-radius:50%;background:#FAD20D;border:2px solid #111;transform:translateX(-7px)"></div>
+            <div style="position:absolute;left:{{ mk.finL }};top:-8px;font-size:12px;font-weight:500;transform:translateX(-50%);white-space:nowrap">จะยืนยัน {{ mk.fin }}</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#5C5A55"><span>{{ mk.lo }}</span><span>ช่วงที่รับซื้อจริง {{ mk.rlo }} ถึง {{ mk.rhi }}</span><span>{{ mk.hi }}</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:12px">
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">ราคาสุดท้าย (บาท)<input inputmode="numeric" value="{{ finalPrice }}" onInput="{{ setFinal }}" style="height:48px;border-radius:14px;border:1.5px solid #111;padding:0 14px;font-size:20px;font-weight:500"></label>
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">บันทึกจากสาย (ส่งถึงพนักงานด้วย)<input value="{{ callNote }}" onInput="{{ setNote }}" style="height:48px;border-radius:14px;border:1.5px solid #D6D3CB;padding:0 14px;font-size:15px"></label>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <button onClick="{{ confirmPrice }}" style="height:48px;padding:0 22px;border:none;border-radius:999px;background:#FAD20D;font-size:16px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">ยืนยันราคา {{ finalFmt }} บาท</button>
+          <button onClick="{{ useSystem }}" style="height:48px;padding:0 20px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:15px;cursor:pointer" style-hover="background:#F7F6F2">ใช้ราคาระบบ {{ sel5.price }}</button>
+          <span style="flex:1"></span>
+          <button onClick="{{ rejectBuy }}" style="height:48px;padding:0 16px;border:none;background:transparent;color:#B3261E;font-size:15px;text-decoration:underline;text-underline-offset:3px;cursor:pointer">ไม่รับซื้อ</button>
+        </div>
+        <div style="font-size:13px;color:#5C5A55">ยืนยันแล้วแอปพนักงานได้แจ้งเตือนทันที ระบบบันทึกผู้ยืนยัน เวลา และเหตุผล</div>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.b11 }}">
+  <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <div style="padding:14px 20px;border-radius:20px;background:#fff"><span style="font-size:14px;color:#5C5A55">วันนี้โอนแล้ว</span><span style="font-size:22px;font-weight:600;margin-left:10px">{{ paidToday }} รายการ</span></div>
+    <div style="padding:14px 20px;border-radius:20px;background:#fff"><span style="font-size:14px;color:#5C5A55">เวลาเฉลี่ย</span><span style="font-size:22px;font-weight:600;margin-left:10px">3 นาที</span></div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+    <div style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:10px">
+      <sc-if value="{{ q11Empty }}"><div style="padding:20px;border-radius:20px;background:#fff;font-size:15px;color:#5C5A55">ไม่มีงานรอโอนเงิน</div></sc-if>
+      <sc-for list="{{ q11 }}" as="q">
+        <button onClick="{{ q.pick }}" style="text-align:left;border:2px solid {{ q.bd }};border-radius:20px;background:#fff;padding:14px 16px;display:flex;flex-direction:column;gap:4px;cursor:pointer" style-hover="border-color:#111">
+          <div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:16px;font-weight:500">{{ q.model }}</span><span style="font-size:16px;font-weight:600">{{ q.amt }}</span></div>
+          <div style="font-size:14px;color:#5C5A55">{{ q.team }} {{ q.staff }}<span style="margin-left:8px">รอ {{ q.wait }} นาที</span></div>
+          <div style="font-size:13px;padding:2px 10px;border-radius:999px;background:{{ q.cbg }};color:{{ q.cfg }};align-self:flex-start">{{ q.claim }}</div>
+        </button>
+      </sc-for>
+    </div>
+    <sc-if value="{{ q11Has }}">
+    <div style="flex:2 1 560px;min-width:0;padding:20px;border-radius:24px;background:#fff;display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+        <div style="flex:1;min-width:200px"><div style="font-size:20px;font-weight:500">{{ sel11.model }}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#5C5A55">{{ sel11.qr }}</div></div>
+        <div style="text-align:right"><div style="font-size:13px;color:#5C5A55">ยอดโอน</div><div style="font-size:26px;font-weight:600">{{ sel11.amt }} บาท</div></div>
+      </div>
+      <sc-if value="{{ sel11.unclaimed }}"><button onClick="{{ claim }}" style="align-self:flex-start;height:44px;padding:0 20px;border:none;border-radius:999px;background:#111;color:#fff;font-size:15px;cursor:pointer">รับงานนี้</button></sc-if>
+      <sc-if value="{{ sel11.claimed }}"><div style="align-self:flex-start;padding:8px 14px;border-radius:999px;background:#F3F2EE;font-size:14px">{{ sel11.claimer }} รับงานแล้ว ชื่อขึ้นในแอปพนักงาน</div></sc-if>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:15px;font-weight:500">รูปบัญชีรับเงินจากพนักงาน</div>
+          <div style="height:200px;border-radius:16px;background:#F3F2EE;display:flex;align-items:center;justify-content:center"><div style="width:140px;height:140px">{{ qrAcct }}</div></div>
+          <div style="display:flex;gap:6px;align-items:center;font-size:14px;color:#1B6B33">{{ ic.check }}พนักงานยืนยันชื่อบัญชีตรงกับบัตรแล้ว</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:15px;font-weight:500">ผู้ขาย</div>
+          <sc-for list="{{ sel11.seller }}" as="m"><div style="display:flex;gap:12px;padding:6px 0;border-top:1px solid #F3F2EE;font-size:15px"><span style="width:100px;color:#5C5A55;flex:none">{{ m.k }}</span><span style="font-family:{{ m.ff }}">{{ m.v }}</span></div></sc-for>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;align-items:end">
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:14px">สลิปการโอน
+          <sc-if value="{{ noSlip }}"><button onClick="{{ attachSlip }}" style="height:48px;border:1.5px dashed #9A978F;border-radius:14px;background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" style-hover="border-color:#111">{{ ic.upload }}แนบสลิป</button></sc-if>
+          <sc-if value="{{ slipOn }}"><div style="height:48px;border-radius:14px;background:#E4F4E8;color:#1B6B33;display:flex;align-items:center;gap:8px;padding:0 14px;font-size:14px;box-sizing:border-box">{{ ic.check }}slip_0482.jpg</div></sc-if>
+        </div>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">บัญชีบริษัทที่โอนออก<select style="height:48px;border-radius:14px;border:1.5px solid #D6D3CB;background:#fff;padding:0 12px;font-size:15px"><option>กสิกรไทย xxx-x-x4821-x บัญชีหลัก</option><option>ไทยพาณิชย์ xxx-x-x7710-x</option></select></label>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">เลขอ้างอิงการโอน {{ refHint }}<input value="{{ slipRef }}" onInput="{{ setSlipRef }}" style="height:48px;border-radius:14px;border:1.5px solid #D6D3CB;padding:0 14px;font-size:15px;font-family:'IBM Plex Mono',monospace"></label>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <sc-if value="{{ canClose }}"><button onClick="{{ closeJob }}" style="height:48px;padding:0 22px;border:none;border-radius:999px;background:#FAD20D;font-size:16px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">แนบสลิปและปิดงาน</button></sc-if>
+        <sc-if value="{{ cannotClose }}"><button disabled style="height:48px;padding:0 22px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:15px">{{ closeBlock }}</button></sc-if>
+        <span style="flex:1"></span>
+        <button onClick="{{ reportAcct }}" style="height:48px;padding:0 16px;border:none;background:transparent;font-size:15px;text-decoration:underline;text-underline-offset:3px;cursor:pointer">แจ้งปัญหาบัญชีกลับไปที่พนักงาน</button>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.b06 }}">
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+    <div role="tablist" style="display:flex;background:#E7E5DE;border-radius:999px;padding:3px">
+      <sc-for list="{{ brands }}" as="b"><button role="tab" aria-selected="{{ b.on }}" onClick="{{ b.pick }}" style="height:36px;padding:0 16px;border:none;border-radius:999px;background:{{ b.bg }};font-size:14px;cursor:pointer">{{ b.name }}</button></sc-for>
+    </div>
+    <span style="font-size:13px;color:#5C5A55">แก้ล่าสุด 28 ต.ค. 2569 17:20 คุณนภา</span>
+    <span style="flex:1"></span>
+    <button onClick="{{ addModel }}" style="height:40px;padding:0 16px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px">{{ ic.plus }}เพิ่มรุ่น</button>
+    <button onClick="{{ importX }}" style="height:40px;padding:0 16px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer">นำเข้า Excel</button>
+    <button onClick="{{ exportX }}" style="height:40px;padding:0 16px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer">ดาวน์โหลด</button>
+  </div>
+  <sc-if value="{{ hasEdits }}">
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:12px 16px;border-radius:16px;background:#FFF7CC">
+      <div style="flex:1;min-width:240px;font-size:14px;line-height:1.6"><b style="font-weight:500">แก้ {{ editCount }} ช่อง</b> มีผลกับการเช็กครั้งถัดไปทันที<sc-for list="{{ editList }}" as="e"><div>{{ e.t }}</div></sc-for></div>
+      <button onClick="{{ cancelEdits }}" style="height:40px;padding:0 16px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer">ยกเลิก</button>
+      <button onClick="{{ saveEdits }}" style="height:40px;padding:0 18px;border:none;border-radius:999px;background:#111;color:#fff;font-size:14px;cursor:pointer">บันทึก</button>
+    </div>
+  </sc-if>
+  <div style="background:#fff;border-radius:20px;overflow-x:auto">
+    <table style="width:100%;min-width:820px;font-size:14px">
+      <thead><tr style="text-align:left;color:#5C5A55;background:#FAF9F6"><th style="font-weight:400;padding:12px 16px">รุ่น</th><th style="font-weight:400">ความจุ</th><th style="font-weight:400">เกรด A</th><th style="font-weight:400">เกรด B</th><th style="font-weight:400">เกรด C</th><th style="font-weight:400">เกรด D</th><th style="font-weight:400;padding-right:16px">รับซื้อ</th></tr></thead>
+      <tbody><sc-for list="{{ priceRows }}" as="r"><tr style="border-top:1px solid #F3F2EE;opacity:{{ r.op }}">
+        <td style="padding:8px 16px;font-weight:500">{{ r.model }}</td><td>{{ r.cap }}</td>
+        <sc-for list="{{ r.cells }}" as="c"><td style="padding:6px 8px 6px 0"><input inputmode="numeric" value="{{ c.v }}" onInput="{{ c.set }}" aria-label="{{ c.aria }}" style="width:96px;height:38px;border-radius:10px;border:1.5px solid {{ c.bd }};background:{{ c.bg }};padding:0 10px;font-size:14px;font-family:'IBM Plex Mono',monospace;box-sizing:border-box"><div style="font-size:11px;color:#7A4A00;height:14px">{{ c.from }}</div></td></sc-for>
+        <td style="padding-right:16px"><button role="switch" aria-checked="{{ r.open }}" aria-label="{{ r.aria }}" onClick="{{ r.toggle }}" style="width:52px;height:30px;border:none;border-radius:999px;background:{{ r.swBg }};position:relative;cursor:pointer;transition:background 150ms"><span style="position:absolute;top:3px;left:{{ r.knob }};width:24px;height:24px;border-radius:50%;background:#fff;transition:left 150ms"></span></button></td>
+      </tr></sc-for></tbody>
+    </table>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px;align-items:start">
+    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:17px;font-weight:500">กติกาหักราคาตามตำหนิ</div>
+      <sc-for list="{{ rules }}" as="r"><div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-top:1px solid #F3F2EE;font-size:15px"><span style="flex:1">{{ r.k }}</span><span style="color:#5C5A55">−</span><input inputmode="numeric" value="{{ r.v }}" onInput="{{ r.set }}" aria-label="{{ r.k }}" style="width:90px;height:38px;border-radius:10px;border:1.5px solid #D6D3CB;padding:0 10px;font-size:14px;font-family:'IBM Plex Mono',monospace"></div></sc-for>
+    </div>
+    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:17px;font-weight:500">จำลองราคา</div>
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">รุ่น<select value="{{ simModel }}" onChange="{{ setSimModel }}" style="height:44px;border-radius:12px;border:1.5px solid #D6D3CB;background:#fff;padding:0 10px;font-size:15px"><sc-for list="{{ simModels }}" as="m"><option value="{{ m.i }}">{{ m.n }}</option></sc-for></select></label>
+      <div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ simDefects }}" as="d"><button role="checkbox" aria-checked="{{ d.on }}" onClick="{{ d.toggle }}" style="min-height:40px;padding:0 14px;border-radius:999px;border:1.5px solid {{ d.bd }};background:{{ d.bg }};color:{{ d.fg }};font-size:14px;cursor:pointer">{{ d.k }}</button></sc-for></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:16px;background:#111;color:#fff"><span style="font-size:15px">ได้เกรด {{ sim.grade }}</span><span style="font-size:24px;font-weight:600">{{ sim.price }} บาท</span></div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.b07 }}">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:12px">
+    <sc-for list="{{ ageTiles }}" as="a"><button onClick="{{ a.pick }}" style="text-align:left;padding:14px 16px;border-radius:18px;border:2px solid {{ a.bd }};background:{{ a.bg }};color:{{ a.fg }};cursor:pointer"><div style="font-size:13px">{{ a.k }}</div><div style="font-size:24px;font-weight:600">{{ a.n }}</div><div style="font-size:13px">{{ a.s }}</div></button></sc-for>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+    <label style="display:flex;align-items:center;gap:6px;font-size:14px">หมวด<select style="height:40px;border-radius:999px;border:1px solid #D6D3CB;background:#fff;padding:0 12px;font-size:14px"><option>ทั้งหมด</option><option>มือถือ</option><option>แท็บเล็ต</option><option>นาฬิกา</option></select></label>
+    <span style="flex:1"></span>
+    <button onClick="{{ exportPrice }}" style="height:40px;padding:0 16px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer" style-hover="background:#F7F6F2">ส่งออกไปกรอกราคา</button>
+    <button onClick="{{ openImport }}" style="height:40px;padding:0 16px;border:none;border-radius:999px;background:#111;color:#fff;font-size:14px;cursor:pointer">นำเข้าราคาจาก Excel</button>
+    <button onClick="{{ addProduct }}" style="height:40px;padding:0 16px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px">{{ ic.plus }}เพิ่มสินค้า</button>
+    <button onClick="{{ importX }}" style="height:40px;padding:0 14px;border:none;background:transparent;font-size:14px;text-decoration:underline;cursor:pointer">นำเข้า Excel</button>
+    <button onClick="{{ exportX }}" style="height:40px;padding:0 14px;border:none;background:transparent;font-size:14px;text-decoration:underline;cursor:pointer">ส่งออก Excel</button>
+    <button onClick="{{ sendPeak }}" style="height:40px;padding:0 14px;border:none;background:transparent;font-size:14px;text-decoration:underline;cursor:pointer">ส่งเข้า PEAK</button>
+  </div>
+  <div style="background:#fff;border-radius:20px;overflow-x:auto">
+    <table style="width:100%;min-width:1180px;font-size:14px">
+      <thead><tr style="text-align:left;color:#5C5A55;background:#FAF9F6"><th style="font-weight:400;padding:12px 16px">รุ่น</th><th style="font-weight:400">ความจุ</th><th style="font-weight:400">สี</th><th style="font-weight:400">IMEI/SN</th><th style="font-weight:400">สภาพ</th><th style="font-weight:400">แบต</th><th style="font-weight:400">ประกัน</th><th style="font-weight:400">อุปกรณ์</th><th style="font-weight:400;text-align:right">ทุน</th><th style="font-weight:400;padding-left:16px">ราคาขาย</th><th style="font-weight:400">อายุ</th><th style="font-weight:400;padding-right:16px">PEAK</th></tr></thead>
+      <tbody><sc-for list="{{ stockRows }}" as="r"><tr onClick="{{ r.open }}" style="border-top:1px solid #F3F2EE;cursor:pointer" style-hover="background:#FAF9F6">
+        <td style="padding:12px 16px;font-weight:500">{{ r.model }}</td><td>{{ r.cap }}</td><td>{{ r.color }}</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13px">{{ r.imei }}</td><td>{{ r.cond }}</td><td>{{ r.bat }}</td><td>{{ r.war }}</td><td>{{ r.acc }}</td><td style="text-align:right">{{ r.cost }}</td>
+        <td style="padding-left:16px"><sc-if value="{{ r.unpriced }}"><span style="padding:3px 10px;border-radius:999px;background:#FFF1D6;color:#7A4A00;font-size:13px;white-space:nowrap">ยังไม่ตั้งราคา</span></sc-if><sc-if value="{{ r.priced }}"><span style="white-space:nowrap">{{ r.sale }}</span></sc-if></td>
+        <td><span style="color:{{ r.ageFg }};font-weight:{{ r.ageFw }}">{{ r.age }}</span></td>
+        <td style="padding-right:16px"><span style="padding:3px 10px;border-radius:999px;font-size:13px;background:{{ r.pbg }};color:{{ r.pfg }};white-space:nowrap">{{ r.peak }}</span></td>
+      </tr></sc-for></tbody>
+    </table>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.b08 }}">
+  <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+    <div style="flex:2 1 560px;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="padding:16px;border-radius:20px;background:#fff;display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end">
+        <label style="flex:1;min-width:220px;display:flex;flex-direction:column;gap:6px;font-size:14px">พิมพ์ IMEI/SN<input value="{{ imeiIn }}" onInput="{{ setImeiIn }}" onKeyDown="{{ imeiKey }}" placeholder="เช่น 353104270923416" style="height:48px;border-radius:14px;border:1.5px solid #111;padding:0 14px;font-size:16px;font-family:'IBM Plex Mono',monospace"></label>
+        <button onClick="{{ addCart }}" style="height:48px;padding:0 20px;border:none;border-radius:999px;background:#111;color:#fff;font-size:15px;cursor:pointer">ใส่ตะกร้า</button>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">หรือเลือกจากสต็อก<select onChange="{{ pickStock }}" value="" style="height:48px;border-radius:14px;border:1.5px solid #D6D3CB;background:#fff;padding:0 10px;font-size:14px;max-width:260px"><option value="">เลือกเครื่อง</option><sc-for list="{{ stockOpts }}" as="o"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></label>
+        <sc-if value="{{ cartErr }}"><div style="width:100%;padding:10px 14px;border-radius:12px;background:#FDECEC;color:#B3261E;font-size:14px">{{ cartErr }}</div></sc-if>
+      </div>
+      <div style="background:#fff;border-radius:20px;overflow-x:auto">
+        <table style="width:100%;min-width:640px;font-size:14px">
+          <thead><tr style="text-align:left;color:#5C5A55;background:#FAF9F6"><th style="font-weight:400;padding:12px 16px">เครื่อง</th><th style="font-weight:400">เกรด</th><th style="font-weight:400">แบต</th><th style="font-weight:400;text-align:right">ราคา</th><th style="font-weight:400;text-align:right">ทุน</th><th style="font-weight:400;text-align:right">กำไร</th><th style="width:56px"></th></tr></thead>
+          <tbody>
+            <sc-for list="{{ cart }}" as="c"><tr style="border-top:1px solid #F3F2EE"><td style="padding:12px 16px"><div style="font-weight:500">{{ c.model }}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5C5A55">{{ c.imei }}</div></td><td>{{ c.cond }}</td><td>{{ c.bat }}</td><td style="text-align:right">{{ c.price }}</td><td style="text-align:right">{{ c.cost }}</td><td style="text-align:right;color:#1B6B33">{{ c.profit }}</td><td><button aria-label="เอาออก" onClick="{{ c.remove }}" style="width:40px;height:40px;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:#F3F2EE">{{ ic.x }}</button></td></tr></sc-for>
+            <sc-if value="{{ cartEmpty }}"><tr><td colspan="7" style="padding:20px 16px;color:#5C5A55">ยังไม่มีเครื่องในตะกร้า</td></tr></sc-if>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:16px 20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px"><div style="flex:1;font-size:16px;font-weight:500">บิลล่าสุด</div><button onClick="{{ exportX }}" style="height:36px;padding:0 14px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F7F6F2">{{ ic.download }}ส่งออก Excel</button></div>
+        <div style="overflow-x:auto"><table style="width:100%;min-width:760px;font-size:14px"><thead><tr style="text-align:left;color:#5C5A55"><th style="font-weight:400;padding:6px 0">เลขที่</th><th style="font-weight:400">วันที่</th><th style="font-weight:400">ลูกค้า</th><th style="font-weight:400">กลุ่มราคา</th><th style="font-weight:400">ชำระ</th><th style="font-weight:400;text-align:right">เครื่อง</th><th style="font-weight:400;text-align:right">ยอดขาย</th><th style="font-weight:400;text-align:right">กำไร</th><th style="font-weight:400;padding-left:16px">PEAK</th></tr></thead>
+          <tbody><sc-for list="{{ bills }}" as="b"><tr style="border-top:1px solid #F3F2EE"><td style="padding:9px 0;font-family:'IBM Plex Mono',monospace;font-size:13px">{{ b.no }}</td><td>{{ b.d }}</td><td>{{ b.c }}</td><td>{{ b.g }}</td><td>{{ b.p }}</td><td style="text-align:right">{{ b.n }}</td><td style="text-align:right">{{ b.t }}</td><td style="text-align:right">{{ b.pr }}</td><td style="padding-left:16px;color:#5C5A55">{{ b.peak }}</td></tr></sc-for></tbody></table></div>
+      </div>
+    </div>
+    <div style="flex:1 1 300px;min-width:0;padding:20px;border-radius:24px;background:#fff;display:flex;flex-direction:column;gap:14px;position:sticky;top:16px">
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">ลูกค้า<input value="{{ buyer }}" onInput="{{ setBuyer }}" placeholder="เลขผู้เสียภาษีหรือเบอร์โทร" inputmode="numeric" style="height:48px;border-radius:14px;border:1.5px solid #D6D3CB;padding:0 14px;font-size:15px"></label>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:14px">กลุ่มราคา<div role="radiogroup" style="display:flex;background:#F3F2EE;border-radius:999px;padding:3px"><sc-for list="{{ tiers }}" as="t"><button role="radio" aria-checked="{{ t.on }}" onClick="{{ t.pick }}" style="flex:1;height:40px;border:none;border-radius:999px;background:{{ t.bg }};color:{{ t.fg }};font-size:14px;cursor:pointer">{{ t.k }}</button></sc-for></div></div>
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">ส่วนลด (บาท)<input inputmode="numeric" value="{{ discount }}" onInput="{{ setDiscount }}" style="height:48px;border-radius:14px;border:1.5px solid #D6D3CB;padding:0 14px;font-size:15px"></label>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:14px">ชำระโดย<div role="radiogroup" style="display:flex;background:#F3F2EE;border-radius:999px;padding:3px"><sc-for list="{{ pays }}" as="t"><button role="radio" aria-checked="{{ t.on }}" onClick="{{ t.pick }}" style="flex:1;height:40px;border:none;border-radius:999px;background:{{ t.bg }};color:{{ t.fg }};font-size:14px;cursor:pointer">{{ t.k }}</button></sc-for></div></div>
+      <div style="border-top:1px solid #F3F2EE;padding-top:12px;display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:#5C5A55">รวม {{ cartCount }} เครื่อง</span><span>{{ subTotal }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px"><span style="color:#5C5A55">ส่วนลด</span><span>−{{ discountFmt }}</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:15px">ยอดสุทธิ</span><span style="font-size:28px;font-weight:600">{{ netTotal }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;color:#1B6B33"><span>กำไรรวม</span><span>{{ profitTotal }} ({{ profitPct }})</span></div>
+      </div>
+      <button onClick="{{ saveSale }}" style="height:52px;border:none;border-radius:999px;background:#FAD20D;font-size:16px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">บันทึกการขาย</button>
+      <div style="font-size:13px;color:#5C5A55;line-height:1.5">บันทึกแล้วตัดสต็อกทันที บิลขายรวมส่งเข้า PEAK สิ้นเดือน</div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.b09 }}">
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+    <label style="display:flex;align-items:center;gap:6px;font-size:14px">ตั้งแต่<input type="date" value="2026-10-01" style="height:40px;border-radius:999px;border:1px solid #D6D3CB;background:#fff;padding:0 12px;font-size:14px"></label>
+    <label style="display:flex;align-items:center;gap:6px;font-size:14px">ถึง<input type="date" value="2026-10-29" style="height:40px;border-radius:999px;border:1px solid #D6D3CB;background:#fff;padding:0 12px;font-size:14px"></label>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:16px;align-items:start">
+    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px;min-width:0">
+      <div style="display:flex;align-items:center;gap:8px"><div style="flex:1;font-size:17px;font-weight:500">กำไรตามที่มาเครื่อง</div><button onClick="{{ exportX }}" style="height:36px;padding:0 14px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:13px;cursor:pointer">Excel</button></div>
+      <div style="overflow-x:auto"><table style="width:100%;min-width:520px;font-size:14px"><thead><tr style="color:#5C5A55;text-align:right"><th style="font-weight:400;text-align:left;padding:6px 0">ที่มา</th><th style="font-weight:400">รับซื้อ</th><th style="font-weight:400">มูลค่า</th><th style="font-weight:400">ขายออก</th><th style="font-weight:400">กำไร</th><th style="font-weight:400">ต่อเครื่อง</th><th style="font-weight:400">% ปิดดีล</th></tr></thead>
+        <tbody><sc-for list="{{ rep1 }}" as="r"><tr style="border-top:1px solid #F3F2EE;text-align:right"><td style="text-align:left;padding:9px 0">{{ r.a }}</td><td>{{ r.b }}</td><td>{{ r.c }}</td><td>{{ r.d }}</td><td>{{ r.e }}</td><td>{{ r.f }}</td><td>{{ r.g }}</td></tr></sc-for></tbody></table></div>
+    </div>
+    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px;min-width:0">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><div style="flex:1;font-size:17px;font-weight:500">ยอดขายและกำไร</div>
+        <div role="tablist" style="display:flex;background:#F3F2EE;border-radius:999px;padding:3px"><sc-for list="{{ rep2Tabs }}" as="t"><button role="tab" aria-selected="{{ t.on }}" onClick="{{ t.pick }}" style="height:32px;padding:0 12px;border:none;border-radius:999px;background:{{ t.bg }};font-size:13px;cursor:pointer">{{ t.k }}</button></sc-for></div>
+        <button onClick="{{ exportX }}" style="height:36px;padding:0 14px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:13px;cursor:pointer">Excel</button></div>
+      <table style="width:100%;font-size:14px"><thead><tr style="color:#5C5A55;text-align:right"><th style="font-weight:400;text-align:left;padding:6px 0">{{ rep2Head }}</th><th style="font-weight:400">บิล</th><th style="font-weight:400">ยอดขาย</th><th style="font-weight:400">กำไร</th></tr></thead>
+        <tbody><sc-for list="{{ rep2 }}" as="r"><tr style="border-top:1px solid #F3F2EE;text-align:right"><td style="text-align:left;padding:9px 0">{{ r.a }}</td><td>{{ r.b }}</td><td>{{ r.c }}</td><td>{{ r.d }}</td></tr></sc-for></tbody></table>
+    </div>
+    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px;min-width:0">
+      <div style="display:flex;align-items:center;gap:8px"><div style="flex:1;font-size:17px;font-weight:500">รับซื้อเข้า ตามรุ่น</div><button onClick="{{ exportX }}" style="height:36px;padding:0 14px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:13px;cursor:pointer">Excel</button></div>
+      <table style="width:100%;font-size:14px"><thead><tr style="color:#5C5A55;text-align:right"><th style="font-weight:400;text-align:left;padding:6px 0">รุ่น</th><th style="font-weight:400">จำนวน</th><th style="font-weight:400">มูลค่า</th><th style="font-weight:400">ราคาเฉลี่ย</th></tr></thead>
+        <tbody><sc-for list="{{ rep3 }}" as="r"><tr style="border-top:1px solid #F3F2EE;text-align:right"><td style="text-align:left;padding:9px 0">{{ r.a }}</td><td>{{ r.b }}</td><td>{{ r.c }}</td><td>{{ r.d }}</td></tr></sc-for></tbody></table>
+    </div>
+    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:10px;min-width:0">
+      <div style="display:flex;align-items:center;gap:8px"><div style="flex:1;font-size:17px;font-weight:500">สต็อกค้างนาน ทุนค้างตามอายุ</div><button onClick="{{ exportX }}" style="height:36px;padding:0 14px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:13px;cursor:pointer">Excel</button></div>
+      <sc-for list="{{ rep4 }}" as="r"><div style="display:flex;flex-direction:column;gap:4px"><div style="display:flex;justify-content:space-between;font-size:14px"><span>{{ r.k }}</span><span>{{ r.v }}</span></div><div style="height:12px;border-radius:6px;background:#F3F2EE"><div style="height:100%;width:{{ r.w }};border-radius:6px;background:{{ r.c }}"></div></div></div></sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.b10 }}">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;align-items:start">
+    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:17px;font-weight:500">ยืนยันราคาทางโทร</div>
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">เบอร์ที่ปุ่ม “โทรหาหลังบ้าน” โทรไป<input value="02-114-5500" inputmode="tel" style="height:44px;border-radius:12px;border:1.5px solid #D6D3CB;padding:0 12px;font-size:15px;font-family:'IBM Plex Mono',monospace"></label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:14px">เตือนหลังบ้านเมื่อรอยืนยันเกิน<input value="5" inputmode="numeric" style="width:64px;height:44px;border-radius:12px;border:1.5px solid #D6D3CB;padding:0 12px;font-size:15px">นาที</label>
+    </div>
+    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:17px;font-weight:500">เชื่อมต่อและอื่น ๆ</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:15px"><span>PEAK</span><span style="padding:3px 10px;border-radius:999px;background:#E4F4E8;color:#1B6B33;font-size:13px">เชื่อมต่อแล้ว</span></div>
+      <sc-for list="{{ peakToggles }}" as="t"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:15px;min-height:44px"><span>{{ t.k }}</span><button role="switch" aria-checked="{{ t.on }}" aria-label="{{ t.k }}" onClick="{{ t.toggle }}" style="width:52px;height:30px;border:none;border-radius:999px;background:{{ t.bg }};position:relative;cursor:pointer;flex:none;transition:background 150ms"><span style="position:absolute;top:3px;left:{{ t.knob }};width:24px;height:24px;border-radius:50%;background:#fff;transition:left 150ms"></span></button></div></sc-for>
+      <label style="display:flex;align-items:center;gap:8px;font-size:15px">อายุ QR ขายเครื่อง<input value="30" inputmode="numeric" style="width:64px;height:44px;border-radius:12px;border:1.5px solid #D6D3CB;padding:0 12px;font-size:15px">นาที</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:15px">เก็บรูปลูกค้าถือบัตร<input value="5" inputmode="numeric" style="width:64px;height:44px;border-radius:12px;border:1.5px solid #D6D3CB;padding:0 12px;font-size:15px">ปี</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:15px">เตือนสต็อกค้างเกิน<input value="30" inputmode="numeric" style="width:64px;height:44px;border-radius:12px;border:1.5px solid #D6D3CB;padding:0 12px;font-size:15px">วัน</label>
+    </div>
+    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center"><div style="flex:1;font-size:17px;font-weight:500">ที่มาของเครื่อง</div><button onClick="{{ addSource }}" style="height:36px;padding:0 14px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:13px;cursor:pointer">เพิ่มช่องทาง</button></div>
+      <table style="width:100%;font-size:14px"><thead><tr style="color:#5C5A55;text-align:left"><th style="font-weight:400;padding:6px 0">ช่องทาง</th><th style="font-weight:400">บังคับเลขอ้างอิง</th></tr></thead>
+        <tbody><sc-for list="{{ srcRows }}" as="r"><tr style="border-top:1px solid #F3F2EE"><td style="padding:8px 0">{{ r.k }}</td><td><button role="switch" aria-checked="{{ r.on }}" aria-label="{{ r.aria }}" onClick="{{ r.toggle }}" style="width:52px;height:30px;border:none;border-radius:999px;background:{{ r.bg }};position:relative;cursor:pointer;transition:background 150ms"><span style="position:absolute;top:3px;left:{{ r.knob }};width:24px;height:24px;border-radius:50%;background:#fff;transition:left 150ms"></span></button></td></tr></sc-for></tbody></table>
+    </div>
+    <div style="padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px;min-width:0">
+      <div style="display:flex;align-items:center"><div style="flex:1;font-size:17px;font-weight:500">พนักงาน</div><button onClick="{{ addStaff }}" style="height:36px;padding:0 14px;border:none;border-radius:999px;background:#111;color:#fff;font-size:13px;cursor:pointer">เพิ่มพนักงาน</button></div>
+      <div style="overflow-x:auto"><table style="width:100%;min-width:520px;font-size:14px"><thead><tr style="color:#5C5A55;text-align:left"><th style="font-weight:400;padding:6px 0">ชื่อ</th><th style="font-weight:400">สาขา/ทีม</th><th style="font-weight:400">บทบาท</th><th style="font-weight:400">ใช้ล่าสุด</th><th style="font-weight:400">ใช้งาน</th></tr></thead>
+        <tbody><sc-for list="{{ staffRows }}" as="r"><tr style="border-top:1px solid #F3F2EE"><td style="padding:8px 0">{{ r.n }}</td><td>{{ r.t }}</td><td>{{ r.r }}</td><td style="color:#5C5A55">{{ r.l }}</td><td><button role="switch" aria-checked="{{ r.on }}" aria-label="{{ r.aria }}" onClick="{{ r.toggle }}" style="width:52px;height:30px;border:none;border-radius:999px;background:{{ r.bg }};position:relative;cursor:pointer;transition:background 150ms"><span style="position:absolute;top:3px;left:{{ r.knob }};width:24px;height:24px;border-radius:50%;background:#fff;transition:left 150ms"></span></button></td></tr></sc-for></tbody></table></div>
+    </div>
+    <div style="grid-column:1/-1;padding:20px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px;min-width:0">
+      <div style="font-size:17px;font-weight:500">สิทธิ์ตามบทบาท</div>
+      <div style="overflow-x:auto"><table style="width:100%;min-width:720px;font-size:14px"><thead><tr style="color:#5C5A55"><th style="font-weight:400;text-align:left;padding:6px 0">ทำอะไรได้</th><th style="font-weight:400">ผู้ดูแล</th><th style="font-weight:400">ผู้ยืนยันราคา</th><th style="font-weight:400">พนักงานรับซื้อ</th><th style="font-weight:400">คลัง/ขาย</th></tr></thead>
+        <tbody><sc-for list="{{ permRows }}" as="r"><tr style="border-top:1px solid #F3F2EE"><td style="padding:10px 0">{{ r.k }}</td><sc-for list="{{ r.cells }}" as="c"><td><span style="display:flex;justify-content:center" aria-label="{{ c.aria }}">{{ c.el }}</span></td></sc-for></tr></sc-for></tbody></table></div>
+    </div>
+  </div>
+</sc-if>
+
+  </main>
+</div>
+</div>
+
+<div onClick="{{ closeAll }}" style="position:fixed;inset:0;z-index:40;background:rgba(17,17,17,.45);opacity:{{ ovOp }};pointer-events:{{ ovPe }};transition:opacity 180ms"></div>
+<aside aria-label="รายละเอียดเครื่อง" style="position:fixed;top:0;right:0;bottom:0;z-index:41;width:min(440px,100vw);background:#fff;box-shadow:-10px 0 30px rgba(0,0,0,.12);transform:{{ drawerTf }};transition:transform 200ms ease-out;display:flex;flex-direction:column">
+  <div style="display:flex;align-items:center;gap:8px;padding:16px 20px;border-bottom:1px solid #F3F2EE"><div style="flex:1;font-size:18px;font-weight:500">{{ det.model }}</div><button aria-label="ปิด" onClick="{{ closeAll }}" style="width:44px;height:44px;border:none;border-radius:50%;background:#F3F2EE;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.x }}</button></div>
+  <div style="flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:6px">
+    <sc-for list="{{ det.rows }}" as="m"><div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #F3F2EE;font-size:15px"><span style="width:110px;color:#5C5A55;flex:none">{{ m.k }}</span><span style="font-family:{{ m.ff }}">{{ m.v }}</span></div></sc-for>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">ราคาปลีก<input inputmode="numeric" value="{{ det.retail }}" onInput="{{ setRetail }}" placeholder="ยังไม่ตั้ง" style="height:44px;border-radius:12px;border:1.5px solid #D6D3CB;padding:0 12px;font-size:15px"></label>
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:14px">ราคาส่ง<input inputmode="numeric" value="{{ det.whole }}" onInput="{{ setWhole }}" placeholder="ยังไม่ตั้ง" style="height:44px;border-radius:12px;border:1.5px solid #D6D3CB;padding:0 12px;font-size:15px"></label>
+    </div>
+    <div style="font-size:13px;color:#5C5A55">{{ det.log }}</div>
+  </div>
+  <div style="padding:16px 20px;border-top:1px solid #F3F2EE;display:flex;gap:8px;flex-wrap:wrap">
+    <button onClick="{{ savePrice }}" style="height:44px;padding:0 18px;border:none;border-radius:999px;background:#FAD20D;font-size:15px;font-weight:500;cursor:pointer">แก้ไขราคาและข้อมูล</button>
+    <button onClick="{{ transferBranch }}" style="height:44px;padding:0 16px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer">โอนสาขา</button>
+    <button onClick="{{ sellThis }}" style="height:44px;padding:0 16px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;cursor:pointer">ขายเครื่องนี้</button>
+  </div>
+</aside>
+<div role="dialog" aria-modal="true" style="position:fixed;left:50%;top:50%;z-index:42;width:min(560px,calc(100vw - 32px));max-height:calc(100vh - 64px);overflow-y:auto;background:#fff;border-radius:24px;padding:24px;box-sizing:border-box;opacity:{{ dlgOp }};pointer-events:{{ dlgPe }};transform:{{ dlgTf }};transition:opacity 180ms,transform 180ms ease-out;display:flex;flex-direction:column;gap:14px">
+  <div style="font-size:20px;font-weight:500">{{ dlg.title }}</div>
+  <sc-if value="{{ dlg.isImport }}">
+    <div style="font-size:14px;color:#5C5A55">ไฟล์ ราคาสต็อก_29ต.ค.xlsx จับคู่ด้วย IMEI / SN</div>
+    <div style="border-radius:16px;background:#F7F6F2;overflow-x:auto"><table style="width:100%;font-size:14px;min-width:420px"><thead><tr style="text-align:left;color:#5C5A55"><th style="font-weight:400;padding:10px 12px">IMEI/SN</th><th style="font-weight:400">รุ่น</th><th style="font-weight:400;text-align:right">ปลีก</th><th style="font-weight:400;text-align:right;padding-right:12px">ส่ง</th></tr></thead>
+      <tbody><sc-for list="{{ importRows }}" as="r"><tr style="border-top:1px solid #ECEAE4"><td style="padding:8px 12px;font-family:'IBM Plex Mono',monospace;font-size:13px">{{ r.a }}</td><td>{{ r.b }}</td><td style="text-align:right">{{ r.c }}</td><td style="text-align:right;padding-right:12px">{{ r.d }}</td></tr></sc-for></tbody></table></div>
+    <div style="padding:12px 14px;border-radius:14px;background:#FFF1D6;color:#7A4A00;font-size:14px;line-height:1.5">จับคู่ไม่ได้ 2 แถว<br>แถว 9 IMEI 352991100045518 ไม่พบในสต็อก<br>แถว 12 ไม่มี IMEI/SN</div>
+    <div style="display:flex;gap:8px;justify-content:flex-end"><button onClick="{{ closeAll }}" style="height:44px;padding:0 18px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:15px;cursor:pointer">ยกเลิก</button><button onClick="{{ applyImport }}" style="height:44px;padding:0 18px;border:none;border-radius:999px;background:#111;color:#fff;font-size:15px;cursor:pointer">บันทึกราคา 2 เครื่อง</button></div>
+  </sc-if>
+  <sc-if value="{{ dlg.isText }}">
+    <div style="font-size:15px;color:#444;line-height:1.55">{{ dlg.body }}</div>
+    <sc-if value="{{ dlg.hasReason }}"><select style="height:44px;border-radius:12px;border:1.5px solid #D6D3CB;background:#fff;padding:0 10px;font-size:15px"><option>รูปบัญชีไม่ชัด</option><option>ชื่อบัญชีไม่ตรงกับบัตร</option><option>บัญชีปิดหรือโอนไม่เข้า</option></select></sc-if>
+    <div style="display:flex;gap:8px;justify-content:flex-end"><button onClick="{{ closeAll }}" style="height:44px;padding:0 18px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:15px;cursor:pointer">ยกเลิก</button><button onClick="{{ dlg.ok }}" style="height:44px;padding:0 18px;border:none;border-radius:999px;background:{{ dlg.okBg }};color:#fff;font-size:15px;cursor:pointer">{{ dlg.okLabel }}</button></div>
+  </sc-if>
+</div>
+<sc-if value="{{ drawerNav }}">
+  <div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;z-index:44;background:rgba(17,17,17,.45)"></div>
+  <nav aria-label="เมนูหลัก" style="position:fixed;top:0;left:0;bottom:0;z-index:45;width:260px;background:#111;color:#fff;display:flex;flex-direction:column;gap:4px;padding:20px 12px;box-sizing:border-box;overflow-y:auto">
+    <img src="assets/logo-white.svg" alt="YelloBe" style="width:116px;height:auto;margin:0 8px 16px">
+    <sc-for list="{{ nav }}" as="n">
+      <sc-if value="{{ n.isHead }}"><div style="font-size:12px;color:#B5B2AA;padding:14px 10px 4px">{{ n.label }}</div></sc-if>
+      <sc-if value="{{ n.isItem }}"><button onClick="{{ n.go }}" style="display:flex;align-items:center;gap:10px;height:44px;padding:0 10px;border:none;border-radius:12px;background:{{ n.bg }};color:{{ n.fg }};font-size:15px;text-align:left;cursor:pointer">{{ n.icon }}<span style="flex:1">{{ n.label }}</span><sc-if value="{{ n.hasBadge }}"><span style="min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#FAD20D;color:#111;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;box-sizing:border-box">{{ n.badge }}</span></sc-if></button></sc-if>
+    </sc-for>
+  </nav>
+</sc-if>
+<div style="position:fixed;left:50%;bottom:28px;z-index:60;transform:translateX(-50%);padding:12px 20px;border-radius:999px;background:#111;color:#fff;font-size:15px;pointer-events:none;opacity:{{ toastOp }};transition:opacity 200ms;max-width:calc(100vw - 32px);text-align:center">{{ toast }}</div>
+<sc-if value="{{ grid }}">
+<div style="position:fixed;inset:0;z-index:70;background:#E8E6DF;overflow:auto;padding:24px;box-sizing:border-box">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px"><div style="font-size:22px;font-weight:500">ทุกจอ Back-office</div><button onClick="{{ closeGrid }}" style="height:44px;padding:0 20px;border:none;border-radius:999px;background:#111;color:#fff;font-size:15px;cursor:pointer">ปิด</button></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:24px">
+    <sc-for list="{{ gridItems }}" as="g">
+      <button onClick="{{ g.go }}" style="border:none;background:transparent;padding:0;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:8px">
+        <div style="width:288px;height:180px;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.08)"><iframe src="{{ g.src }}" title="{{ g.name }}" loading="lazy" style="width:1440px;height:900px;border:none;transform:scale(0.2);transform-origin:top left;pointer-events:none"></iframe></div>
+        <div style="font-size:13px"><span style="font-family:'IBM Plex Mono',monospace;color:#5C5A55;margin-right:6px">{{ g.code }}</span>{{ g.name }}</div>
+      </button>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const P = {
+  x:['M6 6l12 12M18 6L6 18'], check:['M5 12.5l4.5 4.5L19 7.5'], minus:['M6 12h12'], plus:['M12 5v14M5 12h14'], menu:['M4 7h16M4 12h16M4 17h16'],
+  download:['M12 4v11','M7 10l5 5 5-5','M5 20h14'], upload:['M12 16V4','M7 9l5-5 5 5','M5 20h14'],
+  call:['M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z'],
+  home:['M3 11l9-7 9 7','M5 10v10h14V10'], route:['M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4z','M18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4z','M8 17h7a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h7'],
+  tag:['M3 12V4h8l10 10-8 8z','M7.5 8.5h.01'], bank:['M3 10l9-6 9 6','M5 10v8M9.5 10v8M14.5 10v8M19 10v8','M3 20h18'],
+  table:['M4 5h16v14H4z','M4 10h16M10 5v14'], box:['M3 7l9-4 9 4v10l-9 4-9-4z','M3 7l9 4 9-4','M12 11v10'],
+  cart:['M3 4h2l2.5 11h11L21 7H7','M9 20h.01M18 20h.01'], chart:['M4 20V10M10 20V4M16 20v-7M22 20H2'],
+  gear:['M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z','M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z']
+};
+function I(n, s, c, w) {
+  return React.createElement('svg', { width: s || 20, height: s || 20, viewBox: '0 0 24 24', fill: 'none', stroke: c || 'currentColor', strokeWidth: w || 1.8, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': 'true', style: { display: 'block', flex: 'none' } },
+    (P[n] || []).map((d, i) => React.createElement('path', { key: i, d })));
+}
+function qrSvg(seed) {
+  const N = 25; let a = seed; const rnd = () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const rects = []; const inF = (x, y) => (x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16);
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (!inF(x, y) && rnd() > 0.52) rects.push(React.createElement('rect', { key: x + '-' + y, x, y, width: 1, height: 1 }));
+  [[0, 0], [18, 0], [0, 18]].forEach(([fx, fy], i) => { rects.push(React.createElement('rect', { key: 'o' + i, x: fx + 0.5, y: fy + 0.5, width: 6, height: 6, fill: 'none', stroke: '#111', strokeWidth: 1 })); rects.push(React.createElement('rect', { key: 'i' + i, x: fx + 2, y: fy + 2, width: 3, height: 3 })); });
+  return React.createElement('svg', { viewBox: '0 0 25 25', width: '100%', height: '100%', fill: '#111', shapeRendering: 'crispEdges', 'aria-hidden': 'true' }, rects);
+}
+const fmt = n => Number(n || 0).toLocaleString('en-US');
+const SCREENS = [['b02', 'B-02', 'หน้าหลัก', 'home'], ['b03', 'B-03', 'เส้นทางเครื่อง', 'route'], ['b05', 'B-05', 'ยืนยันราคา', 'tag'], ['b11', 'B-11', 'รอโอนเงิน', 'bank'], ['b06', 'B-06', 'ราคารับซื้อ', 'table'], ['b07', 'B-07', 'สต็อก', 'box'], ['b08', 'B-08', 'ขายออก', 'cart'], ['b09', 'B-09', 'รายงาน', 'chart'], ['b10', 'B-10', 'ตั้งค่า', 'gear'], ['b04', 'B-04', 'Device Passport', null]];
+const TITLES = { b02: 'หน้าหลัก', b03: 'เส้นทางเครื่อง', b04: 'Device Passport', b05: 'คิวยืนยันราคา', b11: 'คิวรอโอนเงิน', b06: 'ตารางราคารับซื้อ', b07: 'สต็อก', b08: 'ขายออก', b09: 'รายงาน', b10: 'ตั้งค่า' };
+const FLOWP = ['b02', 'b03', 'b04', 'b05', 'b11', 'b06', 'b07', 'b08', 'b09', 'b10'];
+const COLS = ['รอสแกน QR', 'ตรวจเครื่อง', 'รอยืนยันราคา', 'รอโอนเงิน', 'รับซื้อแล้ว', 'ไม่ขาย หรือหมดอายุ'];
+const JOBS = [
+  ['DC-2610-0489', 'iPhone 12 128GB', 0, 'ประเมิน 9,800', 'ทีมบางแค', 'YelloBe', 'QR หมดอายุใน 6 นาที', 'w'],
+  ['DC-2610-0491', 'Galaxy S22 256GB', 0, 'ประเมิน 10,400', 'ทีมบางนา', 'Shopee', 'QR เหลือ 22 นาที', ''],
+  ['DC-2610-0486', 'iPhone 14 128GB', 1, '17,500', 'ทีมบางนา', 'Shopee', 'คุณกิตติกำลังตรวจ', ''],
+  ['DC-2610-0484', 'iPhone 11 64GB', 2, '3,100', 'ทีมรามอินทรา', 'AIS', 'รอยืนยัน 2 นาที', 'w'],
+  ['DC-2610-0466', 'Galaxy S23 256GB', 3, '14,200', 'ทีมลาดพร้าว', 'True', 'คุณวรรณกำลังโอน', ''],
+  ['DC-2610-0450', 'iPhone 14 Pro 256GB', 4, '22,600', 'ทีมลาดพร้าว', 'YelloBe', '', ''],
+  ['DC-2610-0471', 'iPhone 12 64GB', 4, '9,200', 'ทีมลาดพร้าว', 'ติดต่อตรง', '', ''],
+  ['DC-2610-0458', 'iPhone 11 128GB', 5, '-', 'ทีมลาดพร้าว', 'ติดต่อตรง', 'ลูกค้าไม่ขาย', ''],
+  ['DC-2610-0447', 'Galaxy A34 128GB', 5, '-', 'ทีมบางแค', 'YelloBe', 'QR หมดอายุ', '']
+];
+const PRICE = {
+  Apple: [['iPhone 15 Pro', '256GB', [27500, 25000, 21000, 16000], true], ['iPhone 15', '128GB', [19800, 18000, 15200, 11500], true], ['iPhone 14 Pro', '256GB', [23800, 22600, 19000, 14500], true], ['iPhone 14', '128GB', [15800, 14500, 12200, 9000], true], ['iPhone 13', '128GB', [13800, 12500, 10500, 7800], true], ['iPhone 13', '256GB', [15000, 13600, 11400, 8500], true], ['iPhone 12', '64GB', [10200, 9200, 7600, 5500], true], ['iPhone 11', '64GB', [7400, 6600, 5400, 3800], true]],
+  Samsung: [['Galaxy S24', '256GB', [21500, 19800, 16500, 12000], true], ['Galaxy S23', '256GB', [15800, 14200, 11800, 8500], true], ['Galaxy S22', '256GB', [11800, 10400, 8600, 6200], true], ['Galaxy A54', '128GB', [6800, 5800, 4600, 3200], true]]
+};
+const RULES = [['รอยขนแมว', 500], ['รอยชัด', 1500], ['บุบ', 2500], ['ร้าว', 4000], ['หน้าจอมีปัญหา', 3000], ['Face ID ใช้ไม่ได้', 3000], ['แบตต่ำกว่า 80%', 800], ['ปุ่มมีปัญหา', 800]];
+const STOCK = [
+  ['iPhone 13', '128GB', 'Midnight', '354071152084632', 'B', '87%', 'ไม่มี', 'เครื่องเปล่า', 12300, null, null, 0, 'รอส่ง', 'ลาดพร้าว', 'รับซื้อ ติดต่อตรง'],
+  ['Galaxy S23', '256GB', 'Phantom Black', '350984223187614', 'A', '95%', 'ศูนย์ ถึง ก.พ. 70', 'กล่อง สาย', 14200, null, null, 0, 'รอส่ง', 'ลาดพร้าว', 'รับซื้อ True'],
+  ['iPhone 14 Pro', '256GB', 'Deep Purple', '356623116620589', 'B', '92%', 'Apple ถึง ม.ค. 70', 'กล่อง สาย', 22600, 26900, 25200, 0, 'ส่งแล้ว', 'คลังกลาง', 'รับซื้อ YelloBe'],
+  ['iPhone 12', '64GB', 'Blue', '353071281154330', 'B', '83%', 'ไม่มี', 'เครื่องเปล่า', 9200, 11500, 10600, 1, 'ส่งแล้ว', 'ลาดพร้าว', 'รับซื้อ ติดต่อตรง'],
+  ['iPhone 11', '64GB', 'White', '352918113318072', 'C', '79%', 'ไม่มี', 'เครื่องเปล่า', 5800, 6990, 6400, 5, 'ส่งแล้ว', 'ลาดพร้าว', 'รับซื้อ AIS'],
+  ['iPhone 12 Pro', '256GB', 'Graphite', '353104270923416', 'B', '85%', 'ไม่มี', 'สาย', 15400, 18900, 17500, 10, 'ส่งแล้ว', 'ลาดพร้าว', 'รับซื้อ Shopee'],
+  ['Galaxy A54', '128GB', 'Lime', '358211094471205', 'C', '88%', 'ไม่มี', 'เครื่องเปล่า', 5200, 6900, 6200, 18, 'ส่งแล้ว', 'บางนา', 'รับซื้อ ติดต่อตรง'],
+  ['iPad Air 5', '64GB', 'Space Gray', 'SN DMPXK2L9Q1', 'A', '90%', 'ไม่มี', 'กล่อง', 11500, 14500, 13500, 34, 'ผิดพลาด', 'คลังกลาง', 'เพิ่มเอง'],
+  ['Apple Watch S8', '45mm', 'Midnight', 'SN H4KX93NQ7W', 'B', '86%', 'ไม่มี', 'สายชาร์จ', 6800, 8900, 8200, 41, 'ส่งแล้ว', 'คลังกลาง', 'นำเข้า Excel']
+];
+const PERM = [['สแกน QR และตรวจตัวเครื่อง', [1, 0, 1, 0]], ['ยืนยันราคา', [1, 1, 0, 0]], ['โอนเงินและแนบสลิป', [1, 1, 0, 0]], ['ดูรูปถือบัตรเต็ม', [1, 1, 0, 0]], ['แก้ตารางราคารับซื้อ', [1, 0, 0, 0]], ['โอนสาขา / รับเข้าคลัง', [1, 0, 1, 1]], ['ขายออก ดูทุนและกำไร', [1, 0, 0, 1]]];
+
+class Component extends DCLogic {
+  q = new URLSearchParams(location.search);
+  bare = this.q.get('bare') === '1';
+  state = {
+    screen: TITLES[this.q.get('screen')] ? this.q.get('screen') : 'b02', narrow: false, drawerNav: false, toast: '', playing: false, grid: false,
+    stage: 'confirm', passCase: '0450', price0482: 12300, view: 'board', srcFilter: '', sel5: '0482', finalPrice: '12300', callNote: 'ลูกค้าต่อรอง เครื่องสภาพดี เพิ่มให้ 300', confirmedToday: 11, rejected: [],
+    sel11: '0482', claimed: { '0466': 'คุณวรรณ' }, slip: false, slipRef: '', paidToday: 9, closed: [],
+    brand: 'Apple', edits: {}, open: {}, rules: RULES.map(r => r[1]), simModel: 4, simDef: [0],
+    age: -1, drawer: this.q.get('state') === 'drawer' ? 0 : null, retail: '', whole: '', priced: {}, dlg: null,
+    cart: [2, 3], imeiIn: '', cartErr: '', buyer: '0105561234567', tier: 'ปลีก', discount: '500', pay: 'โอน', bills: [],
+    rep2: 'วิธีชำระ', peakT: [true, true], srcReq: [false, true, false, true, true, false], staffOn: [true, true, true, true, false]
+  };
+  componentDidMount() {
+    this.onResize = () => this.setState({ narrow: innerWidth < 1024 });
+    this.onResize(); addEventListener('resize', this.onResize);
+    if (this.state.screen === 'b11' && this.state.stage === 'confirm') this.setState({ stage: 'transfer' });
+  }
+  componentWillUnmount() { removeEventListener('resize', this.onResize); clearInterval(this.playIv); }
+  toastMsg(m) { this.setState({ toast: m }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2400); }
+  go(id) {
+    const o = { screen: id, drawerNav: false, drawer: null, dlg: null };
+    if (id === 'b11' && this.state.stage === 'confirm') o.stage = 'transfer';
+    this.setState(o); try { window.scrollTo(0, 0); } catch (e) {}
+  }
+
+  renderVals() {
+    const s = this.state, id = s.screen; const is = {}; is[id] = true;
+    const ic = {}; Object.keys(P).forEach(k => ic[k] = I(k));
+    const q5raw = [['0482', 'iPhone 13 128GB', 6, 'ทีมลาดพร้าว', 'คุณสมชาย', '12,000', 'B', 'ติดต่อตรง', '081-234-5678', 12000], ['0484', 'iPhone 11 64GB', 2, 'ทีมรามอินทรา', 'คุณอนันต์', '3,100', 'C', 'AIS', '089-554-1200', 3100]]
+      .filter(x => !(x[0] === '0482' && s.stage !== 'confirm') && !s.rejected.includes(x[0]));
+    const q11raw = [['0466', 'Galaxy S23 256GB', '14,200', 'ทีมลาดพร้าว', 'คุณสมชาย', 4], ['0482', 'iPhone 13 128GB', fmt(s.price0482), 'ทีมลาดพร้าว', 'คุณสมชาย', 1]]
+      .filter(x => !(x[0] === '0482' && s.stage !== 'transfer') && !s.closed.includes(x[0]));
+    const nav = [['h', 'งานวันนี้'], ['b02'], ['b03'], ['b05', q5raw.length], ['b11', q11raw.length], ['h', 'ตั้งราคา'], ['b06'], ['h', 'หลังรับซื้อ'], ['b07'], ['b08'], ['b09'], ['h', 'ระบบ'], ['b10']].map(n => {
+      if (n[0] === 'h') return { isHead: true, label: n[1] };
+      const sc = SCREENS.find(x => x[0] === n[0]); const cur = id === n[0] || (id === 'b04' && n[0] === 'b03');
+      return { isItem: true, label: sc[2], icon: I(sc[3], 20, cur ? '#111' : '#fff'), bg: cur ? '#FAD20D' : 'transparent', fg: cur ? '#111' : '#fff', cur: cur ? 'page' : 'false', hasBadge: !!n[1], badge: n[1], go: () => this.go(n[0]) };
+    });
+    const stageCol = s.stage === 'confirm' ? 2 : s.stage === 'transfer' ? 3 : 4;
+    const jobs = [['DC-2610-0482', 'iPhone 13 128GB', stageCol, s.stage === 'confirm' ? '12,000' : fmt(s.price0482), 'ทีมลาดพร้าว', 'ติดต่อตรง', s.stage === 'confirm' ? 'รอยืนยัน 6 นาที' : s.stage === 'transfer' ? 'รอคนรับงานโอน' : '', s.stage === 'confirm' ? 'w' : '']].concat(JOBS)
+      .filter(j => !s.srcFilter || j[5] === s.srcFilter);
+    const toCard = j => ({ qr: j[0], model: j[1], price: j[3], team: j[4], src: j[5], note: j[6], hasNote: !!j[6], status: COLS[j[2]], nbg: j[7] === 'w' ? '#FFF1D6' : '#F3F2EE', nfg: j[7] === 'w' ? '#7A4A00' : '#444', open: () => { if (j[0] === 'DC-2610-0482' || j[0] === 'DC-2610-0450') { this.setState({ passCase: j[0].slice(-4) }); this.go('b04'); } else this.toastMsg('ตัวอย่างนี้เปิด Passport ได้เฉพาะ DC-2610-0450 และ DC-2610-0482'); } });
+    const sel5 = q5raw.find(x => x[0] === s.sel5) || q5raw[0];
+    const fin = parseInt(String(s.finalPrice).replace(/\D/g, ''), 10) || 0;
+    const sel11 = q11raw.find(x => x[0] === s.sel11) || q11raw[0];
+    const sw = on => ({ bg: on ? '#1B6B33' : '#B5B2AA', knob: on ? '25px' : '3px' });
+    const rows = PRICE[s.brand] || [];
+    const editList = []; Object.keys(s.edits).forEach(k => { const [b, r, g] = k.split('|'); const row = PRICE[b][+r]; editList.push({ t: row[0] + ' ' + row[1] + ' เกรด ' + 'ABCD'[+g] + ' ' + fmt(row[2][+g]) + ' → ' + fmt(s.edits[k]) }); });
+    const simRows = PRICE.Apple.concat(PRICE.Samsung); const simRow = simRows[s.simModel] || simRows[0];
+    const gradeIdx = Math.min(3, s.simDef.filter(i => i >= 2 && i <= 5).length + (s.simDef.includes(1) ? 1 : 0) + (s.simDef.length ? 1 : 0));
+    const simPrice = simRow[2][gradeIdx] - s.simDef.reduce((a, i) => a + (+s.rules[i] || 0), 0);
+    const ages = [['0–7 วัน', 48, 'ทุน 512,300', 0, 7], ['8–14 วัน', 31, 'ทุน 338,900', 8, 14], ['15–30 วัน', 26, 'ทุน 274,100', 15, 30], ['เกิน 30 วัน', 7, 'ทุน 58,200', 31, 999], ['ระหว่างโอน', 3, 'TR-2610-0031', -2, -2], ['ยังไม่ตั้งราคา', STOCK.filter((x, i) => x[9] === null && !s.priced[i]).length, 'ขายไม่ได้จนกว่าจะตั้ง', -3, -3]];
+    const stockIdx = STOCK.map((r, i) => i).filter(i => { if (s.age < 0) return true; const a = ages[s.age]; if (a[3] === -3) return STOCK[i][9] === null && !s.priced[i]; if (a[3] === -2) return false; return STOCK[i][11] >= a[3] && STOCK[i][11] <= a[4]; });
+    const priceOf = i => s.priced[i] || (STOCK[i][9] !== null ? { r: STOCK[i][9], w: STOCK[i][10] } : null);
+    const det = s.drawer !== null ? STOCK[s.drawer] : null;
+    const cartRows = s.cart.map(i => { const pr = priceOf(i); const p = pr ? (s.tier === 'ปลีก' ? pr.r : pr.w) : 0; return { i, p, cost: STOCK[i][8] }; });
+    const sub = cartRows.reduce((a, c) => a + c.p, 0), cost = cartRows.reduce((a, c) => a + c.cost, 0), disc = parseInt(String(s.discount).replace(/\D/g, ''), 10) || 0, net = Math.max(0, sub - disc), profit = net - cost;
+    const addByImei = v => {
+      const k = STOCK.findIndex(r => r[3].replace(/\D|SN /g, '') === v.replace(/\D/g, '') || r[3] === v.trim());
+      if (k < 0) return this.setState({ cartErr: 'ไม่พบ IMEI/SN นี้ในสต็อก' });
+      if (s.cart.includes(k)) return this.setState({ cartErr: 'เครื่องนี้อยู่ในตะกร้าแล้ว' });
+      if (!priceOf(k)) return this.setState({ cartErr: STOCK[k][0] + ' ' + STOCK[k][1] + ' ยังไม่ตั้งราคา ตั้งราคาในสต็อกก่อน' });
+      this.setState({ cart: s.cart.concat([k]), imeiIn: '', cartErr: '' });
+    };
+    const mkSrc = sid => { try { const u = new URL(location.href); u.searchParams.set('bare', '1'); u.searchParams.set('screen', sid); u.hash = ''; return u.toString(); } catch (e) { return '?bare=1&screen=' + sid; } };
+    const dlg = s.dlg || { title: '' };
+    const rep2Data = { 'วิธีชำระ': [['เงินสด', 14, '182,400', '21,300'], ['โอน', 31, '426,900', '48,700'], ['เครดิต', 6, '154,200', '13,900']], 'สาขา': [['ลาดพร้าว', 19, '268,500', '31,200'], ['บางนา', 15, '221,300', '24,800'], ['รามอินทรา', 10, '160,400', '16,500'], ['บางแค', 7, '113,300', '11,400']], 'คนขาย': [['คุณปรีชา', 28, '412,600', '46,900'], ['คุณมาลี', 23, '350,900', '37,000']] };
+
+    const conf = s.stage !== 'confirm', dn = s.stage === 'done';
+    const EV = ['หน้า', 'หลัง', 'ซ้าย', 'ขวา', 'บน', 'ล่าง', 'แคป แบต', 'แคป IMEI', 'แคป อะไหล่'];
+    const pp = s.passCase === '0450' ? {
+      model: 'iPhone 14 Pro 256GB Deep Purple', imei: '356623116620589', qr: 'DC-2610-0450', grade: 'B', priceChip: 'ราคารับซื้อ 22,600 บาท', status: 'รับซื้อสำเร็จ เข้าคลังแล้ว', stBg: '#E4F4E8', stFg: '#1B6B33',
+      tl: [['เช็กในแอป', '12:21 ผ่าน 23 จาก 23', 1], ['สแกน QR ที่บ้านลูกค้า', '12:40 คุณสมชาย', 1], ['ตรวจตัวเครื่อง', '12:52 คุณสมชาย', 1], ['ยืนยันราคา', '12:56 คุณวรรณ', 1], ['ปิดดีล', '13:05 คุณวรรณแนบสลิป', 1], ['เข้าคลัง', '14:10 คลังกลาง กล่อง TR-2610-0029', 1], ['ขายออก', 'ตั้งราคาแล้ว ยังไม่ขาย', 0]],
+      must: [['ข้อที่ไม่ผ่าน', 'ไม่มี ผ่านครบ 23 ข้อ'], ['สภาพ', 'ไม่มีรอย'], ['แบต', '92%'], ['iCloud', 'ออกแล้ว'], ['IMEI', 'ตรงกับเครื่อง'], ['น้ำเข้า', 'ไม่พบ'], ['หน้าจอ', 'ปกติ'], ['ปุ่ม', 'ปกติ']],
+      health: [['ระบบตรวจอัตโนมัติ', '8/8'], ['การเชื่อมต่อ', '5/5'], ['หน้าจอ', '4/4'], ['สแกน ชาร์จ และปุ่ม', '3/3'], ['ข้อมูลเสริม', '3/3 แบต 92% อะไหล่ของแท้'], ['ตรวจตัวเครื่อง', 'รูป 6 ด้านครบ ทุกข้อปกติ']],
+      lines: [['ราคาประเมิน เกรด B', '22,600'], ['รายการหัก', 'ไม่มี'], ['ราคาระบบ', '22,600', 1], ['ราคาที่หลังบ้านยืนยัน', '22,600', 2]], priceNote: 'คุณวรรณ 12:56 ใช้ราคาระบบ', hasId: true,
+      seller: [['ที่มา', 'YelloBe (เว็บหรือแอป) เลขอ้างอิง YB-88213', 0], ['ชื่อ', 'นางสาวกมลวรรณ ทองดี', 0], ['เลขบัตร', '3-1006-xxxxx-72-1', 1], ['PDPA', 'ยินยอมแล้ว 12:59', 0], ['ลายเซ็น', '13:00', 0], ['สลิปโอน', '2026102913050450', 1]],
+      ev: EV.concat(['รูปถือบัตร (เบลอ)', 'รูปบัญชีรับเงิน', 'สลิปโอน'])
+    } : {
+      model: 'iPhone 13 128GB Midnight', imei: '354071152084632', qr: 'DC-2610-0482', grade: 'B', priceChip: conf ? 'ราคารับซื้อ ' + fmt(s.price0482) + ' บาท' : 'ราคาระบบ 12,000 บาท',
+      status: dn ? 'รับซื้อสำเร็จ รอส่งเข้าคลัง' : conf ? 'รอโอนเงิน' : 'รอยืนยันราคา', stBg: dn ? '#E4F4E8' : '#FFF1D6', stFg: dn ? '#1B6B33' : '#7A4A00',
+      tl: [['เช็กในแอป', '14:02 ผ่าน 21 จาก 23', 1], ['สแกน QR ที่บ้านลูกค้า', '14:18 คุณสมชาย', 1], ['ตรวจตัวเครื่อง', '14:30 คุณสมชาย', 1], ['ยืนยันราคา', conf ? '14:38 คุณนภา' : 'รอหลังบ้าน', conf], ['ปิดดีล', dn ? '14:51 คุณวรรณแนบสลิป' : conf ? 'รอโอนเงิน' : '-', dn], ['เข้าคลัง', dn ? 'พนักงานถือเครื่อง รอส่งกล่อง' : '-', 0], ['ขายออก', '-', 0]],
+      must: [['ข้อที่ไม่ผ่าน', 'ไม่มี ข้าม 2 ข้อ (ซิม การชาร์จ) พนักงานทดสอบแล้วผ่าน'], ['สภาพ', 'รอยขนแมว'], ['แบต', '87%'], ['iCloud', 'ออกแล้ว'], ['IMEI', 'ตรงกับเครื่อง'], ['น้ำเข้า', 'ไม่พบ'], ['หน้าจอ', 'ปกติ'], ['ปุ่ม', 'ปกติ']],
+      health: [['ระบบตรวจอัตโนมัติ', '8/8'], ['การเชื่อมต่อ', '4/5 ซิม ข้าม'], ['หน้าจอ', '4/4'], ['สแกน ชาร์จ และปุ่ม', '2/3 ชาร์จ ข้าม'], ['ข้อมูลเสริม', '3/3 แบต 87% อะไหล่ของแท้'], ['ตรวจตัวเครื่อง', 'รูป 6 ด้านครบ ทุกข้อปกติ']],
+      lines: [['ราคาประเมิน เกรด B', '12,500'], ['รอยขนแมว', '−500'], ['ราคาระบบ', '12,000', 1]].concat(conf ? [['ราคาที่หลังบ้านยืนยัน', fmt(s.price0482), 2]] : []),
+      priceNote: conf ? 'คุณนภา 14:38 เหตุผล ' + s.callNote : 'ยังไม่ยืนยันราคา', hasId: conf,
+      seller: [['ที่มา', 'ติดต่อตรง (โทร หรือ LINE) ไม่มีเลขอ้างอิง', 0]].concat(conf ? [['ชื่อ', 'นายธนกร วงศ์ใจดี', 0], ['เลขบัตร', '1-1037-xxxxx-31-6', 1], ['PDPA', 'ยินยอมแล้ว 14:41', 0], ['ลายเซ็น', '14:43', 0], ['สลิปโอน', dn ? '2026102914510482' : 'ยังไม่โอน', dn ? 1 : 0]] : [['ผู้ขาย', 'ยังไม่ถึงขั้นยืนยันตัวตน', 0]]),
+      ev: EV.concat(conf ? ['รูปถือบัตร (เบลอ)', 'รูปบัญชีรับเงิน'] : [], dn ? ['สลิปโอน'] : [])
+    };
+    return {
+      pp, ppLines: pp.lines.map(l => ({ k: l[0], v: l[1], fs: l[2] === 2 ? '16px' : '15px', fw: l[2] === 2 ? 500 : 400, bd: l[2] ? '#F3F2EE' : 'transparent' })),
+      passTl: pp.tl.map(t => ({ k: t[0], s: t[1], c: t[2] ? '#1B6B33' : '#E2E0D9' })),
+      mustKnow: pp.must.map(m => ({ k: m[0], v: m[1] })), health: pp.health.map(m => ({ k: m[0], v: m[1] })),
+      seller: pp.seller.map(m => ({ k: m[0], v: m[1], ff: m[2] ? "'IBM Plex Mono',monospace" : 'inherit' })),
+      evidence: pp.ev.map(k => ({ k, open: () => this.toastMsg('เปิดรูป ' + k) })), evidenceCount: pp.ev.length,
+      is, ic, screen: id, pageTitle: TITLES[id], narrow: s.narrow, navInline: !s.narrow, drawerNav: s.narrow && s.drawerNav, nav,
+      openDrawer: () => this.setState({ drawerNav: true }), closeDrawer: () => this.setState({ drawerNav: false }),
+      showProto: !this.bare, screenOpts: FLOWP.map(k => { const sc = SCREENS.find(x => x[0] === k); return { id: k, label: sc[1] + ' ' + sc[2] }; }),
+      pickScreen: e => this.go(e.target.value),
+      playLabel: s.playing ? 'หยุด' : 'เล่น flow อัตโนมัติ',
+      togglePlay: () => {
+        if (s.playing) { clearInterval(this.playIv); return this.setState({ playing: false }); }
+        this.setState({ playing: true }); this.go('b02');
+        this.playIv = setInterval(() => { const i = FLOWP.indexOf(this.state.screen); if (i >= FLOWP.length - 1) { clearInterval(this.playIv); return this.setState({ playing: false }); } this.go(FLOWP[i + 1]); }, 3000);
+      },
+      grid: s.grid, openGrid: () => this.setState({ grid: true }), closeGrid: () => this.setState({ grid: false }),
+      gridItems: FLOWP.map(k => { const sc = SCREENS.find(x => x[0] === k); return { code: sc[1], name: TITLES[k], src: mkSrc(k), go: () => { this.setState({ grid: false }); this.go(k); } }; }),
+      kpis: [['ยอดรับซื้อวันนี้', '162,400', '14 เครื่อง'], ['มูลค่าสต็อก', '1,284,500', '112 เครื่อง ตามทุน'], ['กำไรขายวันนี้', '18,750', 'ขายออก 9 เครื่อง']].map(k => ({ k: k[0], v: k[1], s: k[2] })),
+      alerts: [
+        ['รอยืนยันราคา', q5raw.length + ' รายการ', q5raw.length ? 'พนักงานรอนานสุด 6 นาที' : 'ไม่มีงานค้าง', 'ไปยืนยันราคา', '#FFF1D6', '#7A4A00', 'b05'],
+        ['รอโอนเงิน', q11raw.length + ' รายการ', 'ปกติโอนภายใน 5 นาที', 'ไปโอนเงิน', '#FFF7CC', '#4A3B00', 'b11'],
+        ['ส่งเข้า PEAK ไม่สำเร็จ', '1 รายการ', 'iPad Air 5 64GB รหัสสินค้าซ้ำในไฟล์ template', 'แก้ไข', '#FDECEC', '#B3261E', 'b07'],
+        ['สต็อกค้างเกิน 30 วัน', '7 เครื่อง', 'ทุนค้าง 58,200 บาท', 'ดูสต็อก', '#FFFFFF', '#111', 'b07']
+      ].map(a => ({ k: a[0], v: a[1], s: a[2], cta: a[3], bg: a[4], fg: a[5], go: () => { if (a[6] === 'b07' && a[0].indexOf('30') > 0) this.setState({ age: 3 }); this.go(a[6]); } })),
+      funnel: [['เช็กในแอป', 46], ['สแกน QR ที่บ้านลูกค้า', 21], ['ตกลงราคา', 16], ['เข้าคลัง', 14], ['ขายออก', 9]].map((f, i) => ({ k: f[0], v: f[1], w: Math.round(f[1] / 46 * 100) + '%', c: i === 0 ? '#111' : '#FAD20D' })),
+      bySource: [['ติดต่อตรง', 6, '68,900'], ['YelloBe', 4, '49,300'], ['Shopee', 2, '21,800'], ['True', 1, '12,600'], ['AIS', 1, '9,800']].map(r => ({ k: r[0], n: r[1], v: r[2] })),
+      teams: [['ลาดพร้าว', 5, '71%'], ['บางนา', 4, '67%'], ['รามอินทรา', 3, '60%'], ['บางแค', 2, '50%']].map(r => ({ k: r[0], n: r[1], p: r[2] })),
+      boardView: s.view === 'board', tableView: s.view === 'table', tabBoardBg: s.view === 'board' ? '#fff' : 'transparent', tabTableBg: s.view === 'table' ? '#fff' : 'transparent',
+      setBoard: () => this.setState({ view: 'board' }), setTable: () => this.setState({ view: 'table' }), srcFilter: s.srcFilter, setSrcFilter: e => this.setState({ srcFilter: e.target.value }),
+      columns: COLS.map((c, i) => { const cards = jobs.filter(j => j[2] === i).map(toCard); return { name: c, n: cards.length, cards }; }), rows3: jobs.map(toCard),
+      exportX: () => this.toastMsg('ดาวน์โหลดไฟล์ Excel แล้ว'), importX: () => this.toastMsg('เลือกไฟล์ Excel เพื่อนำเข้า'),
+      printReceipt: () => this.toastMsg('เปิดหน้าพิมพ์ใบรับซื้อ'), toStock: () => this.go('b07'),
+      askViewId: () => this.setState({ dlg: { isText: true, title: 'ดูรูปถือบัตรเต็ม', body: 'ระบบจะบันทึกว่าคุณนภาเปิดดูรูปถือบัตรของรายการ ' + pp.qr + ' เวลา ' + new Date().toTimeString().slice(0, 5), okLabel: 'เปิดดูรูป', okBg: '#111', ok: () => { this.setState({ dlg: null }); this.toastMsg('บันทึกการเปิดดูแล้ว'); } } }),
+
+      confirmedToday: s.confirmedToday, q5: q5raw.map(x => ({ model: x[1], wait: x[2], team: x[3], staff: x[4], price: x[5], grade: x[6], bd: sel5 && sel5[0] === x[0] ? '#111' : 'transparent', pick: () => this.setState({ sel5: x[0], finalPrice: String(x[9] + (x[0] === '0482' ? 300 : 0)) }) })),
+      q5Empty: !q5raw.length, q5Has: !!q5raw.length,
+      sel5: sel5 ? { model: sel5[1], qr: 'DC-2610-' + sel5[0], src: sel5[7], grade: sel5[6], price: sel5[5], staff: sel5[4], phone: sel5[8],
+        app: sel5[0] === '0482' ? 'ผ่าน 21 จาก 23 ข้าม ซิม การชาร์จ' : 'ผ่าน 19 จาก 23 Face ID ไม่ผ่าน', insp: sel5[0] === '0482' ? 'รอยขนแมว ซิมและชาร์จผ่าน ทุกข้อปกติ' : 'รอยชัด แบต 76%',
+        lines: (sel5[0] === '0482' ? [['ราคาเกรด B', '12,500'], ['รอยขนแมว', '−500']] : [['ราคาเกรด C', '5,400'], ['รอยชัด', '−1,500'], ['แบตต่ำกว่า 80%', '−800']]).map(l => ({ k: l[0], v: l[1] })) } : {},
+      mk: (() => { const sys = sel5 ? sel5[9] : 0, lo = Math.round(sys * 0.8), hi = Math.round(sys * 1.15), rlo = Math.round(sys * 0.9), rhi = Math.round(sys * 1.1); const pct = v => Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100)) + '%';
+        return { lo: fmt(lo), hi: fmt(hi), rlo: fmt(rlo), rhi: fmt(rhi), sys: fmt(sys), fin: fmt(fin), sysL: pct(sys), finL: pct(fin), rangeL: pct(rlo), rangeW: ((rhi - rlo) / (hi - lo) * 100) + '%' }; })(),
+      finalPrice: s.finalPrice, finalFmt: fmt(fin), setFinal: e => this.setState({ finalPrice: e.target.value.replace(/\D/g, '') }), callNote: s.callNote, setNote: e => this.setState({ callNote: e.target.value }),
+      callStaff: () => this.toastMsg('กำลังโทรหา ' + (sel5 ? sel5[4] : '')),
+      toPassport: () => { if (sel5 && sel5[0] === '0482') { this.setState({ passCase: '0482' }); this.go('b04'); } else this.toastMsg('ตัวอย่างนี้เปิด Passport ได้เฉพาะ DC-2610-0482'); },
+      confirmPrice: () => { if (!fin) return this.toastMsg('ใส่ราคาสุดท้ายก่อน'); const k = sel5[0]; this.setState(k === '0482' ? { stage: 'transfer', price0482: fin, confirmedToday: s.confirmedToday + 1 } : { rejected: s.rejected.concat([k]), confirmedToday: s.confirmedToday + 1 }); this.toastMsg('ยืนยัน ' + fmt(fin) + ' บาทแล้ว แอปพนักงานได้แจ้งเตือน'); },
+      useSystem: () => { this.setState({ finalPrice: String(sel5[9]) }); this.toastMsg('ใส่ราคาระบบแล้ว กดยืนยันเพื่อส่ง'); },
+      rejectBuy: () => this.setState({ dlg: { isText: true, title: 'ไม่รับซื้อเครื่องนี้', body: sel5[1] + ' แอปพนักงานจะขึ้นว่าหลังบ้านไม่รับซื้อ พร้อมบันทึกจากสาย', okLabel: 'ยืนยันไม่รับซื้อ', okBg: '#B3261E', ok: () => { this.setState({ dlg: null, rejected: s.rejected.concat([sel5[0]]) }); this.toastMsg('บันทึกไม่รับซื้อแล้ว'); } } }),
+      paidToday: s.paidToday, q11Empty: !q11raw.length, q11Has: !!q11raw.length,
+      q11: q11raw.map(x => { const c = s.claimed[x[0]]; return { model: x[1], amt: x[2], team: x[3], staff: x[4], wait: x[5], claim: c ? c + ' รับงานแล้ว' : 'ยังไม่มีคนรับ', cbg: c ? '#F3F2EE' : '#FFF1D6', cfg: c ? '#444' : '#7A4A00', bd: sel11 && sel11[0] === x[0] ? '#111' : 'transparent', pick: () => this.setState({ sel11: x[0], slip: false, slipRef: '' }) }; }),
+      sel11: sel11 ? { model: sel11[1], qr: 'DC-2610-' + sel11[0], amt: sel11[2], claimed: !!s.claimed[sel11[0]], unclaimed: !s.claimed[sel11[0]], claimer: s.claimed[sel11[0]] || '',
+        seller: (sel11[0] === '0482' ? [['ชื่อ', 'นายธนกร วงศ์ใจดี', 0], ['เลขบัตร', '1-1037-xxxxx-31-6', 1], ['เซ็นเมื่อ', '29 ต.ค. 2569 14:43', 0]] : [['ชื่อ', 'นางสาวพิมพ์ชนก ศรีสุข', 0], ['เลขบัตร', '3-1012-xxxxx-55-2', 1], ['เซ็นเมื่อ', '29 ต.ค. 2569 14:22', 0]]).map(m => ({ k: m[0], v: m[1], ff: m[2] ? "'IBM Plex Mono',monospace" : 'inherit' })) } : {},
+      qrAcct: qrSvg(77), claim: () => { this.setState({ claimed: Object.assign({}, s.claimed, { [sel11[0]]: 'คุณวรรณ' }) }); this.toastMsg('รับงานแล้ว ชื่อคุณวรรณขึ้นในแอปพนักงาน'); },
+      noSlip: !s.slip, slipOn: s.slip, attachSlip: () => this.setState({ slip: true, slipRef: '2026102914510482' }), slipRef: s.slipRef, setSlipRef: e => this.setState({ slipRef: e.target.value }), refHint: s.slip ? '(อ่านจากสลิปแล้ว)' : '',
+      canClose: !!(sel11 && s.claimed[sel11[0]] && s.slip && s.slipRef), cannotClose: !(sel11 && s.claimed[sel11[0]] && s.slip && s.slipRef),
+      closeBlock: sel11 && !s.claimed[sel11[0]] ? 'กดรับงานก่อน' : !s.slip ? 'แนบสลิปก่อน' : 'ใส่เลขอ้างอิง',
+      closeJob: () => { const k = sel11[0]; this.setState(Object.assign({ closed: s.closed.concat([k]), slip: false, slipRef: '', paidToday: s.paidToday + 1 }, k === '0482' ? { stage: 'done' } : {})); this.toastMsg('ปิดงานแล้ว แอปพนักงานขึ้นรับซื้อสำเร็จ'); },
+      reportAcct: () => this.setState({ dlg: { isText: true, hasReason: true, title: 'แจ้งปัญหาบัญชีกลับไปที่พนักงาน', body: 'พนักงานจะได้แจ้งเตือนให้ขอรูปบัญชีใหม่จากลูกค้า', okLabel: 'ส่งแจ้งเตือน', okBg: '#111', ok: () => { this.setState({ dlg: null }); this.toastMsg('แจ้งพนักงานแล้ว'); } } }),
+      brands: Object.keys(PRICE).map(b => ({ name: b, on: s.brand === b, bg: s.brand === b ? '#fff' : 'transparent', pick: () => this.setState({ brand: b }) })),
+      priceRows: rows.map((r, ri) => { const okey = s.brand + '|' + ri; const open = s.open[okey] !== undefined ? s.open[okey] : r[3]; const o = sw(open);
+        return { model: r[0], cap: r[1], op: open ? 1 : 0.55, open, aria: 'รับซื้อ ' + r[0] + ' ' + r[1], swBg: o.bg, knob: o.knob, toggle: () => this.setState({ open: Object.assign({}, s.open, { [okey]: !open }) }),
+          cells: r[2].map((v, gi) => { const k = s.brand + '|' + ri + '|' + gi; const ed = s.edits[k]; return { v: ed !== undefined ? fmt(ed) : fmt(v), aria: r[0] + ' ' + r[1] + ' เกรด ' + 'ABCD'[gi], bd: ed !== undefined ? '#7A4A00' : '#ECEAE4', bg: ed !== undefined ? '#FFF7CC' : '#fff', from: ed !== undefined ? 'จาก ' + fmt(v) : '',
+            set: e => { const n = parseInt(e.target.value.replace(/\D/g, ''), 10); const ne = Object.assign({}, s.edits); if (!n || n === v) delete ne[k]; else ne[k] = n; this.setState({ edits: ne }); } }; }) }; }),
+      hasEdits: Object.keys(s.edits).length > 0, editCount: Object.keys(s.edits).length, editList,
+      cancelEdits: () => this.setState({ edits: {} }),
+      saveEdits: () => { Object.keys(s.edits).forEach(k => { const [b, r, g] = k.split('|'); PRICE[b][+r][2][+g] = s.edits[k]; }); this.setState({ edits: {} }); this.toastMsg('บันทึกราคาแล้ว มีผลกับการเช็กครั้งถัดไป'); },
+      addModel: () => this.toastMsg('เปิดฟอร์มเพิ่มรุ่น'),
+      rules: RULES.map((r, i) => ({ k: r[0], v: fmt(s.rules[i]), set: e => { const a = s.rules.slice(); a[i] = parseInt(e.target.value.replace(/\D/g, ''), 10) || 0; this.setState({ rules: a }); } })),
+      simModels: simRows.map((r, i) => ({ i, n: r[0] + ' ' + r[1] })), simModel: s.simModel, setSimModel: e => this.setState({ simModel: +e.target.value }),
+      simDefects: RULES.map((r, i) => { const on = s.simDef.includes(i); return { k: r[0], on, bg: on ? '#111' : '#fff', fg: on ? '#fff' : '#111', bd: on ? '#111' : '#D6D3CB', toggle: () => this.setState({ simDef: on ? s.simDef.filter(x => x !== i) : s.simDef.concat([i]) }) }; }),
+      sim: { grade: 'ABCD'[gradeIdx], price: fmt(Math.max(0, simPrice)) },
+      ageTiles: ages.map((a, i) => { const on = s.age === i; const warn = i === 3, unp = i === 5; return { k: a[0], n: a[1], s: a[2], bd: on ? '#111' : 'transparent', bg: warn ? '#FDECEC' : unp ? '#FFF1D6' : '#fff', fg: warn ? '#B3261E' : unp ? '#7A4A00' : '#111', pick: () => this.setState({ age: on ? -1 : i }) }; }),
+      stockRows: stockIdx.map(i => { const r = STOCK[i]; const pr = priceOf(i); const pk = r[12]; return { model: r[0], cap: r[1], color: r[2], imei: r[3], cond: r[4], bat: r[5], war: r[6], acc: r[7], cost: fmt(r[8]), unpriced: !pr, priced: !!pr, sale: pr ? 'ปลีก ' + fmt(pr.r) + ' ส่ง ' + fmt(pr.w) : '',
+        age: r[11] === 0 ? 'วันนี้' : r[11] + ' วัน', ageFg: r[11] > 30 ? '#B3261E' : '#111', ageFw: r[11] > 30 ? 500 : 400, peak: pk, pbg: pk === 'ผิดพลาด' ? '#FDECEC' : pk === 'รอส่ง' ? '#F3F2EE' : '#E4F4E8', pfg: pk === 'ผิดพลาด' ? '#B3261E' : pk === 'รอส่ง' ? '#444' : '#1B6B33',
+        open: () => { const p = priceOf(i); this.setState({ drawer: i, retail: p ? String(p.r) : '', whole: p ? String(p.w) : '' }); } }; }),
+      exportPrice: () => this.toastMsg('ดาวน์โหลด Excel เครื่องที่ยังไม่ตั้งราคา ' + STOCK.filter((x, i) => !priceOf(i)).length + ' เครื่อง'),
+      openImport: () => this.setState({ dlg: { isImport: true, title: 'ตัวอย่างก่อนนำเข้าราคา' } }),
+      importRows: [['354071152084632', 'iPhone 13 128GB', '14,900', '13,900'], ['350984223187614', 'Galaxy S23 256GB', '17,500', '16,300']].map(r => ({ a: r[0], b: r[1], c: r[2], d: r[3] })),
+      applyImport: () => { this.setState({ dlg: null, priced: Object.assign({}, s.priced, { 0: { r: 14900, w: 13900 }, 1: { r: 17500, w: 16300 } }) }); this.toastMsg('นำเข้าราคา 2 เครื่องแล้ว บันทึกว่ามาจาก Excel'); },
+      addProduct: () => this.toastMsg('เปิดฟอร์มเพิ่มสินค้า กรอกทุนเอง'), sendPeak: () => this.toastMsg('ส่งรายการรอส่งเข้า PEAK แล้ว'),
+      det: det ? { model: det[0] + ' ' + det[1] + ' ' + det[2], retail: s.retail, whole: s.whole,
+        rows: [['IMEI/SN', det[3], 1], ['ทุน', fmt(det[8]) + ' บาท (' + (det[14].indexOf('รับซื้อ') === 0 ? 'ราคารับซื้อ' : 'กรอกเอง') + ')', 0], ['สภาพ', det[4] + ' แบต ' + det[5], 0], ['อุปกรณ์', det[7], 0], ['สาขา', det[13], 0], ['ที่มา', det[14], 0], ['หมายเหตุ', 'TH: ' + (det[4] === 'B' ? 'มีรอยขนแมวเล็กน้อย' : 'สภาพตามเกรด') + ' EN: ' + (det[4] === 'B' ? 'Light hairline scratches' : 'As graded'), 0]].map(m => ({ k: m[0], v: m[1], ff: m[2] ? "'IBM Plex Mono',monospace" : 'inherit' })),
+        log: s.priced[s.drawer] ? 'ตั้งราคาโดยคุณนภา วันนี้' : det[9] === null ? 'ยังไม่ตั้งราคา ขายไม่ได้จนกว่าจะตั้ง' : 'ตั้งราคาโดยคุณมาลี 28 ต.ค. 2569 จากการแก้เอง' } : { rows: [], model: '', log: '', retail: '', whole: '' },
+      setRetail: e => this.setState({ retail: e.target.value.replace(/\D/g, '') }), setWhole: e => this.setState({ whole: e.target.value.replace(/\D/g, '') }),
+      savePrice: () => { if (!s.retail || !s.whole) return this.toastMsg('กรอกราคาปลีกและราคาส่งก่อน'); this.setState({ priced: Object.assign({}, s.priced, { [s.drawer]: { r: +s.retail, w: +s.whole } }), drawer: null }); this.toastMsg('บันทึกราคาแล้ว'); },
+      transferBranch: () => this.toastMsg('เลือกสาขาปลายทางเพื่อโอน'), sellThis: () => { const i = s.drawer; if (!priceOf(i)) return this.toastMsg('ตั้งราคาก่อนจึงขายได้'); this.setState({ cart: s.cart.includes(i) ? s.cart : s.cart.concat([i]) }); this.go('b08'); },
+      drawerTf: det ? 'translateX(0)' : 'translateX(105%)', ovOp: det || s.dlg ? 1 : 0, ovPe: det || s.dlg ? 'auto' : 'none',
+      dlg, dlgOp: s.dlg ? 1 : 0, dlgPe: s.dlg ? 'auto' : 'none', dlgTf: s.dlg ? 'translate(-50%,-50%)' : 'translate(-50%,calc(-50% + 12px))',
+      closeAll: () => this.setState({ drawer: null, dlg: null }),
+      imeiIn: s.imeiIn, setImeiIn: e => this.setState({ imeiIn: e.target.value }), imeiKey: e => { if (e.key === 'Enter') addByImei(s.imeiIn); }, addCart: () => addByImei(s.imeiIn), cartErr: s.cartErr,
+      stockOpts: STOCK.map((r, i) => ({ v: i, n: r[0] + ' ' + r[1] + (priceOf(i) ? '' : ' (ยังไม่ตั้งราคา)') })).filter(o => !s.cart.includes(o.v)),
+      pickStock: e => { if (e.target.value === '') return; addByImei(STOCK[+e.target.value][3]); },
+      cart: cartRows.map(c => { const r = STOCK[c.i]; return { model: r[0] + ' ' + r[1], imei: r[3], cond: r[4], bat: r[5], price: fmt(c.p), cost: fmt(c.cost), profit: fmt(c.p - c.cost), remove: () => this.setState({ cart: s.cart.filter(x => x !== c.i) }) }; }),
+      cartEmpty: !cartRows.length, cartCount: cartRows.length, subTotal: fmt(sub), discount: s.discount, discountFmt: fmt(disc), setDiscount: e => this.setState({ discount: e.target.value.replace(/\D/g, '') }),
+      netTotal: fmt(net), profitTotal: fmt(profit), profitPct: net ? (profit / net * 100).toFixed(1) + '%' : '0%',
+      buyer: s.buyer, setBuyer: e => this.setState({ buyer: e.target.value }),
+      tiers: ['ปลีก', 'ส่ง'].map(k => ({ k, on: s.tier === k, bg: s.tier === k ? '#111' : 'transparent', fg: s.tier === k ? '#fff' : '#111', pick: () => this.setState({ tier: k }) })),
+      pays: ['เงินสด', 'โอน', 'เครดิต'].map(k => ({ k, on: s.pay === k, bg: s.pay === k ? '#111' : 'transparent', fg: s.pay === k ? '#fff' : '#111', pick: () => this.setState({ pay: k }) })),
+      saveSale: () => { if (!cartRows.length) return this.toastMsg('ใส่เครื่องในตะกร้าก่อน'); const no = 'SO-2610-' + String(118 + s.bills.length).padStart(4, '0'); this.setState({ bills: [[no, '29 ต.ค.', s.buyer || '-', s.tier, s.pay, cartRows.length, fmt(net), fmt(profit), 'รอส่งสิ้นเดือน']].concat(s.bills), cart: [] }); this.toastMsg('บันทึกการขาย ' + no + ' แล้ว ตัดสต็อกแล้ว'); },
+      bills: s.bills.concat([['SO-2610-0117', '29 ต.ค.', '0105559876543', 'ส่ง', 'เครดิต', 3, '48,600', '5,900', 'รอส่งสิ้นเดือน'], ['SO-2610-0116', '29 ต.ค.', '081-889-2201', 'ปลีก', 'โอน', 1, '18,900', '3,500', 'รอส่งสิ้นเดือน'], ['SO-2610-0115', '28 ต.ค.', '089-110-7734', 'ปลีก', 'เงินสด', 1, '11,500', '2,300', 'รอส่งสิ้นเดือน']])
+        .map(b => ({ no: b[0], d: b[1], c: b[2], g: b[3], p: b[4], n: b[5], t: b[6], pr: b[7], peak: b[8] })),
+      rep1: [['ติดต่อตรง', 142, '1,612,400', 128, '186,300', '1,456', '68%'], ['YelloBe', 96, '1,108,900', 84, '124,700', '1,485', '61%'], ['Shopee', 51, '552,300', 44, '58,900', '1,339', '54%'], ['True', 28, '331,600', 25, '33,800', '1,352', '49%'], ['AIS', 22, '241,000', 19, '24,100', '1,268', '46%']].map(r => ({ a: r[0], b: r[1], c: r[2], d: r[3], e: r[4], f: r[5], g: r[6] })),
+      rep2Tabs: ['วิธีชำระ', 'สาขา', 'คนขาย'].map(k => ({ k, on: s.rep2 === k, bg: s.rep2 === k ? '#fff' : 'transparent', pick: () => this.setState({ rep2: k }) })), rep2Head: s.rep2,
+      rep2: rep2Data[s.rep2].map(r => ({ a: r[0], b: r[1], c: r[2], d: r[3] })),
+      rep3: [['iPhone 13 128GB', 38, '462,500', '12,171'], ['iPhone 14 Pro 256GB', 21, '471,900', '22,471'], ['iPhone 12 64GB', 33, '296,700', '8,991'], ['Galaxy S23 256GB', 17, '238,300', '14,018'], ['iPhone 11 64GB', 29, '182,700', '6,300']].map(r => ({ a: r[0], b: r[1], c: r[2], d: r[3] })),
+      rep4: [['0–7 วัน', '512,300', 100, '#1B6B33'], ['8–14 วัน', '338,900', 66, '#FAD20D'], ['15–30 วัน', '274,100', 54, '#E0A800'], ['เกิน 30 วัน', '58,200', 11, '#B3261E']].map(r => ({ k: r[0], v: r[1] + ' บาท', w: r[2] + '%', c: r[3] })),
+      peakToggles: ['ส่งสินค้าที่รับซื้อเข้า PEAK', 'ส่งบิลขายรอบสิ้นเดือน'].map((k, i) => { const o = sw(s.peakT[i]); return { k, on: s.peakT[i], bg: o.bg, knob: o.knob, toggle: () => { const a = s.peakT.slice(); a[i] = !a[i]; this.setState({ peakT: a }); } }; }),
+      srcRows: ['ติดต่อตรง (โทร หรือ LINE)', 'Shopee', 'YelloBe (เว็บหรือแอป)', 'True', 'AIS', 'อื่น ๆ'].map((k, i) => { const o = sw(s.srcReq[i]); return { k, on: s.srcReq[i], aria: 'บังคับเลขอ้างอิง ' + k, bg: o.bg, knob: o.knob, toggle: () => { const a = s.srcReq.slice(); a[i] = !a[i]; this.setState({ srcReq: a }); } }; }),
+      addSource: () => this.toastMsg('เพิ่มช่องทางใหม่'), addStaff: () => this.toastMsg('เปิดฟอร์มเพิ่มพนักงาน'),
+      staffRows: [['คุณนภา', 'สำนักงานใหญ่', 'ผู้ยืนยันราคา', 'ตอนนี้'], ['คุณวรรณ', 'สำนักงานใหญ่', 'ผู้ยืนยันราคา', '2 นาทีที่แล้ว'], ['คุณสมชาย', 'ทีมลาดพร้าว', 'พนักงานรับซื้อ', '5 นาทีที่แล้ว'], ['คุณมาลี', 'คลังกลาง', 'คลัง/ขาย', 'เมื่อวาน'], ['คุณประวิทย์', 'ทีมบางแค', 'พนักงานรับซื้อ', '12 ก.ย.']].map((r, i) => { const o = sw(s.staffOn[i]); return { n: r[0], t: r[1], r: r[2], l: r[3], on: s.staffOn[i], aria: 'เปิดใช้งาน ' + r[0], bg: o.bg, knob: o.knob, toggle: () => { const a = s.staffOn.slice(); a[i] = !a[i]; this.setState({ staffOn: a }); } }; }),
+      permRows: PERM.map(p => ({ k: p[0], cells: p[1].map(v => ({ aria: v ? 'ได้' : 'ไม่ได้', el: v ? I('check', 20, '#1B6B33', 2.4) : I('minus', 20, '#B5B2AA') })) })),
+      toast: s.toast, toastOp: s.toast ? 1 : 0
+    };
+  }
+}
+</script>
+</body>
+</html>

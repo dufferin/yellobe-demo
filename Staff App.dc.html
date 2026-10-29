@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Kanit,sans-serif;color:#111;background:#E8E6DF;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit;color:inherit}
+a{color:#111}a:hover{color:#5C5A55}
+input::placeholder{color:#6B6862}
+@keyframes ybspin{to{transform:rotate(360deg)}}
+@keyframes ybpop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion: reduce){*{transition-duration:1ms !important}}
+</style>
+</helmet>
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;font-family:Kanit,sans-serif;color:#111">
+<sc-if value="{{ showPanel }}" hint-placeholder-val="{{ true }}">
+<aside style="width:300px;flex:none;background:#FFFFFF;border-right:1px solid #E2E0D9;display:flex;flex-direction:column;height:100vh;position:sticky;top:0;box-sizing:border-box">
+  <div style="padding:20px 20px 12px;display:flex;flex-direction:column;gap:12px">
+    <img src="assets/logo.svg" alt="YelloBe" style="width:112px;height:auto">
+    <div>
+      <div style="font-size:18px;font-weight:500">Staff App</div>
+      <div style="font-size:13px;color:#5C5A55">แอปพนักงาน เข้าจาก “สำหรับพนักงาน”</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button onClick="{{ togglePlay }}" style="flex:1.4;white-space:nowrap;height:44px;border:none;border-radius:999px;background:#111;color:#fff;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">{{ playIcon }}{{ playLabel }}</button>
+      <button onClick="{{ openGrid }}" style="flex:1;height:44px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">{{ ic.grid }}ดูทุกจอ</button>
+    </div>
+    <div style="display:flex;gap:8px;font-size:13px">
+      <a href="Customer%20App.dc.html" style="padding:6px 10px;border-radius:999px;background:#F3F2EE;text-decoration:none">Customer App</a>
+      <a href="Back-office.dc.html" style="padding:6px 10px;border-radius:999px;background:#F3F2EE;text-decoration:none">Back-office</a>
+    </div>
+  </div>
+  <sc-if value="{{ hasDemos }}">
+  <div style="margin:0 16px 8px;padding:12px;border-radius:16px;background:#FFF7CC;display:flex;flex-direction:column;gap:8px">
+    <div style="font-size:12px;color:#5C4A00">ทางลัดเดโมของจอนี้</div>
+    <sc-for list="{{ demos }}" as="d"><button onClick="{{ d.fn }}" style="min-height:36px;border:1px solid #111;border-radius:999px;background:#fff;font-size:13px;cursor:pointer">{{ d.label }}</button></sc-for>
+  </div>
+  </sc-if>
+  <div style="flex:1;overflow-y:auto;padding:4px 12px 20px">
+    <sc-for list="{{ screens }}" as="s" hint-placeholder-count="12">
+      <button onClick="{{ s.go }}" style="display:flex;gap:10px;align-items:center;width:100%;min-height:38px;padding:6px 10px;border:none;border-radius:10px;background:{{ s.bg }};text-align:left;cursor:pointer">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5C5A55;width:38px;flex:none">{{ s.code }}</span>
+        <span style="font-size:14px;font-weight:{{ s.fw }}">{{ s.name }}</span>
+      </button>
+    </sc-for>
+  </div>
+</aside>
+</sc-if>
+<main style="flex:1;min-width:0;display:flex;align-items:center;justify-content:center;padding:{{ mainPad }};box-sizing:border-box;min-height:100vh">
+<div style="width:{{ frameW }}px;height:{{ frameH }}px;flex:none">
+<div style="width:414px;height:868px;transform:scale({{ scale }});transform-origin:top left;border-radius:60px;background:#111;padding:12px;box-sizing:border-box;box-shadow:0 30px 60px rgba(0,0,0,.18)">
+<div style="position:relative;width:390px;height:844px;border-radius:48px;overflow:hidden;background:#F7F6F2">
+  <div ref="{{ layerRef }}" style="position:absolute;inset:0;z-index:0;pointer-events:none"></div>
+  <div ref="{{ screenRef }}" style="position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;background:#F7F6F2;padding-top:{{ padTop }}px;box-sizing:border-box">
+
+<sc-if value="{{ isJob }}">
+  <div style="flex:none;background:#FFFFFF;border-bottom:1px solid #ECEAE4">
+    <div style="display:flex;align-items:center;gap:4px;height:56px;padding:0 16px 0 8px">
+      <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:17px;font-weight:500;line-height:1.2">iPhone 13 128GB</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#5C5A55">DC-2610-0482</div>
+      </div>
+      <div style="text-align:right"><div style="font-size:15px;color:#5C5A55">{{ jobPriceLabel }}</div><div style="font-size:18px;font-weight:600">{{ jobPrice }}</div></div>
+    </div>
+    <div style="display:flex;gap:6px;padding:0 16px 10px">
+      <sc-for list="{{ jobSteps }}" as="j"><div style="flex:1;display:flex;flex-direction:column;gap:4px"><div style="height:4px;border-radius:2px;background:{{ j.bar }}"></div><div style="font-size:15px;color:{{ j.fg }};font-weight:{{ j.fw }}">{{ j.name }}</div></div></sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.s01 }}">
+  <div style="display:flex;align-items:center;height:56px;padding:0 8px;flex:none">
+    <a href="Customer%20App.dc.html" style="min-height:44px;display:flex;align-items:center;gap:4px;padding:0 8px;font-size:15px;text-decoration:none">{{ ic.back }}หน้าลูกค้า</a>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px 24px 24px;display:flex;flex-direction:column;gap:20px">
+    <img src="assets/logo.svg" alt="YelloBe" style="width:120px;height:auto">
+    <h1 style="margin:0;font-size:28px;font-weight:500">เข้าสู่ระบบพนักงาน</h1>
+    <label style="display:flex;flex-direction:column;gap:6px;font-size:15px">รหัสพนักงาน<input value="{{ f.emp }}" onInput="{{ setEmp }}" autocomplete="username" style="height:56px;border-radius:16px;border:1.5px solid #D6D3CB;background:#fff;padding:0 16px;font-size:17px;font-family:'IBM Plex Mono',monospace;box-sizing:border-box"></label>
+    <label style="display:flex;flex-direction:column;gap:6px;font-size:15px">รหัสผ่าน<input type="password" value="{{ f.pw }}" onInput="{{ setPw }}" autocomplete="current-password" style="height:56px;border-radius:16px;border:1.5px solid #D6D3CB;background:#fff;padding:0 16px;font-size:17px;box-sizing:border-box"></label>
+    <label style="display:flex;align-items:center;gap:12px;min-height:44px;font-size:16px;cursor:pointer"><input type="checkbox" checked="{{ f.remember }}" onChange="{{ toggleRemember }}" style="width:22px;height:22px;accent-color:#111">จำฉันไว้ในเครื่องนี้</label>
+    <div style="font-size:15px;color:#5C5A55">ลืมรหัสผ่าน ติดต่อหัวหน้าทีม</div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">เข้าสู่ระบบ</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.s02 }}">
+  <div style="flex:1;overflow-y:auto;padding:12px 20px 20px;display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:44px;height:44px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center;font-weight:500">สช</div>
+      <div style="flex:1"><div style="font-size:18px;font-weight:500">คุณสมชาย</div><div style="font-size:15px;color:#5C5A55">ทีมลาดพร้าว</div></div>
+      <button aria-label="การแจ้งเตือน" style="width:44px;height:44px;border:none;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.bell }}</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+      <div style="padding:12px;border-radius:20px;background:#111;color:#fff"><div style="font-size:15px;color:#D9D7D0">รับซื้อวันนี้</div><div style="font-size:24px;font-weight:600">{{ homeCount }}</div><div style="font-size:15px;color:#D9D7D0">เครื่อง</div></div>
+      <div style="padding:12px;border-radius:20px;background:#fff"><div style="font-size:15px;color:#5C5A55">มูลค่าวันนี้</div><div style="font-size:20px;font-weight:600;line-height:1.5">{{ homeValue }}</div><div style="font-size:15px;color:#5C5A55">บาท</div></div>
+      <div style="padding:12px;border-radius:20px;background:#fff"><div style="font-size:15px;color:#5C5A55">ถือรอส่งคลัง</div><div style="font-size:24px;font-weight:600">6</div><div style="font-size:15px;color:#5C5A55">เครื่อง</div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:16px;font-weight:500">ต้องทำตอนนี้</div>
+      <sc-if value="{{ hasTodo }}">
+        <button onClick="{{ toS08b }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:20px;border:2px solid #FAD20D;background:#FFF7CC;text-align:left;cursor:pointer">
+          <div style="flex:1"><div style="font-size:16px;font-weight:500">หลังบ้านยืนยันราคาแล้ว</div><div style="font-size:15px;color:#444">iPhone 13 128GB ราคา 12,300 บาท</div></div>{{ ic.chev }}
+        </button>
+      </sc-if>
+      <sc-if value="{{ noTodo }}"><div style="padding:14px 16px;border-radius:20px;background:#fff;font-size:15px;color:#5C5A55">ยังไม่มีงานค้าง กดสแกนด้านล่างเพื่อเริ่มรับซื้อ</div></sc-if>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:16px;font-weight:500">รายการวันนี้</div>
+      <div style="border-radius:20px;background:#fff;padding:0 16px">
+        <sc-for list="{{ todayList }}" as="r" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid {{ r.line }}">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:16px;font-weight:500">{{ r.model }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#5C5A55">{{ r.qr }}</div>
+              <div style="font-size:15px;color:#5C5A55">{{ r.note }}</div>
+            </div>
+            <span style="padding:4px 10px;border-radius:999px;font-size:15px;background:{{ r.bg }};color:{{ r.fg }}">{{ r.st }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.s03 }}">
+  <div style="flex:1;background:#1A1A1A;position:relative;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;height:56px;padding:0 8px;color:#fff">
+      <button aria-label="ปิด" onClick="{{ toHome }}" style="width:44px;height:44px;border:none;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.x }}</button>
+      <div style="flex:1;text-align:center;font-size:17px;font-weight:500">สแกน QR ลูกค้า</div>
+      <div style="width:44px"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
+      <div style="position:relative;width:240px;height:240px">
+        <div style="position:absolute;left:0;top:0;width:44px;height:44px;border-left:4px solid #FAD20D;border-top:4px solid #FAD20D;border-radius:16px 0 0 0"></div>
+        <div style="position:absolute;right:0;top:0;width:44px;height:44px;border-right:4px solid #FAD20D;border-top:4px solid #FAD20D;border-radius:0 16px 0 0"></div>
+        <div style="position:absolute;left:0;bottom:0;width:44px;height:44px;border-left:4px solid #FAD20D;border-bottom:4px solid #FAD20D;border-radius:0 0 0 16px"></div>
+        <div style="position:absolute;right:0;bottom:0;width:44px;height:44px;border-right:4px solid #FAD20D;border-bottom:4px solid #FAD20D;border-radius:0 0 16px 0"></div>
+        <div style="position:absolute;inset:36px;opacity:{{ scanQrOp }};transition:opacity 200ms">{{ qrW }}</div>
+      </div>
+      <div style="color:#fff;font-size:16px">{{ scanHint }}</div>
+    </div>
+    <div style="background:#FFFFFF;border-radius:28px 28px 0 0;padding:20px 24px 34px;display:flex;flex-direction:column;gap:12px">
+      <sc-if value="{{ scan.isScanning }}">
+        <div style="display:flex;align-items:center;gap:12px;font-size:16px">{{ spin }}กำลังหา QR ในกรอบ</div>
+        <button onClick="{{ toManual }}" style="width:100%;height:56px;border:1.5px solid #111;border-radius:999px;background:transparent;font-size:17px;font-weight:500;cursor:pointer">กรอกรหัสเอง</button>
+      </sc-if>
+      <sc-if value="{{ scan.isManual }}">
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:15px">รหัสใต้ QR
+          <div style="display:flex;align-items:center;height:56px;border-radius:16px;border:1.5px solid #111;padding:0 16px;gap:4px;font-family:'IBM Plex Mono',monospace;font-size:18px"><span>DC-</span><input inputmode="numeric" value="{{ scan.code }}" onInput="{{ setCode }}" placeholder="2610-0482" aria-label="รหัสใต้ QR" style="flex:1;border:none;outline:none;font-family:inherit;font-size:18px;background:transparent;min-width:0"></div>
+        </label>
+        <button onClick="{{ manualOk }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer">ตรวจรหัส</button>
+      </sc-if>
+      <sc-if value="{{ scan.isFound }}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+          <div><div style="font-size:20px;font-weight:500">iPhone 13 128GB</div><div style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#5C5A55">DC-2610-0482</div><div style="font-size:15px;color:#5C5A55">ผลเช็ก ผ่าน 21 จาก 23</div></div>
+          <span style="display:flex;gap:6px;align-items:center;padding:6px 12px;border-radius:999px;background:#E4F4E8;color:#1B6B33;font-size:15px;white-space:nowrap">{{ ic.clock }}เหลือ 18 นาที</span>
+        </div>
+        <button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">เปิดผลตรวจ</button>
+      </sc-if>
+      <sc-if value="{{ scan.isBad }}">
+        <div style="display:flex;gap:12px;padding:14px 16px;border-radius:20px;background:#FDECEC;color:#B3261E">{{ ic.info }}<div><div style="font-size:16px;font-weight:500">{{ scan.badTitle }}</div><div style="font-size:15px">{{ scan.badSub }}</div></div></div>
+        <button onClick="{{ rescan }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#111;color:#fff;font-size:18px;font-weight:500;cursor:pointer">สแกนใหม่</button>
+      </sc-if>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.s05 }}">
+  <div style="flex:1;overflow-y:auto;padding:16px 20px 20px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;gap:8px">
+      <div style="flex:1;padding:14px 16px;border-radius:20px;background:#fff"><div style="font-size:15px;color:#5C5A55">ผลตรวจจากแอป</div><div style="font-size:20px;font-weight:500">ผ่าน 21 จาก 23</div></div>
+      <div style="flex:1;padding:14px 16px;border-radius:20px;background:#FFF1D6;color:#7A4A00"><div style="font-size:15px">ต้องตรวจเพิ่ม</div><div style="font-size:20px;font-weight:500">{{ extraLeft }}</div></div>
+    </div>
+    <div style="font-size:16px;font-weight:500">ตรวจเพิ่มก่อน</div>
+    <sc-for list="{{ extras }}" as="x" hint-placeholder-count="2">
+      <div style="padding:14px 16px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:16px;font-weight:500">{{ x.name }}</div>
+        <div style="font-size:15px;line-height:1.5"><span style="color:#5C5A55">ลูกค้าเจอ</span> {{ x.found }}<br><span style="color:#5C5A55">ต้องทำ</span> {{ x.todo }}</div>
+        <div role="radiogroup" aria-label="{{ x.name }}" style="display:flex;gap:8px">
+          <button role="radio" aria-checked="{{ x.isOk }}" onClick="{{ x.setOk }}" style="flex:1;height:44px;border-radius:999px;border:1.5px solid {{ x.okBd }};background:{{ x.okBg }};color:{{ x.okFg }};font-size:15px;cursor:pointer">ผ่าน</button>
+          <button role="radio" aria-checked="{{ x.isBad }}" onClick="{{ x.setBad }}" style="flex:1;height:44px;border-radius:999px;border:1.5px solid {{ x.badBd }};background:{{ x.badBg }};color:{{ x.badFg }};font-size:15px;cursor:pointer">ไม่ผ่าน</button>
+        </div>
+      </div>
+    </sc-for>
+    <div style="font-size:16px;font-weight:500">ภาพแคปจากลูกค้า</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+      <sc-for list="{{ shots }}" as="sh">
+        <button onClick="{{ sh.open }}" style="border:none;border-radius:16px;background:#fff;padding:8px;cursor:pointer;display:flex;flex-direction:column;gap:6px;text-align:left">
+          <div style="height:96px;border-radius:10px;background:#F3F2EE;display:flex;align-items:center;justify-content:center;font-size:15px;font-family:'IBM Plex Mono',monospace;color:#444;padding:6px;box-sizing:border-box;text-align:center;word-break:break-all">{{ sh.val }}</div>
+          <div style="font-size:15px">{{ sh.name }}</div>
+        </button>
+      </sc-for>
+    </div>
+    <div style="font-size:16px;font-weight:500">หัวข้ออื่น</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ groups }}" as="g">
+        <div style="border-radius:20px;background:#fff;overflow:hidden">
+          <button onClick="{{ g.toggle }}" aria-expanded="{{ g.open }}" style="width:100%;display:flex;align-items:center;gap:12px;padding:0 16px;height:56px;border:none;background:transparent;text-align:left;cursor:pointer">
+            <span style="flex:1;font-size:15px">{{ g.name }}</span><span style="font-size:15px;font-weight:500">{{ g.score }}</span><span style="display:flex;transform:{{ g.rot }};transition:transform 200ms">{{ ic.down }}</span>
+          </button>
+          <sc-if value="{{ g.open }}"><div style="padding:0 16px 12px"><sc-for list="{{ g.items }}" as="it"><div style="display:flex;align-items:center;gap:10px;min-height:38px;border-top:1px solid #F3F2EE;font-size:15px"><span style="flex:1">{{ it.n }}</span><span style="color:#5C5A55">{{ it.v }}</span>{{ it.el }}</div></sc-for></div></sc-if>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:20px;background:#111;color:#fff"><span style="font-size:15px;color:#D9D7D0">ราคาประเมินจากระบบ เกรด B</span><span style="font-size:20px;font-weight:600">12,500</span></div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none;background:#F7F6F2">
+    <sc-if value="{{ extraDone }}"><button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">ตรวจตัวเครื่อง</button></sc-if>
+    <sc-if value="{{ extraNotDone }}"><button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">เลือกผลตรวจเพิ่มให้ครบ</button></sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.s06 }}">
+  <div style="flex:none;margin:12px 20px 0;padding:12px 16px;border-radius:20px;background:#111;color:#fff;display:flex;flex-direction:column;gap:2px">
+    <sc-for list="{{ priceLines }}" as="l"><div style="display:flex;justify-content:space-between;font-size:15px;color:#E2E0D9"><span>{{ l.k }}</span><span style="font-family:'IBM Plex Mono',monospace">{{ l.v }}</span></div></sc-for>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid #3A3936;margin-top:4px;padding-top:6px"><span style="font-size:15px">{{ priceTotalLabel }}</span><span style="font-size:22px;font-weight:600">{{ priceTotal }}</span></div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:14px 20px 20px;display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:16px;font-weight:500">สภาพตัวเครื่อง</div>
+      <div role="radiogroup" aria-label="สภาพตัวเครื่อง" style="display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ conds }}" as="c"><button role="radio" aria-checked="{{ c.on }}" onClick="{{ c.pick }}" style="min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:15px;cursor:pointer">{{ c.name }}</button></sc-for>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:16px;font-weight:500">รูป 6 ด้าน</div><div style="font-size:15px;color:#5C5A55">ถ่ายแล้ว {{ photoCount }} จาก 6</div></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        <sc-for list="{{ photos }}" as="p"><button onClick="{{ p.tap }}" aria-label="{{ p.aria }}" style="height:76px;border-radius:16px;border:{{ p.bd }};background:{{ p.bg }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:15px;cursor:pointer;color:{{ p.fg }}">{{ p.icon }}{{ p.name }}</button></sc-for>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:16px;font-weight:500">รายการตรวจ</div>
+      <div style="border-radius:20px;background:#fff;padding:4px 16px">
+        <sc-for list="{{ checks }}" as="c">
+          <div style="display:flex;align-items:center;gap:10px;min-height:60px;border-bottom:1px solid {{ c.line }}">
+            <div style="flex:1;font-size:15px;line-height:1.3">{{ c.name }}<div style="font-size:15px;color:#5C5A55">{{ c.sub }}</div></div>
+            <div role="radiogroup" aria-label="{{ c.name }}" style="display:flex;background:#F3F2EE;border-radius:999px;padding:3px">
+              <button role="radio" aria-checked="{{ c.aOn }}" onClick="{{ c.setA }}" style="min-width:64px;height:44px;border:none;border-radius:999px;background:{{ c.aBg }};color:{{ c.aFg }};font-size:15px;cursor:pointer">{{ c.a }}</button>
+              <button role="radio" aria-checked="{{ c.bOn }}" onClick="{{ c.setB }}" style="min-width:64px;height:44px;border:none;border-radius:999px;background:{{ c.bBg }};color:{{ c.bFg }};font-size:15px;cursor:pointer">{{ c.b }}</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:16px;font-weight:500">อื่น ๆ</div>
+      <sc-for list="{{ others }}" as="o">
+        <div style="display:flex;flex-direction:column;gap:6px;padding:12px;border-radius:16px;background:#fff">
+          <input value="{{ o.t }}" onInput="{{ o.setT }}" placeholder="รายการ เช่น ลำโพงแตก" aria-label="รายการ" style="height:44px;border:1.5px solid #D6D3CB;border-radius:12px;padding:0 12px;font-size:15px">
+          <input value="{{ o.n }}" onInput="{{ o.setN }}" placeholder="หมายเหตุ" aria-label="หมายเหตุ" style="height:44px;border:1.5px solid #D6D3CB;border-radius:12px;padding:0 12px;font-size:15px">
+        </div>
+      </sc-for>
+      <button onClick="{{ addOther }}" style="height:48px;border:1.5px dashed #9A978F;border-radius:16px;background:transparent;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">{{ ic.plus }}เพิ่มรายการ</button>
+    </div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <sc-if value="{{ canBuy }}"><button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">ถัดไป เลือกที่มาของเครื่อง</button></sc-if>
+    <sc-if value="{{ cannotBuy }}"><button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">{{ blockText }}</button></sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.s07 }}">
+  <div style="flex:1;overflow-y:auto;padding:16px 20px 20px;display:flex;flex-direction:column;gap:14px">
+    <h1 style="margin:0;font-size:24px;font-weight:500">เครื่องนี้มาจากช่องทางไหน</h1>
+    <div role="radiogroup" aria-label="ที่มาของเครื่อง" style="display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ sources }}" as="o">
+        <button role="radio" aria-checked="{{ o.on }}" onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 16px;border-radius:18px;border:1.5px solid {{ o.bd }};background:#fff;font-size:16px;text-align:left;cursor:pointer">
+          <span style="width:22px;height:22px;border-radius:50%;border:2px solid #111;display:flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box"><span style="width:10px;height:10px;border-radius:50%;background:{{ o.dot }}"></span></span>{{ o.name }}
+        </button>
+      </sc-for>
+    </div>
+    <sc-if value="{{ srcOther }}"><input value="{{ f.srcOther }}" onInput="{{ setSrcOther }}" placeholder="ระบุช่องทาง" aria-label="ระบุช่องทาง" style="height:56px;border-radius:16px;border:1.5px solid #D6D3CB;background:#fff;padding:0 16px;font-size:16px"></sc-if>
+    <label style="display:flex;flex-direction:column;gap:6px;font-size:15px">เลขอ้างอิงจากช่องทาง {{ refHint }}
+      <input value="{{ f.ref }}" onInput="{{ setRef }}" placeholder="เลขคำสั่งซื้อ เลขเคส หรือรหัสโปรโมชัน" style="height:56px;border-radius:16px;border:1.5px solid {{ refBd }};background:#fff;padding:0 16px;font-size:16px;font-family:'IBM Plex Mono',monospace">
+    </label>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <sc-if value="{{ srcOk }}"><button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">ส่งให้หลังบ้านยืนยันราคา</button></sc-if>
+    <sc-if value="{{ srcNotOk }}"><button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">{{ srcBlock }}</button></sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isPrice }}">
+  <sc-if value="{{ is.s08b }}">
+    <div ref="{{ bannerRef }}" role="status" style="position:absolute;top:50px;left:12px;right:12px;z-index:4;padding:12px 16px;border-radius:20px;background:#111;color:#fff;display:flex;align-items:center;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,.25)">
+      <div style="width:36px;height:36px;border-radius:10px;background:#FAD20D;color:#111;display:flex;align-items:center;justify-content:center;flex:none">{{ ic.bell }}</div>
+      <div style="flex:1"><div style="font-size:15px;font-weight:500">หลังบ้านยืนยันราคาแล้ว</div><div style="font-size:15px;color:#D9D7D0">iPhone 13 128GB 12,300 บาท</div></div>
+    </div>
+  </sc-if>
+  <div style="flex:1;overflow-y:auto;padding:16px 20px 20px;display:flex;flex-direction:column;gap:14px">
+    <sc-if value="{{ is.s08a }}">
+      <div style="padding:18px;border-radius:24px;background:#fff;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><span style="display:flex;gap:6px;align-items:center;font-size:15px;color:#5C5A55">{{ ic.lock }}ราคาระบบ แก้ไม่ได้</span><span style="padding:4px 12px;border-radius:999px;background:#FAD20D;font-size:15px;font-weight:500">เกรด B</span></div>
+        <div style="font-size:40px;font-weight:600;line-height:1.1">12,000 <span style="font-size:18px;font-weight:400">บาท</span></div>
+        <div style="border-top:1px solid #F3F2EE;padding-top:8px;display:flex;flex-direction:column;gap:2px">
+          <div style="display:flex;justify-content:space-between;font-size:15px"><span>ราคาเกรด B</span><span style="font-family:'IBM Plex Mono',monospace">12,500</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:15px"><span>รอยขนแมว</span><span style="font-family:'IBM Plex Mono',monospace">−500</span></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;background:#FFF1D6;color:#7A4A00">{{ spinA }}<div><div style="font-size:16px;font-weight:500">รอหลังบ้านยืนยันราคา</div><div style="font-size:15px">ส่งผลตรวจแล้ว 14:32 โทรคุยราคากับหลังบ้านได้เลย</div></div></div>
+      <button onClick="{{ callBack }}" style="height:56px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:17px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform 100ms" style-active="transform:scale(0.97)">{{ ic.call }}โทรหาหลังบ้าน</button>
+    </sc-if>
+    <sc-if value="{{ is.s08b }}">
+      <div style="height:64px;flex:none"></div>
+      <div style="padding:18px;border-radius:24px;background:#fff;border:2px solid #1B6B33;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:15px;color:#5C5A55">ราคาสุดท้าย</span><span style="display:flex;gap:4px;align-items:center;padding:4px 12px;border-radius:999px;background:#E4F4E8;color:#1B6B33;font-size:15px">{{ ic.check }}ยืนยันแล้ว</span></div>
+        <div style="font-size:40px;font-weight:600;line-height:1.1">12,300 <span style="font-size:18px;font-weight:400">บาท</span></div>
+        <div style="font-size:15px;color:#444">ยืนยันโดยคุณนภา 14:38<br>สูงกว่าราคาระบบ 300 บาท (ราคาระบบ 12,000)</div>
+        <div style="padding:12px 14px;border-radius:16px;background:#F3F2EE;font-size:15px;line-height:1.5"><span style="color:#5C5A55">ข้อความจากหลังบ้าน</span><br>ลูกค้าต่อรอง เครื่องสภาพดี เพิ่มให้ 300</div>
+      </div>
+    </sc-if>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none;display:flex;flex-direction:column;gap:4px">
+    <sc-if value="{{ is.s08a }}"><button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">ลูกค้ายืนยันราคา</button></sc-if>
+    <sc-if value="{{ is.s08b }}">
+      <button onClick="{{ askNotSell }}" style="height:48px;border:none;background:transparent;font-size:16px;text-decoration:underline;text-underline-offset:3px;cursor:pointer">ลูกค้าไม่ขาย</button>
+      <button onClick="{{ toS10 }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">ลูกค้ายืนยัน 12,300 บาท</button>
+    </sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.s10 }}">
+  <div style="flex:1;overflow-y:auto;padding:16px 20px 20px;display:flex;flex-direction:column;gap:14px">
+    <h1 style="margin:0;font-size:22px;font-weight:500">ถ่ายรูปลูกค้าถือบัตรประชาชนข้างใบหน้า</h1>
+    <sc-if value="{{ noIdPhoto }}">
+      <button onClick="{{ takeId }}" aria-label="ถ่ายรูป" style="position:relative;height:230px;border:none;border-radius:24px;background:#1A1A1A;cursor:pointer;overflow:hidden">
+        <div style="position:absolute;left:70px;top:36px;width:110px;height:140px;border:2px dashed #FAD20D;border-radius:50%"></div>
+        <div style="position:absolute;left:196px;top:88px;width:104px;height:66px;border:2px dashed #FAD20D;border-radius:10px"></div>
+        <div style="position:absolute;left:0;right:0;bottom:14px;display:flex;flex-direction:column;align-items:center;gap:6px;color:#fff;font-size:15px"><span style="width:52px;height:52px;border-radius:50%;background:#FAD20D;color:#111;display:flex;align-items:center;justify-content:center">{{ ic.camera }}</span>ให้เห็นหน้าและบัตรในรูปเดียว</div>
+      </button>
+    </sc-if>
+    <sc-if value="{{ f.idPhoto }}">
+      <div style="position:relative;height:230px;border-radius:24px;background:#D6D3CB;overflow:hidden">
+        <div style="position:absolute;left:78px;top:40px;width:96px;height:124px;border-radius:50%;background:#B9B5AC"></div>
+        <div style="position:absolute;left:196px;top:92px;width:100px;height:62px;border-radius:8px;background:#F3F2EE"></div>
+        <span style="position:absolute;left:12px;top:12px;display:flex;gap:4px;align-items:center;padding:4px 10px;border-radius:999px;background:#E4F4E8;color:#1B6B33;font-size:15px">{{ ic.check }}ถ่ายแล้ว</span>
+        <button onClick="{{ retakeId }}" style="position:absolute;right:12px;bottom:12px;height:44px;padding:0 16px;border:none;border-radius:999px;background:#fff;font-size:15px;cursor:pointer">ถ่ายใหม่</button>
+      </div>
+    </sc-if>
+    <label style="display:flex;flex-direction:column;gap:6px;font-size:15px">ชื่อ-นามสกุล ตามบัตร<input value="{{ f.name }}" onInput="{{ setName }}" style="height:56px;border-radius:16px;border:1.5px solid #D6D3CB;background:#fff;padding:0 16px;font-size:17px"></label>
+    <label style="display:flex;flex-direction:column;gap:6px;font-size:15px">เลขบัตรประชาชน 13 หลัก<input inputmode="numeric" maxlength="13" value="{{ f.idNo }}" onInput="{{ setIdNo }}" style="height:56px;border-radius:16px;border:1.5px solid {{ idBd }};background:#fff;padding:0 16px;font-size:18px;letter-spacing:1px;font-family:'IBM Plex Mono',monospace"><span style="font-size:15px;color:{{ idHintFg }}">{{ idHint }}</span></label>
+    <label style="display:flex;align-items:flex-start;gap:12px;min-height:44px;font-size:15px;line-height:1.45;cursor:pointer"><input type="checkbox" checked="{{ f.owner }}" onChange="{{ toggleOwner }}" style="width:22px;height:22px;margin-top:1px;accent-color:#111;flex:none">ลูกค้ายืนยันว่าเป็นเจ้าของเครื่อง</label>
+    <label style="display:flex;align-items:flex-start;gap:12px;min-height:44px;font-size:15px;line-height:1.45;cursor:pointer"><input type="checkbox" checked="{{ f.pdpa }}" onChange="{{ togglePdpa }}" style="width:22px;height:22px;margin-top:1px;accent-color:#111;flex:none">ลูกค้ายินยอมให้เก็บรูปถือบัตรตามนโยบาย PDPA</label>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <sc-if value="{{ idOk }}"><button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">ถัดไป</button></sc-if>
+    <sc-if value="{{ idNotOk }}"><button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">{{ idBlock }}</button></sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.s11 }}">
+  <div style="flex:1;overflow-y:auto;padding:16px 20px 20px;display:flex;flex-direction:column;gap:14px">
+    <div style="padding:16px;border-radius:20px;background:#fff;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;font-size:15px;gap:12px"><span style="color:#5C5A55">เครื่อง</span><span style="text-align:right">iPhone 13 128GB Midnight</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:15px;gap:12px"><span style="color:#5C5A55">ผู้ขาย</span><span style="text-align:right">{{ f.name }}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:15px;gap:12px"><span style="color:#5C5A55">เลขบัตร</span><span style="font-family:'IBM Plex Mono',monospace">{{ idMasked }}</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid #F3F2EE;padding-top:8px"><span style="font-size:15px;color:#5C5A55">ราคารับซื้อ</span><span style="font-size:22px;font-weight:600">12,300 บาท</span></div>
+    </div>
+    <div style="font-size:15px;line-height:1.55;color:#444">ข้าพเจ้ายินยอมขายเครื่องนี้ตามสภาพที่ตรวจ และรับเงินผ่านบัญชีชื่อเดียวกับบัตรประชาชน</div>
+    <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:16px;font-weight:500">ให้ลูกค้าเซ็นชื่อในกรอบ</div><button onClick="{{ sigClear }}" style="min-height:44px;padding:0 12px;border:none;background:transparent;font-size:15px;text-decoration:underline;text-underline-offset:3px;cursor:pointer">ล้าง</button></div>
+    <canvas ref="{{ sigRef }}" width="700" height="380" onPointerDown="{{ sigDown }}" onPointerMove="{{ sigMove }}" onPointerUp="{{ sigUp }}" aria-label="กรอบเซ็นชื่อ" style="width:100%;height:190px;border-radius:20px;background:#fff;border:1.5px dashed #9A978F;touch-action:none;cursor:crosshair;box-sizing:border-box"></canvas>
+    <div style="font-size:15px;color:#5C5A55">ระบบบันทึกเวลาที่เซ็นไว้กับรายการ</div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <sc-if value="{{ f.signed }}"><button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">ยืนยันลายเซ็น</button></sc-if>
+    <sc-if value="{{ notSigned }}"><button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">รอลูกค้าเซ็นชื่อ</button></sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.s12 }}">
+  <div style="flex:1;overflow-y:auto;padding:16px 20px 20px;display:flex;flex-direction:column;gap:14px">
+    <h1 style="margin:0;font-size:22px;font-weight:500">บัญชีรับเงินของลูกค้า</h1>
+    <div role="tablist" style="display:flex;background:#ECEAE4;border-radius:999px;padding:4px">
+      <button role="tab" aria-selected="{{ bankUp }}" onClick="{{ setBankUp }}" style="flex:1;height:44px;border:none;border-radius:999px;background:{{ bankTabA }};font-size:15px;cursor:pointer">อัปโหลดรูป</button>
+      <button role="tab" aria-selected="{{ bankManual }}" onClick="{{ setBankManual }}" style="flex:1;height:44px;border:none;border-radius:999px;background:{{ bankTabB }};font-size:15px;cursor:pointer">กรอกเลขบัญชี</button>
+    </div>
+    <sc-if value="{{ bankUp }}">
+      <sc-if value="{{ noBankImg }}">
+        <button onClick="{{ uploadBank }}" style="height:180px;border:1.5px dashed #9A978F;border-radius:24px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:16px;cursor:pointer">{{ ic.upload }}อัปโหลดรูป<span style="font-size:15px;color:#5C5A55">QR รับเงินจากแอปธนาคาร หรือหน้าสมุดบัญชี</span></button>
+      </sc-if>
+      <sc-if value="{{ f.bankImg }}">
+        <div style="display:flex;gap:12px;align-items:center;padding:12px;border-radius:20px;background:#fff">
+          <div style="width:72px;height:96px;border-radius:12px;background:#F3F2EE;padding:10px;box-sizing:border-box;flex:none">{{ qrS }}</div>
+          <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:500">QR รับเงิน</div><div style="font-size:15px;color:#5C5A55;font-family:'IBM Plex Mono',monospace;word-break:break-all">IMG_2041.jpg</div></div>
+          <button onClick="{{ uploadBank }}" style="height:44px;padding:0 14px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:15px;cursor:pointer">เปลี่ยนรูป</button>
+        </div>
+      </sc-if>
+      <div style="font-size:15px;color:#5C5A55">หลังบ้านใช้รูปนี้โอนเงิน ไม่ต้องกรอกชื่อธนาคาร</div>
+    </sc-if>
+    <sc-if value="{{ bankManual }}">
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:15px">ธนาคาร<select style="height:56px;border-radius:16px;border:1.5px solid #D6D3CB;background:#fff;padding:0 12px;font-size:16px"><option>ไทยพาณิชย์</option><option>กสิกรไทย</option><option>กรุงเทพ</option><option>กรุงไทย</option><option>กรุงศรีอยุธยา</option></select></label>
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:15px">เลขบัญชี<input inputmode="numeric" value="{{ f.acct }}" onInput="{{ setAcct }}" placeholder="10 หลัก" style="height:56px;border-radius:16px;border:1.5px solid #D6D3CB;background:#fff;padding:0 16px;font-size:18px;font-family:'IBM Plex Mono',monospace"></label>
+    </sc-if>
+    <label style="display:flex;align-items:flex-start;gap:12px;min-height:44px;font-size:15px;line-height:1.45;cursor:pointer;padding:14px 16px;border-radius:20px;background:#fff"><input type="checkbox" checked="{{ f.acctOk }}" onChange="{{ toggleAcctOk }}" style="width:22px;height:22px;margin-top:1px;accent-color:#111;flex:none">ยืนยันกับลูกค้าแล้ว ชื่อบัญชีตรงกับบัตรประชาชน</label>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <sc-if value="{{ bankOk }}"><button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">ถัดไป</button></sc-if>
+    <sc-if value="{{ bankNotOk }}"><button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">{{ bankBlock }}</button></sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.s13 }}">
+  <div style="flex:1;overflow-y:auto;padding:16px 20px 20px;display:flex;flex-direction:column;gap:14px">
+    <div style="padding:18px;border-radius:24px;background:#fff">
+      <div style="font-size:15px;color:#5C5A55">ยอดที่จะโอนให้ลูกค้า</div>
+      <div style="font-size:36px;font-weight:600">12,300 บาท</div>
+      <div style="font-size:15px;color:#5C5A55">ปกติไม่เกิน 5 นาที</div>
+    </div>
+    <div style="padding:18px;border-radius:24px;background:#fff;display:flex;flex-direction:column">
+      <sc-for list="{{ tl13 }}" as="t">
+        <div style="display:flex;gap:12px">
+          <div style="display:flex;flex-direction:column;align-items:center;width:26px;flex:none">{{ t.el }}<div style="flex:1;width:2px;background:{{ t.line }};min-height:22px"></div></div>
+          <div style="padding-bottom:16px"><div style="font-size:16px;font-weight:{{ t.fw }};color:{{ t.fg }}">{{ t.name }}</div><div style="font-size:15px;color:#5C5A55">{{ t.sub }}</div></div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;gap:10px;padding:14px 16px;border-radius:20px;background:#FFF7CC;font-size:15px;line-height:1.5">{{ ic.info }}<div>บอกลูกค้าว่ากำลังโอนเงิน รับเครื่องเมื่อสลิปขึ้นในแอปแล้ว</div></div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <button onClick="{{ toHome }}" style="width:100%;height:56px;border:1.5px solid #111;border-radius:999px;background:transparent;font-size:17px;font-weight:500;cursor:pointer">กลับหน้าแรก แจ้งเตือนเมื่อเสร็จ</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.s14 }}">
+  <div style="flex:1;overflow-y:auto;padding:16px 20px 20px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 0">
+      <div style="width:84px;height:84px;border-radius:50%;background:#1B6B33;display:flex;align-items:center;justify-content:center">{{ checkL }}</div>
+      <div style="font-size:26px;font-weight:500">รับซื้อสำเร็จ</div>
+      <div style="font-size:15px;color:#5C5A55">หลังบ้านแนบสลิปแล้ว 14:51</div>
+    </div>
+    <div style="padding:6px 16px;border-radius:20px;background:#fff">
+      <sc-for list="{{ details }}" as="d"><div style="display:flex;justify-content:space-between;gap:12px;min-height:42px;align-items:center;border-bottom:1px solid {{ d.line }};font-size:15px"><span style="color:#5C5A55">{{ d.k }}</span><span style="text-align:right;font-family:{{ d.ff }};font-weight:{{ d.fw }}">{{ d.v }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none;display:flex;flex-direction:column;gap:8px">
+    <button onClick="{{ next }}" style="width:100%;height:56px;border:1.5px solid #111;border-radius:999px;background:transparent;font-size:17px;font-weight:500;cursor:pointer">ดูสลิปการโอน</button>
+    <button onClick="{{ toHomeDone }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">กลับหน้าแรก</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.s15 }}">
+  <div style="display:flex;align-items:center;height:56px;padding:0 8px;gap:4px;flex:none">
+    <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
+    <div style="font-size:17px;font-weight:500">สลิปการโอน</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:8px 20px 20px">
+    <div style="padding:20px;border-radius:24px;background:#fff;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:8px;color:#1B6B33;font-size:16px;font-weight:500">{{ ic.check }}โอนเงินสำเร็จ</div>
+      <div style="font-size:15px;color:#5C5A55">29 ต.ค. 2569 14:51</div>
+      <div style="border-top:1px solid #F3F2EE;padding-top:12px"><div style="font-size:15px;color:#5C5A55">จาก</div><div style="font-size:16px">บจก. เยลโลบี</div><div style="font-size:15px;color:#444;font-family:'IBM Plex Mono',monospace">กสิกรไทย xxx-x-x4821-x</div></div>
+      <div><div style="font-size:15px;color:#5C5A55">ถึง</div><div style="font-size:16px">นายธนกร วงศ์ใจดี</div><div style="font-size:15px;color:#444;font-family:'IBM Plex Mono',monospace">ไทยพาณิชย์ xxx-x-x5530-x</div></div>
+      <div style="border-top:1px solid #F3F2EE;padding-top:12px;display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:15px;color:#5C5A55">จำนวนเงิน</span><span style="font-size:26px;font-weight:600">12,300.00</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:15px;gap:12px"><span style="color:#5C5A55">เลขอ้างอิง</span><span style="font-family:'IBM Plex Mono',monospace">2026102914510482</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:15px"><span style="color:#5C5A55">แนบโดย</span><span>คุณวรรณ</span></div>
+    </div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <button onClick="{{ sendLine }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#111;color:#fff;font-size:18px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform 100ms" style-active="transform:scale(0.97)">{{ ic.chat }}ส่งสลิปให้ลูกค้าทาง LINE</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.s16 }}">
+  <div style="display:flex;align-items:center;height:56px;padding:0 20px;flex:none"><div style="font-size:20px;font-weight:500">เครื่องที่ถืออยู่</div></div>
+  <div style="flex:1;overflow-y:auto;padding:4px 20px 16px;display:flex;flex-direction:column;gap:12px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+      <sc-for list="{{ aging }}" as="a"><div style="padding:10px 8px;border-radius:16px;background:{{ a.bg }};color:{{ a.fg }};text-align:center"><div style="font-size:22px;font-weight:600">{{ a.n }}</div><div style="font-size:15px">{{ a.k }}</div></div></sc-for>
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;height:48px;border-radius:999px;background:#fff;padding:0 16px">{{ ic.search }}<input inputmode="numeric" value="{{ f.search }}" onInput="{{ setSearch }}" placeholder="ค้นหาด้วย IMEI" aria-label="ค้นหาด้วย IMEI" style="flex:1;border:none;outline:none;font-size:16px;background:transparent;min-width:0"></label>
+    <div style="border-radius:20px;background:#fff;padding:0 12px">
+      <sc-for list="{{ stock }}" as="d">
+        <label style="display:flex;align-items:center;gap:12px;min-height:64px;border-bottom:1px solid {{ d.line }};cursor:pointer">
+          <input type="checkbox" checked="{{ d.on }}" onChange="{{ d.toggle }}" aria-label="{{ d.model }}" style="width:22px;height:22px;accent-color:#111;flex:none">
+          <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:500">{{ d.model }}</div><div style="font-size:15px;color:#5C5A55;font-family:'IBM Plex Mono',monospace">IMEI {{ d.imei }}</div></div>
+          <span style="padding:4px 10px;border-radius:999px;font-size:15px;background:{{ d.bg }};color:{{ d.fg }};white-space:nowrap">{{ d.age }}</span>
+        </label>
+      </sc-for>
+    </div>
+  </div>
+  <div style="padding:8px 20px 8px;flex:none">
+    <button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">สร้างกล่องส่ง {{ selCount }} เครื่อง</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.s17 }}">
+  <div style="display:flex;align-items:center;height:56px;padding:0 8px;gap:4px;flex:none">
+    <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
+    <div style="font-size:17px;font-weight:500">กล่องส่งคลัง</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:4px 20px 20px;display:flex;flex-direction:column;gap:12px">
+    <div style="padding:18px;border-radius:24px;background:#fff;display:flex;gap:16px;align-items:center">
+      <div style="width:104px;height:104px;flex:none">{{ qrBox }}</div>
+      <div style="min-width:0"><div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:500">TR-2610-0031</div><div style="font-size:15px">{{ selCount }} เครื่อง</div><div style="font-size:15px;color:#5C5A55">ทีมลาดพร้าว → คลังสำนักงานใหญ่</div><div style="font-size:15px;color:#5C5A55;margin-top:4px">ให้ผู้รับสแกน QR กล่องที่ปลายทาง</div></div>
+    </div>
+    <div style="padding:18px;border-radius:24px;background:#fff;display:flex;flex-direction:column">
+      <sc-for list="{{ tl17 }}" as="t">
+        <div style="display:flex;gap:12px">
+          <div style="display:flex;flex-direction:column;align-items:center;width:26px;flex:none">{{ t.el }}<div style="flex:1;width:2px;background:{{ t.line }};min-height:18px"></div></div>
+          <div style="padding-bottom:14px"><div style="font-size:16px;font-weight:{{ t.fw }};color:{{ t.fg }}">{{ t.name }}</div><div style="font-size:15px;color:#5C5A55">{{ t.sub }}</div></div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="border-radius:20px;background:#fff;padding:0 16px">
+      <sc-for list="{{ boxItems }}" as="d"><div style="display:flex;justify-content:space-between;align-items:center;min-height:52px;border-bottom:1px solid {{ d.line }};font-size:15px"><span>{{ d.model }}</span><span style="font-family:'IBM Plex Mono',monospace;color:#5C5A55;font-size:15px">IMEI …{{ d.imei }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="padding:12px 24px 34px;flex:none">
+    <button onClick="{{ toS16 }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">แพ็กเสร็จแล้ว</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ showTabs }}">
+  <nav aria-label="เมนูหลัก" style="flex:none;height:84px;background:#FFFFFF;border-top:1px solid #ECEAE4;display:grid;grid-template-columns:repeat(5,1fr);align-items:start;padding-top:6px;box-sizing:border-box">
+    <sc-for list="{{ tabs }}" as="t">
+      <button onClick="{{ t.go }}" aria-label="{{ t.name }}" aria-current="{{ t.cur }}" style="height:56px;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;color:{{ t.fg }};cursor:pointer;position:relative">
+        <span style="display:flex;align-items:center;justify-content:center;width:{{ t.sz }};height:{{ t.sz }};border-radius:50%;background:{{ t.bg }};margin-top:{{ t.mt }}">{{ t.icon }}</span>{{ t.label }}
+      </button>
+    </sc-for>
+  </nav>
+</sc-if>
+
+  </div>
+  <div style="position:absolute;top:0;left:0;right:0;height:47px;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 36px;pointer-events:none;color:{{ sbFg }}">
+    <span style="font-size:15px;font-weight:600">9:41</span>
+    <svg width="68" height="12" viewBox="0 0 68 12" aria-hidden="true" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"></rect><rect x="5" y="5.5" width="3" height="6.5" rx="1"></rect><rect x="10" y="3" width="3" height="9" rx="1"></rect><rect x="15" y="0" width="3" height="12" rx="1"></rect><path d="M27 4.5a8 8 0 0 1 11 0M29.3 7a4.6 4.6 0 0 1 6.4 0M32.5 10.2h.01" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"></path><rect x="44" y="1" width="21" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="1.2"></rect><rect x="46" y="3" width="13" height="6" rx="1.5"></rect><rect x="66" y="4" width="1.6" height="4" rx=".8"></rect></svg>
+  </div>
+  <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;z-index:6;background:rgba(0,0,0,.45);opacity:{{ sheetOp }};pointer-events:{{ sheetPe }};transition:opacity 280ms"></div>
+  <div role="dialog" aria-modal="true" style="position:absolute;left:0;right:0;bottom:0;z-index:7;background:#FFFFFF;border-radius:28px 28px 0 0;padding:8px 24px 34px;transform:{{ sheetTf }};transition:transform 280ms cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;gap:12px">
+    <button aria-label="ปิด" onClick="{{ closeSheet }}" style="align-self:center;width:64px;height:28px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:44px;height:5px;border-radius:3px;background:#CFCCC4"></span></button>
+    <sc-if value="{{ sheet.isShot }}">
+      <div style="font-size:18px;font-weight:500">{{ sheet.title }}</div>
+      <div style="height:300px;border-radius:20px;background:#F3F2EE;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px;box-sizing:border-box;text-align:center">
+        <div style="font-size:15px;color:#5C5A55">{{ sheet.path }}</div>
+        <div style="font-size:20px;font-weight:500;font-family:'IBM Plex Mono',monospace;word-break:break-all">{{ sheet.val }}</div>
+      </div>
+      <button onClick="{{ closeSheet }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#111;color:#fff;font-size:17px;font-weight:500;cursor:pointer">ปิด</button>
+    </sc-if>
+    <sc-if value="{{ sheet.isNotSell }}">
+      <div style="font-size:20px;font-weight:500">ลูกค้าไม่ขายใช่ไหม</div>
+      <div style="font-size:15px;color:#5C5A55;line-height:1.5">งานนี้จะปิดเป็น “ไม่ขาย” และแจ้งหลังบ้านให้ทราบ คืนเครื่องให้ลูกค้าได้เลย</div>
+      <button onClick="{{ closeSheet }}" style="height:48px;border:none;background:transparent;font-size:16px;text-decoration:underline;text-underline-offset:3px;cursor:pointer">กลับไปก่อน</button>
+      <button onClick="{{ confirmNotSell }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#111;color:#fff;font-size:17px;font-weight:500;cursor:pointer">ยืนยัน ลูกค้าไม่ขาย</button>
+    </sc-if>
+  </div>
+  <div style="position:absolute;left:50%;bottom:120px;z-index:8;transform:translateX(-50%);padding:10px 18px;border-radius:999px;background:#111;color:#fff;font-size:15px;white-space:nowrap;pointer-events:none;opacity:{{ toastOp }};transition:opacity 200ms">{{ toast }}</div>
+</div>
+</div>
+</div>
+</main>
+<sc-if value="{{ grid }}">
+<div style="position:fixed;inset:0;z-index:50;background:#E8E6DF;overflow:auto;padding:24px;box-sizing:border-box">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+    <div style="font-size:22px;font-weight:500">ทุกจอ Staff App</div>
+    <button onClick="{{ closeGrid }}" style="height:44px;padding:0 20px;border:none;border-radius:999px;background:#111;color:#fff;font-size:15px;cursor:pointer">ปิด</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:24px">
+    <sc-for list="{{ gridItems }}" as="g">
+      <button onClick="{{ g.go }}" style="border:none;background:transparent;padding:0;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:8px">
+        <div style="width:174px;height:365px;border-radius:26px;overflow:hidden;background:#111"><iframe src="{{ g.src }}" title="{{ g.name }}" loading="lazy" style="width:414px;height:868px;border:none;transform:scale(0.42);transform-origin:top left;pointer-events:none"></iframe></div>
+        <div style="font-size:13px"><span style="font-family:'IBM Plex Mono',monospace;color:#5C5A55;margin-right:6px">{{ g.code }}</span>{{ g.name }}</div>
+      </button>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const P = {
+  back:['M15 18l-6-6 6-6'], chev:['M9 18l6-6-6-6'], down:['M6 9l6 6 6-6'], check:['M5 12.5l4.5 4.5L19 7.5'], x:['M6 6l12 12M18 6L6 18'], minus:['M6 12h12'], plus:['M12 5v14M5 12h14'],
+  camera:['M4 8h3l2-3h6l2 3h3v11H4z','M12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z'],
+  clock:['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z','M12 7v5l3 2'], info:['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z','M12 11v5','M12 7.8h.01'],
+  bell:['M6 16V11a6 6 0 0 1 12 0v5l2 2H4z','M10 21h4'], lock:['M6 11h12v10H6z','M8 11V7a4 4 0 0 1 8 0v4'],
+  call:['M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z'],
+  upload:['M12 16V4','M7 9l5-5 5 5','M5 20h14'], chat:['M4 5h16v11H9l-5 4z'], search:['M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z','M20 20l-4-4'],
+  home:['M3 11l9-7 9 7','M5 10v10h14V10'], list:['M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01'],
+  scan:['M4 8V5a1 1 0 0 1 1-1h3','M16 4h3a1 1 0 0 1 1 1v3','M20 16v3a1 1 0 0 1-1 1h-3','M8 20H5a1 1 0 0 1-1-1v-3','M7 12h10'],
+  box:['M3 7l9-4 9 4v10l-9 4-9-4z','M3 7l9 4 9-4','M12 11v10'], user:['M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z','M4 21a8 8 0 0 1 16 0'],
+  grid:['M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z'], play:['M7 5l12 7-12 7z'], stop:['M7 7h10v10H7z']
+};
+function I(n, s, c, w) {
+  return React.createElement('svg', { width: s || 24, height: s || 24, viewBox: '0 0 24 24', fill: 'none', stroke: c || 'currentColor', strokeWidth: w || 1.8, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': 'true', style: { display: 'block', flex: 'none' } },
+    (P[n] || []).map((d, i) => React.createElement('path', { key: i, d })));
+}
+function badge(bg, fg, n, anim) { return React.createElement('span', { style: { width: 26, height: 26, borderRadius: '50%', background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', animation: anim && !RM ? 'ybpop 200ms ease-out' : 'none' } }, I(n, 16, fg, 2.4)); }
+function spinner(c) { return React.createElement('span', { role: 'status', 'aria-label': 'กำลังรอ', style: { width: 22, height: 22, borderRadius: '50%', border: '2.5px solid rgba(0,0,0,.12)', borderTopColor: c || '#111', boxSizing: 'border-box', animation: RM ? 'ybspin 2.4s linear infinite' : 'ybspin .8s linear infinite', flex: 'none', display: 'block' } }); }
+function stEl(st) {
+  if (st === 'run') return React.createElement('span', { style: { width: 26, height: 26, display: 'flex', alignItems: 'center', justifyContent: 'center' } }, spinner());
+  if (st === 'p') return badge('#E4F4E8', '#1B6B33', 'check', true);
+  if (st === 's') return badge('#F3F2EE', '#444', 'minus');
+  if (st === 'f') return badge('#FDECEC', '#B3261E', 'x');
+  return React.createElement('span', { style: { width: 26, height: 26, borderRadius: '50%', border: '2px solid #D6D3CB', boxSizing: 'border-box', display: 'block', flex: 'none' } });
+}
+function qrSvg(seed, color) {
+  const N = 25; let a = seed; const rnd = () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const col = color || '#111'; const rects = []; const inF = (x, y) => (x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16);
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (!inF(x, y) && rnd() > 0.52) rects.push(React.createElement('rect', { key: x + '-' + y, x, y, width: 1, height: 1 }));
+  [[0, 0], [18, 0], [0, 18]].forEach(([fx, fy], i) => { rects.push(React.createElement('rect', { key: 'o' + i, x: fx + 0.5, y: fy + 0.5, width: 6, height: 6, fill: 'none', stroke: col, strokeWidth: 1 })); rects.push(React.createElement('rect', { key: 'i' + i, x: fx + 2, y: fy + 2, width: 3, height: 3 })); });
+  return React.createElement('svg', { viewBox: '0 0 25 25', width: '100%', height: '100%', fill: col, shapeRendering: 'crispEdges', 'aria-hidden': 'true' }, rects);
+}
+const FLOW = [
+  ['s01','S-01','เข้าสู่ระบบพนักงาน'],['s02','S-02','หน้าแรก'],['s03','S-03','สแกน QR ลูกค้า'],['s05','S-05','ผลตรวจจากแอป'],['s06','S-06','ตรวจตัวเครื่อง'],['s07','S-07','ที่มาของเครื่อง'],
+  ['s08a','S-08','ราคาล็อก รอหลังบ้าน'],['s08b','S-08','ราคาล็อก ยืนยันแล้ว'],['s10','S-10','รูปถือบัตรและยินยอม'],['s11','S-11','ลูกค้าเซ็นชื่อ'],['s12','S-12','บัญชีรับเงิน'],
+  ['s13','S-13','รอโอนเงิน'],['s14','S-14','รับซื้อสำเร็จ'],['s15','S-15','สลิปการโอน'],['s16','S-16','เครื่องที่ถืออยู่'],['s17','S-17','กล่องส่งคลัง']
+];
+const IDX = id => FLOW.findIndex(f => f[0] === id);
+const STEP = { s05: 0, s06: 0, s07: 0, s08a: 1, s08b: 1, s10: 2, s11: 2, s12: 3, s13: 3, s14: 4 };
+const CONDS = [['ไม่มีรอย', 0], ['รอยขนแมว', 500], ['รอยชัด', 1500], ['บุบ', 2500], ['ร้าว', 4000]];
+const CHECKS = [['หน้าจอ', 'ปกติ', 'มีปัญหา', 3000], ['ร่องรอยน้ำเข้า', 'ไม่พบ', 'พบ', 2500], ['iCloud / Google Lock', 'ออกแล้ว', 'ยังติด', 'block', 'ออกจาก iCloud ก่อนรับซื้อ'], ['IMEI ตรงกับเครื่อง', 'ตรง', 'ไม่ตรง', 'block', 'IMEI ไม่ตรง รับซื้อไม่ได้', 'ลูกค้าแคปมา 35 407115 208463 2'], ['ปุ่มเปิดปิด', 'ปกติ', 'มีปัญหา', 800]];
+const EXTRAS = [['ซิมและสัญญาณ', 'ไม่มีซิม ข้ามไป', 'ใส่ซิมทดสอบ แล้วโทรออก 1 ครั้ง', 1000], ['การชาร์จ', 'ไม่มีสายชาร์จ ข้ามไป', 'เสียบสายทดสอบ ดูว่าขึ้นกำลังชาร์จ', 1500]];
+const SOURCES = [['direct', 'ติดต่อตรง (โทร หรือ LINE)', false], ['shopee', 'Shopee', true], ['yellobe', 'YelloBe (เว็บหรือแอป)', false], ['true', 'True', true], ['ais', 'AIS', true], ['other', 'อื่น ๆ', false]];
+const PHOTOS = ['หน้า', 'หลัง', 'ซ้าย', 'ขวา', 'บน', 'ล่าง'];
+const STOCK = [['Galaxy A54 128GB', '358211094471205', 18], ['iPhone 12 Pro 256GB', '353104270923416', 10], ['iPhone 11 64GB', '352918113318072', 5], ['iPhone 12 64GB', '353071281154330', 0], ['iPhone 13 128GB', '354071152084632', 0]];
+const GROUPS = [
+  ['ระบบตรวจอัตโนมัติ', '8/8', [['รุ่น ความจุ และ RAM', 'p'], ['กล้องทุกเลนส์', 'p'], ['ไมโครโฟน', 'p'], ['ลำโพงและลำโพงสนทนา', 'p', 'ฟังเอง'], ['ระบบสั่น', 'p'], ['ไฟฉาย', 'p'], ['เซ็นเซอร์การเคลื่อนไหว', 'p'], ['การดัดแปลงระบบ', 'p']]],
+  ['การเชื่อมต่อ', '4/5', [['Wi-Fi', 'p'], ['Bluetooth', 'p'], ['GPS', 'p'], ['ซิมและสัญญาณ', 's'], ['NFC', 'p']]],
+  ['หน้าจอ', '4/4', [['ทัชสกรีน', 'p', 'ครบ 100%'], ['สีและความสว่าง', 'p'], ['เซ็นเซอร์ระยะใกล้', 'p'], ['เซ็นเซอร์แสง', 'p']]],
+  ['สแกน ชาร์จ และปุ่ม', '2/3', [['Face ID', 'p'], ['การชาร์จ', 's'], ['ปุ่มกด', 'p']]],
+  ['ข้อมูลเสริม', '3/3', [['สุขภาพแบตเตอรี่', 'p', '87%'], ['IMEI', 'p'], ['ประวัติอะไหล่', 'p', 'ของแท้']]]
+];
+const fmt = n => n.toLocaleString('en-US');
+
+class Component extends DCLogic {
+  q = new URLSearchParams(location.search);
+  bare = this.q.get('bare') === '1';
+  reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  timers = [];
+  screenRef = React.createRef(); layerRef = React.createRef(); sigRef = React.createRef(); bannerRef = React.createRef();
+  state = {
+    screen: IDX(this.q.get('screen')) >= 0 ? this.q.get('screen') : 's01', scale: 1, toast: '', playing: false, grid: false, sheet: null,
+    scan: 'scanning', confirmed: false, done: false, expand: {},
+    f: { emp: 'LP-0142', pw: 'yellobe01', remember: true, extras: ['', ''], cond: 1, photos: [1, 1, 1, 1, 1, 1], checks: [0, 0, 0, 0, 0], others: [], src: 'direct', srcOther: '', ref: '',
+      idPhoto: false, name: 'นายธนกร วงศ์ใจดี', idNo: '1103700482316', owner: false, pdpa: false, signed: false, bankMode: 'up', bankImg: false, acct: '', acctOk: false, search: '', sel: [0, 1, 2], code: '' }
+  };
+  componentDidMount() {
+    this.onResize = () => {
+      if (this.bare) return this.setState({ scale: 1 });
+      const narrow = innerWidth < 760; const w = narrow ? innerWidth - 32 : innerWidth - 348, h = narrow ? innerHeight - 32 : innerHeight - 40;
+      this.setState({ scale: Math.min(1, h / 868, w / 414) });
+    };
+    this.onResize(); addEventListener('resize', this.onResize); this.enter(this.state.screen); this.applyQ();
+  }
+  applyQ() {
+    const st = this.q.get('state'), id = this.state.screen; if (!st) return;
+    if (id === 's03' && st === 'manual') { this.timers.forEach(clearTimeout); this.timers = []; this.setState({ scan: 'manual' }); }
+    if (id === 's10' && st === 'filled') this.setF({ idPhoto: true, owner: true, pdpa: true });
+    if (id === 's11' && st === 'signed') { this.setF({ signed: true }); setTimeout(() => this.drawSample(), 80); }
+    if (id === 's12' && st === 'uploaded') this.setF({ bankImg: true, acctOk: true });
+  }
+  componentWillUnmount() { removeEventListener('resize', this.onResize); clearInterval(this.playIv); this.timers.forEach(clearTimeout); }
+  t(ms, fn) { this.timers.push(setTimeout(fn, ms)); }
+  toastMsg(m) { this.setState({ toast: m }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2000); }
+  setF(o) { this.setState(s => ({ f: Object.assign({}, s.f, o) })); }
+  go(id, dir) {
+    if (dir === undefined) dir = 1;
+    if (IDX(id) < 0 || id === this.state.screen) return;
+    this.timers.forEach(clearTimeout); this.timers = [];
+    const old = this.screenRef.current, layer = this.layerRef.current; let clone = null;
+    if (old && layer && !this.bare) { layer.innerHTML = ''; clone = old.cloneNode(true); clone.style.position = 'absolute'; clone.style.inset = '0'; layer.appendChild(clone); }
+    this.setState({ screen: id, sheet: null }, () => { this.animate(clone, layer, dir); this.enter(id); });
+  }
+  animate(clone, layer, dir) {
+    const el = this.screenRef.current; if (!el || !clone) return;
+    const done = () => { layer.innerHTML = ''; };
+    if (this.reduce || dir === 0) { layer.style.zIndex = 3; clone.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' }).onfinish = done; return; }
+    const o = { duration: 300, easing: 'cubic-bezier(0.2,0.8,0.2,1)', fill: 'forwards' };
+    if (dir > 0) { layer.style.zIndex = 0; el.animate([{ transform: 'translateX(100%)' }, { transform: 'translateX(0)' }], Object.assign({}, o, { fill: 'none' })); clone.animate([{ transform: 'translateX(0)', opacity: 1 }, { transform: 'translateX(-30%)', opacity: 0.5 }], o).onfinish = done; }
+    else { layer.style.zIndex = 3; el.animate([{ transform: 'translateX(-30%)', opacity: 0.6 }, { transform: 'translateX(0)', opacity: 1 }], Object.assign({}, o, { fill: 'none' })); clone.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(100%)' }], o).onfinish = done; }
+  }
+  enter(id) {
+    const live = () => !this.state.playing && !this.bare;
+    if (id === 's03') { this.setState({ scan: 'scanning' }); this.t(1800, () => { if (this.state.scan === 'scanning') this.setState({ scan: 'found' }); }); }
+    if (id === 's08a') this.t(5000, () => { if (live()) this.go('s08b', 1); });
+    if (id === 's08b') { this.setState({ confirmed: true }); this.t(20, () => { const b = this.bannerRef.current; if (b) b.animate(this.reduce ? [{ opacity: 0 }, { opacity: 1 }] : [{ transform: 'translateY(-130%)' }, { transform: 'translateY(0)' }], { duration: this.reduce ? 300 : 250, easing: 'ease-out' }); }); }
+    if (id === 's13') this.t(5000, () => { if (live()) this.go('s14', 1); });
+    if (id === 's14') this.setState({ done: true });
+    if (id === 's11' && this.state.f.signed) this.t(50, () => this.drawSample());
+  }
+  next() { const nx = FLOW[IDX(this.state.screen) + 1]; if (nx) this.go(nx[0], 1); }
+  back() { const s = this.state.screen; const map = { s13: 's02', s14: 's02', s15: 's14', s17: 's16', s16: 's02', s03: 's02' }; if (map[s]) return this.go(map[s], -1); const i = IDX(s); if (i > 0) this.go(FLOW[i - 1][0], -1); }
+  price() {
+    const f = this.state.f; const lines = [['ราคาเกรด B', '12,500']]; let total = 12500; let block = '';
+    if (f.cond < 0) block = 'เลือกสภาพตัวเครื่อง';
+    else if (CONDS[f.cond][1]) { lines.push([CONDS[f.cond][0], '−' + fmt(CONDS[f.cond][1])]); total -= CONDS[f.cond][1]; }
+    CHECKS.forEach((c, i) => { if (f.checks[i] === 1) { if (c[3] === 'block') block = block || c[4]; else { lines.push([c[0] + ' ' + c[2], '−' + fmt(c[3])]); total -= c[3]; } } });
+    EXTRAS.forEach((x, i) => { if (f.extras[i] === 'bad') { lines.push([x[0] + ' ไม่ผ่าน', '−' + fmt(x[3])]); total -= x[3]; } });
+    const pc = f.photos.filter(Boolean).length; if (!block && pc < 6) block = 'ถ่ายรูปให้ครบ 6 ด้าน';
+    return { lines, total, block };
+  }
+  sigPos(e) { const cv = this.sigRef.current; const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height]; }
+  drawSample() {
+    const cv = this.sigRef.current; if (!cv) return; const ctx = cv.getContext('2d'); ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.strokeStyle = '#111';
+    ctx.beginPath(); ctx.moveTo(120, 240); ctx.bezierCurveTo(180, 100, 230, 320, 290, 200); ctx.bezierCurveTo(340, 110, 380, 300, 450, 210); ctx.bezierCurveTo(500, 150, 540, 260, 590, 190); ctx.stroke();
+  }
+
+  renderVals() {
+    const s = this.state, f = s.f, id = s.screen; const is = {}; is[id] = true;
+    const ic = {}; Object.keys(P).forEach(k => ic[k] = I(k));
+    const step = STEP[id]; const isJob = step !== undefined;
+    const pr = this.price();
+    const jobPrice = id === 's05' ? '12,500' : (s.confirmed || ['s08b', 's10', 's11', 's12', 's13', 's14'].includes(id)) && id !== 's06' && id !== 's07' && id !== 's08a' ? '12,300' : fmt(pr.total);
+    const jobPriceLabel = id === 's05' ? 'ราคาประเมิน' : jobPrice === '12,300' ? 'ราคาสุดท้าย' : 'ราคาระบบ';
+    const demos = [];
+    if (id === 's03') { demos.push({ label: 'จำลอง QR หมดอายุ', fn: () => this.setState({ scan: 'expired' }) }); demos.push({ label: 'จำลอง QR ใช้ไปแล้ว', fn: () => this.setState({ scan: 'used' }) }); }
+    if (id === 's08a') demos.push({ label: 'หลังบ้านยืนยันราคา', fn: () => this.go('s08b', 1) });
+    if (id === 's10') demos.push({ label: 'กรอกให้ครบ', fn: () => this.setF({ idPhoto: true, owner: true, pdpa: true }) });
+    if (id === 's11') demos.push({ label: 'เซ็นชื่อตัวอย่าง', fn: () => { this.drawSample(); this.setF({ signed: true }); } });
+    if (id === 's12') demos.push({ label: 'กรอกให้ครบ', fn: () => this.setF({ bankImg: true, acctOk: true }) });
+    if (id === 's13') demos.push({ label: 'หลังบ้านแนบสลิป', fn: () => this.go('s14', 1) });
+    const mkSrc = sid => { try { const u = new URL(location.href); u.searchParams.set('bare', '1'); u.searchParams.set('screen', sid); u.hash = ''; return u.toString(); } catch (e) { return '?bare=1&screen=' + sid; } };
+    const segBtn = (on, bad) => on ? { bg: bad ? '#B3261E' : '#111', fg: '#fff' } : { bg: 'transparent', fg: '#444' };
+    const idValid = /^\d{13}$/.test(f.idNo);
+    const idBlock = !f.idPhoto ? 'ถ่ายรูปถือบัตรก่อน' : !idValid ? 'กรอกเลขบัตรให้ครบ 13 หลัก' : !f.owner || !f.pdpa ? 'ติ๊กยืนยันทั้ง 2 ข้อ' : '';
+    const bankHas = f.bankMode === 'up' ? f.bankImg : f.acct.length >= 10;
+    const bankBlock = !bankHas ? (f.bankMode === 'up' ? 'อัปโหลดรูปบัญชีก่อน' : 'กรอกเลขบัญชีให้ครบ') : !f.acctOk ? 'ติ๊กยืนยันชื่อบัญชีก่อน' : '';
+    const src = SOURCES.find(o => o[0] === f.src); const refNeed = src && src[2];
+    const srcBlock = !src ? 'เลือกช่องทาง' : f.src === 'other' && !f.srcOther.trim() ? 'ระบุช่องทาง' : refNeed && !f.ref.trim() ? 'ช่องทางนี้ต้องใส่เลขอ้างอิง' : '';
+    const tlEl = st => st === 'done' ? badge('#1B6B33', '#fff', 'check') : st === 'run' ? stEl('run') : stEl('wait');
+    const mkTl = arr => arr.map((t, i) => ({ name: t[0], sub: t[1], el: tlEl(t[2]), line: i === arr.length - 1 ? 'transparent' : t[2] === 'done' ? '#1B6B33' : '#E2E0D9', fw: t[2] === 'run' ? 500 : 400, fg: t[2] === 'wait' ? '#5C5A55' : '#111' }));
+    const searchQ = f.search.replace(/\D/g, '');
+    const stockList = STOCK.map((d, i) => ({ d, i })).filter(x => !searchQ || x.d[1].includes(searchQ));
+    const selCount = f.sel.length;
+    const tabs = [['s02', 'หน้าแรก', 'home'], ['list', 'รายการ', 'list'], ['s03', 'สแกน', 'scan'], ['s16', 'เครื่องที่ถือ', 'box'], ['acct', 'บัญชี', 'user']].map(t => {
+      const center = t[0] === 's03', cur = id === t[0];
+      return { name: t[1], label: center ? '' : t[1], icon: I(t[2], center ? 28 : 24, center ? '#111' : cur ? '#111' : '#5C5A55'), fg: cur ? '#111' : '#5C5A55', cur: cur ? 'page' : 'false',
+        bg: center ? '#FAD20D' : 'transparent', sz: center ? '60px' : '28px', mt: center ? '-22px' : '0', go: () => { if (t[0] === 'list') return this.toastMsg('ตัวอย่างนี้ใช้รายการวันนี้ในหน้าแรก'); if (t[0] === 'acct') return this.toastMsg('ตัวอย่างนี้ไม่มีหน้าบัญชี'); this.go(t[0], IDX(t[0]) > IDX(id) ? 1 : -1); } };
+    });
+    const sheet = s.sheet || {};
+    return {
+      is, ic, isJob, isPrice: id === 's08a' || id === 's08b', jobPrice, jobPriceLabel,
+      jobSteps: ['ตรวจ', 'ราคา', 'ผู้ขาย', 'จ่ายเงิน'].map((n, i) => ({ name: n, bar: i < step ? '#1B6B33' : i === step ? '#111' : '#E2E0D9', fg: i <= step ? '#111' : '#5C5A55', fw: i === step ? 500 : 400 })),
+      showPanel: !this.bare, mainPad: this.bare ? '0' : '20px 16px', scale: s.scale, frameW: Math.round(414 * s.scale), frameH: Math.round(868 * s.scale),
+      padTop: 47, sbFg: id === 's03' ? '#fff' : '#111', showTabs: id === 's02' || id === 's16',
+      spin: spinner(), spinA: spinner('#7A4A00'), checkL: I('check', 44, '#fff', 2.6), qrW: qrSvg(482, '#fff'), qrS: qrSvg(77), qrBox: qrSvg(31),
+      playLabel: s.playing ? 'หยุด' : 'เล่น flow', playIcon: I(s.playing ? 'stop' : 'play', 16, '#fff'),
+      togglePlay: () => {
+        if (s.playing) { clearInterval(this.playIv); return this.setState({ playing: false }); }
+        this.setState({ playing: true }); if (id === 's17') this.go('s01', 0);
+        this.playIv = setInterval(() => { if (this.state.screen === 's17') { clearInterval(this.playIv); return this.setState({ playing: false }); } this.next(); }, 2600);
+      },
+      openGrid: () => this.setState({ grid: true }), closeGrid: () => this.setState({ grid: false }), grid: s.grid,
+      gridItems: FLOW.map(x => ({ code: x[1], name: x[2], src: mkSrc(x[0]), go: () => { this.setState({ grid: false }); this.go(x[0], 0); } })),
+      screens: FLOW.map(x => ({ code: x[1], name: x[2], bg: x[0] === id ? '#FAD20D' : 'transparent', fw: x[0] === id ? 500 : 400, go: () => { clearInterval(this.playIv); this.setState({ playing: false }); this.go(x[0], IDX(x[0]) > IDX(id) ? 1 : -1); } })),
+      demos, hasDemos: demos.length > 0 && !this.bare,
+      next: () => this.next(), back: () => this.back(), toHome: () => this.go('s02', -1), toHomeDone: () => this.go('s02', -1), toS08b: () => this.go('s08b', 1), toS10: () => this.go('s10', 1), toS16: () => this.go('s16', -1),
+      f, setEmp: e => this.setF({ emp: e.target.value }), setPw: e => this.setF({ pw: e.target.value }), toggleRemember: () => this.setF({ remember: !f.remember }),
+      homeCount: s.done ? 3 : 2, homeValue: s.done ? '44,100' : '31,800', hasTodo: s.confirmed && !s.done, noTodo: !(s.confirmed && !s.done),
+      todayList: [].concat(s.done ? [['iPhone 13 128GB', 'DC-2610-0482', 'สำเร็จ', '12,300 บาท 14:51']] : [], [['iPhone 14 Pro 256GB', 'DC-2610-0450', 'สำเร็จ', '22,600 บาท 13:05'], ['Galaxy S23 256GB', 'DC-2610-0466', 'รอโอน', 'คุณวรรณกำลังโอนเงิน'], ['iPhone 12 64GB', 'DC-2610-0471', 'สำเร็จ', '9,200 บาท 11:20'], ['iPhone 11 128GB', 'DC-2610-0458', 'ยกเลิก', 'ลูกค้าไม่ขาย']])
+        .map((r, i, a) => ({ model: r[0], qr: r[1], st: r[2], note: r[3], line: i === a.length - 1 ? 'transparent' : '#F3F2EE', bg: r[2] === 'สำเร็จ' ? '#E4F4E8' : r[2] === 'รอโอน' ? '#FFF1D6' : '#F3F2EE', fg: r[2] === 'สำเร็จ' ? '#1B6B33' : r[2] === 'รอโอน' ? '#7A4A00' : '#444' })),
+      scan: { isScanning: s.scan === 'scanning', isManual: s.scan === 'manual', isFound: s.scan === 'found', isBad: s.scan === 'expired' || s.scan === 'used', code: f.code,
+        badTitle: s.scan === 'expired' ? 'QR นี้หมดอายุแล้ว' : 'QR นี้ใช้ไปแล้ว', badSub: s.scan === 'expired' ? 'ให้ลูกค้าเช็กใหม่ในแอปเพื่อรับ QR ใหม่' : 'ตรวจรหัสกับลูกค้าอีกครั้ง' },
+      scanQrOp: s.scan === 'found' ? 1 : 0.25, scanHint: s.scan === 'found' ? 'พบ QR แล้ว' : 'วาง QR ในกรอบ',
+      toManual: () => { this.timers.forEach(clearTimeout); this.setState({ scan: 'manual' }); }, setCode: e => this.setF({ code: e.target.value.replace(/[^\d-]/g, '') }),
+      manualOk: () => { if (f.code.replace(/\D/g, '') === '26100482') this.setState({ scan: 'found' }); else this.toastMsg('ไม่พบรหัสนี้ ลองตรวจอีกครั้ง'); },
+      rescan: () => { this.setState({ scan: 'scanning' }); this.t(1500, () => this.setState({ scan: 'found' })); },
+      extras: EXTRAS.map((x, i) => { const v = f.extras[i]; const set = val => { const a = f.extras.slice(); a[i] = val; this.setF({ extras: a }); };
+        return { name: x[0], found: x[1], todo: x[2], isOk: v === 'ok', isBad: v === 'bad', setOk: () => set('ok'), setBad: () => set('bad'),
+          okBg: v === 'ok' ? '#1B6B33' : '#fff', okFg: v === 'ok' ? '#fff' : '#111', okBd: v === 'ok' ? '#1B6B33' : '#D6D3CB', badBg: v === 'bad' ? '#B3261E' : '#fff', badFg: v === 'bad' ? '#fff' : '#111', badBd: v === 'bad' ? '#B3261E' : '#D6D3CB' }; }),
+      extraLeft: f.extras.filter(v => !v).length ? f.extras.filter(v => !v).length + ' ข้อ' : 'ครบแล้ว', extraDone: f.extras.every(Boolean), extraNotDone: !f.extras.every(Boolean),
+      shots: [['สุขภาพแบต', '87%', 'การตั้งค่า › แบตเตอรี่'], ['IMEI', '354071152084632', 'กด *#06#'], ['ประวัติอะไหล่', 'ของแท้ทุกชิ้น', 'การตั้งค่า › ทั่วไป › เกี่ยวกับ']].map(x => ({ name: x[0], val: x[1], open: () => this.setState({ sheet: { isShot: true, title: 'ภาพแคป ' + x[0], val: x[1], path: x[2] } }) })),
+      groups: GROUPS.map((g, gi) => { const open = !!s.expand[gi]; return { name: g[0], score: g[1], open, rot: open ? 'rotate(180deg)' : 'none', toggle: () => this.setState({ expand: Object.assign({}, s.expand, { [gi]: !open }) }), items: g[2].map(it => ({ n: it[0], v: it[2] || '', el: stEl(it[1]) })) }; }),
+      priceLines: pr.lines.map(l => ({ k: l[0], v: l[1] })), priceTotal: pr.block && pr.block.indexOf('iCloud') + pr.block.indexOf('IMEI') > -2 ? 'รับซื้อไม่ได้' : fmt(pr.total), priceTotalLabel: 'ราคาระบบ',
+      canBuy: !pr.block, cannotBuy: !!pr.block, blockText: pr.block,
+      conds: CONDS.map((c, i) => { const on = f.cond === i; return { name: c[0] + (c[1] ? ' −' + fmt(c[1]) : ''), on, bg: on ? '#111' : '#fff', fg: on ? '#fff' : '#111', bd: on ? '#111' : '#D6D3CB', pick: () => this.setF({ cond: i }) }; }),
+      photoCount: f.photos.filter(Boolean).length,
+      photos: PHOTOS.map((p, i) => { const on = !!f.photos[i]; return { name: p, aria: (on ? 'ถ่ายแล้ว ' : 'ถ่ายรูปด้าน') + p, icon: I(on ? 'check' : 'camera', 22, on ? '#1B6B33' : '#111'), bg: on ? '#E4F4E8' : '#fff', fg: on ? '#1B6B33' : '#111', bd: on ? '1.5px solid #E4F4E8' : '1.5px dashed #9A978F', tap: () => { const a = f.photos.slice(); a[i] = a[i] ? 0 : 1; this.setF({ photos: a }); } }; }),
+      checks: CHECKS.map((c, i) => { const v = f.checks[i]; const set = val => { const a = f.checks.slice(); a[i] = val; this.setF({ checks: a }); }; const A = segBtn(v === 0, false), B = segBtn(v === 1, true);
+        return { name: c[0], sub: c[5] || '', a: c[1], b: c[2], aOn: v === 0, bOn: v === 1, aBg: A.bg, aFg: A.fg, bBg: B.bg, bFg: B.fg, setA: () => set(0), setB: () => set(1), line: i === CHECKS.length - 1 ? 'transparent' : '#F3F2EE' }; }),
+      others: f.others.map((o, i) => ({ t: o.t, n: o.n, setT: e => { const a = f.others.slice(); a[i] = Object.assign({}, a[i], { t: e.target.value }); this.setF({ others: a }); }, setN: e => { const a = f.others.slice(); a[i] = Object.assign({}, a[i], { n: e.target.value }); this.setF({ others: a }); } })),
+      addOther: () => this.setF({ others: f.others.concat([{ t: '', n: '' }]) }),
+      sources: SOURCES.map(o => { const on = f.src === o[0]; return { name: o[1], on, bd: on ? '#111' : '#E2E0D9', dot: on ? '#111' : 'transparent', pick: () => this.setF({ src: o[0] }) }; }),
+      srcOther: f.src === 'other', setSrcOther: e => this.setF({ srcOther: e.target.value }), setRef: e => this.setF({ ref: e.target.value }),
+      refHint: refNeed ? '(ต้องใส่)' : '(ถ้ามี)', refBd: refNeed && !f.ref.trim() ? '#7A4A00' : '#D6D3CB', srcOk: !srcBlock, srcNotOk: !!srcBlock, srcBlock,
+      callBack: () => this.toastMsg('กำลังโทร 02-114-5500'), askNotSell: () => this.setState({ sheet: { isNotSell: true } }),
+      confirmNotSell: () => { this.setState({ sheet: null }); this.toastMsg('ปิดงานเป็นไม่ขายแล้ว'); this.go('s02', -1); },
+      noIdPhoto: !f.idPhoto, takeId: () => this.setF({ idPhoto: true }), retakeId: () => this.setF({ idPhoto: false }),
+      setName: e => this.setF({ name: e.target.value }), setIdNo: e => this.setF({ idNo: e.target.value.replace(/\D/g, '').slice(0, 13) }),
+      idBd: f.idNo && !idValid ? '#7A4A00' : '#D6D3CB', idHint: idValid ? 'ครบ 13 หลัก' : 'กรอกแล้ว ' + f.idNo.length + ' จาก 13 หลัก', idHintFg: idValid ? '#1B6B33' : '#5C5A55',
+      toggleOwner: () => this.setF({ owner: !f.owner }), togglePdpa: () => this.setF({ pdpa: !f.pdpa }), idOk: !idBlock, idNotOk: !!idBlock, idBlock,
+      idMasked: idValid ? f.idNo[0] + '-' + f.idNo.slice(1, 5) + '-xxxxx-' + f.idNo.slice(10, 12) + '-' + f.idNo[12] : '-',
+      sigRef: this.sigRef, notSigned: !f.signed,
+      sigDown: e => { const cv = this.sigRef.current; if (!cv) return; this.sigOn = true; try { cv.setPointerCapture(e.pointerId); } catch (_) {} const ctx = cv.getContext('2d'); ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#111'; const [x, y] = this.sigPos(e); ctx.beginPath(); ctx.moveTo(x, y); },
+      sigMove: e => { if (!this.sigOn) return; const ctx = this.sigRef.current.getContext('2d'); const [x, y] = this.sigPos(e); ctx.lineTo(x, y); ctx.stroke(); if (!f.signed) this.setF({ signed: true }); },
+      sigUp: () => { this.sigOn = false; }, sigClear: () => { const cv = this.sigRef.current; if (cv) cv.getContext('2d').clearRect(0, 0, cv.width, cv.height); this.setF({ signed: false }); },
+      bankUp: f.bankMode === 'up', bankManual: f.bankMode === 'manual', bankTabA: f.bankMode === 'up' ? '#fff' : 'transparent', bankTabB: f.bankMode === 'manual' ? '#fff' : 'transparent',
+      setBankUp: () => this.setF({ bankMode: 'up' }), setBankManual: () => this.setF({ bankMode: 'manual' }), noBankImg: !f.bankImg, uploadBank: () => this.setF({ bankImg: true }),
+      setAcct: e => this.setF({ acct: e.target.value.replace(/\D/g, '').slice(0, 12) }), toggleAcctOk: () => this.setF({ acctOk: !f.acctOk }), bankOk: !bankBlock, bankNotOk: !!bankBlock, bankBlock,
+      tl13: mkTl([['ส่งข้อมูลบัญชีแล้ว', '14:46', 'done'], ['คุณวรรณกำลังโอนเงิน', 'รับงาน 14:47', 'run'], ['แนบสลิปแล้ว รับซื้อสำเร็จ', 'แอปแจ้งเตือนเมื่อเสร็จ', 'wait']]),
+      details: [['รุ่น', 'iPhone 13 128GB'], ['สี', 'Midnight'], ['เกรด', 'B'], ['แบต', '87%'], ['ราคารับซื้อ', '12,300 บาท', 0, 600], ['IMEI', '354071152084632', 1], ['ผู้ขาย', f.name], ['ที่มา', src ? src[1] : '-'], ['เลขที่รายการ', 'DC-2610-0482', 1]]
+        .map((d, i, a) => ({ k: d[0], v: d[1], ff: d[2] ? "'IBM Plex Mono',monospace" : 'inherit', fw: d[3] || 400, line: i === a.length - 1 ? 'transparent' : '#F3F2EE' })),
+      sendLine: () => this.toastMsg('เปิด LINE เพื่อส่งสลิปแล้ว'),
+      aging: [['0–3 วัน', 2], ['4–7 วัน', 1], ['8–14 วัน', 1], ['เกิน 14 วัน', 1]].map((a, i) => ({ k: a[0], n: a[1], bg: i === 3 ? '#FDECEC' : '#fff', fg: i === 3 ? '#B3261E' : '#111' })),
+      setSearch: e => this.setF({ search: e.target.value }),
+      stock: stockList.map((x, k) => { const on = f.sel.includes(x.i); const age = x.d[2]; return { model: x.d[0], imei: x.d[1], on, age: age === 0 ? 'วันนี้' : age + ' วัน', bg: age > 14 ? '#FDECEC' : age > 7 ? '#FFF1D6' : '#F3F2EE', fg: age > 14 ? '#B3261E' : age > 7 ? '#7A4A00' : '#444', line: k === stockList.length - 1 ? 'transparent' : '#F3F2EE',
+        toggle: () => this.setF({ sel: on ? f.sel.filter(v => v !== x.i) : f.sel.concat([x.i]) }) }; }),
+      selCount,
+      tl17: mkTl([['แพ็กกล่องแล้ว', '29 ต.ค. 15:10 คุณสมชาย', 'done'], ['ระหว่างทาง', 'รอคนส่งสแกนรับกล่อง', 'run'], ['ถึงคลังกลาง', 'ผู้รับสแกน QR กล่องยืนยัน', 'wait']]),
+      boxItems: f.sel.map(i => STOCK[i]).map((d, k, a) => ({ model: d[0], imei: d[1].slice(-4), line: k === a.length - 1 ? 'transparent' : '#F3F2EE' })),
+      tabs, sheet, sheetOp: s.sheet ? 1 : 0, sheetPe: s.sheet ? 'auto' : 'none', sheetTf: s.sheet ? 'translateY(0)' : 'translateY(105%)', closeSheet: () => this.setState({ sheet: null }),
+      bannerRef: this.bannerRef, layerRef: this.layerRef, screenRef: this.screenRef,
+      toast: s.toast, toastOp: s.toast ? 1 : 0
+    };
+  }
+}
+</script>
+</body>
+</html>

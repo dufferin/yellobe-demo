@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YelloBe Demo</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--y:#FAD20D;--ink:#111;--muted:#555;--bg:#F7F6F2;--card:#fff;--line:#ECEAE4}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Kanit',system-ui,sans-serif;color:var(--ink);background:var(--bg)}
+main{max-width:960px;margin:0 auto;padding:48px 16px 64px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+header img{height:40px;width:auto}
+h1{font-size:32px;font-weight:600;margin:0 0 6px;line-height:1.25}
+p.lead{margin:0 0 32px;color:var(--muted);font-size:17px;font-weight:300;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+a.card{display:flex;flex-direction:column;gap:8px;padding:24px;border-radius:24px;background:var(--card);border:1px solid var(--line);text-decoration:none;color:var(--ink);transition:border-color .15s ease,transform .15s ease}
+a.card:hover,a.card:focus-visible{border-color:var(--ink);transform:translateY(-2px)}
+a.card:focus-visible{outline:3px solid var(--y);outline-offset:2px}
+.tag{align-self:flex-start;font-size:13px;font-weight:500;padding:3px 12px;border-radius:12px;background:var(--y)}
+.card b{font-size:22px;font-weight:600}
+.card span.d{color:var(--muted);font-size:15px;line-height:1.55}
+.go{margin-top:auto;padding-top:8px;font-weight:500;font-size:15px}
+footer{margin-top:40px;color:var(--muted);font-size:14px;line-height:1.6}
+@media (prefers-reduced-motion: reduce){a.card{transition:none}a.card:hover{transform:none}}
+</style>
+</head>
+<body>
+<main>
+<header><img src="assets/logo.svg" alt="YelloBe"></header>
+<h1>เช็กเครื่องเอง รับซื้อถึงบ้าน</h1>
+<p class="lead">Prototype ระบบรับซื้อมือถือของ YelloBe กดผ่าน flow ได้ทุกจอ ข้อมูลในจอเป็นตัวอย่าง</p>
+<div class="grid">
+<a class="card" href="Customer%20App.dc.html"><span class="tag">มือถือ</span><b>แอปลูกค้า</b><span class="d">เช็กเครื่องเอง 23 ข้อใน 5 หัวข้อ ดูผลและเกรดเบื้องต้น แล้วรับ QR ขายเครื่อง</span><span class="go">เปิดแอปลูกค้า →</span></a>
+<a class="card" href="Staff%20App.dc.html"><span class="tag">มือถือ</span><b>แอปพนักงาน</b><span class="d">สแกน QR ตรวจตัวเครื่อง รอหลังบ้านยืนยันราคา ปิดดีล และรอโอนเงิน</span><span class="go">เปิดแอปพนักงาน →</span></a>
+<a class="card" href="Back-office.dc.html"><span class="tag">เว็บ</span><b>Back-office</b><span class="d">งานวันนี้ ยืนยันราคา รอโอนเงิน Device Passport ราคารับซื้อ สต็อก ขายออก และรายงาน</span><span class="go">เปิด Back-office →</span></a>
+</div>
+<footer>เปิดบนคอมพิวเตอร์จะเห็นแผงเลือกจอด้านข้าง และปุ่มเล่น flow อัตโนมัติ</footer>
+</main>
+</body>
+</html>
