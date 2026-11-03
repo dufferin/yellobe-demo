@@ -10,19 +10,22 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&amp;family=IBM+Plex+Sans+Thai:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:Kanit,sans-serif;color:#111;background:#E8E6DF;-webkit-font-smoothing:antialiased}
+body{margin:0;font-family:'IBM Plex Sans Thai',sans-serif;color:#1A1A1A;background:#EFEDE6;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font-family:inherit;color:inherit}
-a{color:#111}a:hover{color:#5C5A55}
+a{color:#1A1A1A}a:hover{color:#5C5A55}
 @keyframes ybspin{to{transform:rotate(360deg)}}
+@keyframes ybLogo{0%{opacity:0;transform:translateY(14px) scale(.86)}60%{opacity:1;transform:translateY(-2px) scale(1.03)}100%{opacity:1;transform:none}}
+@keyframes ybLine{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes ybRise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @keyframes ybpop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
-@media (prefers-reduced-motion: reduce){*{transition-duration:1ms !important}}
+@media (prefers-reduced-motion: reduce){*{transition-duration:1ms !important;animation-duration:1ms !important;animation-iteration-count:1 !important}}
 </style>
 </helmet>
-<div style="display:flex;flex-wrap:wrap;min-height:100vh;font-family:Kanit,sans-serif;color:#111">
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;font-family:'IBM Plex Sans Thai',sans-serif;color:#1A1A1A">
 <sc-if value="{{ showPanel }}" hint-placeholder-val="{{ true }}">
-<aside style="width:300px;flex:none;background:#FFFFFF;border-right:1px solid #E2E0D9;display:flex;flex-direction:column;height:100vh;position:sticky;top:0;box-sizing:border-box">
+<aside style="width:300px;flex:none;background:#FFFFFF;border-right:1px solid #EBEBEB;display:flex;flex-direction:column;height:100vh;position:sticky;top:0;box-sizing:border-box">
   <div style="padding:20px 20px 12px;display:flex;flex-direction:column;gap:12px">
     <img src="assets/logo.svg" alt="YelloBe" style="width:112px;height:auto">
     <div>
@@ -30,23 +33,23 @@ a{color:#111}a:hover{color:#5C5A55}
       <div style="font-size:13px;color:#5C5A55">แอปลูกค้า 390×844 กดผ่าน flow ได้จริง</div>
     </div>
     <div style="display:flex;gap:8px">
-      <button onClick="{{ togglePlay }}" style="flex:1.4;white-space:nowrap;height:44px;border:none;border-radius:999px;background:#111;color:#fff;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">{{ playIcon }}{{ playLabel }}</button>
-      <button onClick="{{ openGrid }}" style="flex:1;height:44px;border:1.5px solid #111;border-radius:999px;background:#fff;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">{{ ic.grid }}ดูทุกจอ</button>
+      <button onClick="{{ togglePlay }}" style="flex:1.4;white-space:nowrap;height:44px;border:none;border-radius:999px;background:#1A1A1A;color:#fff;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">{{ playIcon }}{{ playLabel }}</button>
+      <button onClick="{{ openGrid }}" style="flex:1;height:44px;border:1.5px solid #1A1A1A;border-radius:999px;background:#fff;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">{{ ic.grid }}ดูทุกจอ</button>
     </div>
     <div style="display:flex;gap:8px;font-size:13px">
-      <a href="Staff%20App.dc.html" style="padding:6px 10px;border-radius:999px;background:#F3F2EE;text-decoration:none">Staff App</a>
-      <a href="Back-office.dc.html" style="padding:6px 10px;border-radius:999px;background:#F3F2EE;text-decoration:none">Back-office</a>
+      <a href="Staff%20App.dc.html" style="padding:6px 10px;border-radius:999px;background:#F5F5F5;text-decoration:none">Staff App</a>
+      <a href="Back-office.dc.html" style="padding:6px 10px;border-radius:999px;background:#F5F5F5;text-decoration:none">Back-office</a>
     </div>
   </div>
   <sc-if value="{{ hasDemos }}">
-  <div style="margin:0 16px 8px;padding:12px;border-radius:16px;background:#FFF7CC;display:flex;flex-direction:column;gap:8px">
+  <div style="margin:0 16px 8px;padding:12px;border-radius:16px;background:#FEF8CC;display:flex;flex-direction:column;gap:8px">
     <div style="font-size:12px;color:#5C4A00">ทางลัดเดโมของจอนี้</div>
-    <sc-for list="{{ demos }}" as="d"><button onClick="{{ d.fn }}" style="min-height:36px;border:1px solid #111;border-radius:999px;background:#fff;font-size:13px;cursor:pointer">{{ d.label }}</button></sc-for>
+    <sc-for list="{{ demos }}" as="d"><button onClick="{{ d.fn }}" style="min-height:36px;border:1px solid #1A1A1A;border-radius:999px;background:#fff;font-size:13px;cursor:pointer">{{ d.label }}</button></sc-for>
   </div>
   </sc-if>
   <div style="flex:1;overflow-y:auto;padding:4px 12px 20px">
     <sc-for list="{{ screens }}" as="s" hint-placeholder-count="12">
-      <button onClick="{{ s.go }}" style="display:flex;gap:10px;align-items:center;width:100%;min-height:38px;padding:6px 10px;border:none;border-radius:10px;background:{{ s.bg }};text-align:left;cursor:pointer">
+      <button onClick="{{ s.go }}" style="display:flex;gap:10px;align-items:center;width:100%;min-height:38px;padding:6px 10px;border:none;border-radius:8px;background:{{ s.bg }};text-align:left;cursor:pointer">
         <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5C5A55;width:38px;flex:none">{{ s.code }}</span>
         <span style="font-size:14px;font-weight:{{ s.fw }}">{{ s.name }}</span>
       </button>
@@ -56,15 +59,15 @@ a{color:#111}a:hover{color:#5C5A55}
 </sc-if>
 <main style="flex:1;min-width:0;display:flex;align-items:center;justify-content:center;padding:{{ mainPad }};box-sizing:border-box;min-height:100vh">
 <div style="width:{{ frameW }}px;height:{{ frameH }}px;flex:none">
-<div style="width:414px;height:868px;transform:scale({{ scale }});transform-origin:top left;border-radius:60px;background:#111;padding:12px;box-sizing:border-box;box-shadow:0 30px 60px rgba(0,0,0,.18)">
-<div style="position:relative;width:390px;height:844px;border-radius:48px;overflow:hidden;background:#F7F6F2">
+<div style="width:414px;height:868px;transform:scale({{ scale }});transform-origin:top left;border-radius:60px;background:#1A1A1A;padding:12px;box-sizing:border-box;box-shadow:0 30px 60px rgba(0,0,0,.18)">
+<div style="position:relative;width:390px;height:844px;border-radius:48px;overflow:hidden;background:#F5F5F5">
   <div ref="{{ layerRef }}" style="position:absolute;inset:0;z-index:0;pointer-events:none"></div>
-  <div ref="{{ screenRef }}" style="position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;background:#F7F6F2;padding-top:{{ padTop }}px;box-sizing:border-box">
+  <div ref="{{ screenRef }}" style="position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;background:#F5F5F5;padding-top:{{ padTop }}px;box-sizing:border-box">
 
 <sc-if value="{{ isCheck }}">
   <div style="padding:0 8px;flex:none">
     <div style="display:flex;align-items:center;justify-content:space-between;height:52px;gap:4px">
-      <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
+      <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:1px solid rgba(255,255,255,.9);border-radius:50%;background:#FFFFFF;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
       <div style="text-align:center;flex:1">
         <div style="font-size:15px;color:#5C5A55;line-height:1.2">{{ hdr.group }}</div>
         <div style="font-size:16px;font-weight:500;line-height:1.3">ข้อ {{ hdr.n }} จาก 23</div>
@@ -72,16 +75,16 @@ a{color:#111}a:hover{color:#5C5A55}
       <button onClick="{{ skip }}" style="min-height:44px;min-width:44px;padding:0 10px;border:none;background:transparent;font-size:15px;text-decoration:underline;text-underline-offset:3px;cursor:pointer">{{ hdr.skip }}</button>
     </div>
     <div style="display:flex;gap:4px;padding:4px 16px 8px">
-      <sc-for list="{{ segs }}" as="g"><div style="flex:{{ g.flex }};height:6px;border-radius:3px;background:#E2E0D9;overflow:hidden"><div style="height:100%;width:{{ g.fill }};background:#111;transition:width 300ms ease-out"></div></div></sc-for>
+      <sc-for list="{{ segs }}" as="g"><div style="flex:{{ g.flex }};height:6px;border-radius:3px;background:#EBEBEB;overflow:hidden"><div style="height:100%;width:{{ g.fill }};background:#FAD20E;transition:width 300ms ease-out"></div></div></sc-for>
     </div>
   </div>
 </sc-if>
 
 <sc-if value="{{ is.c00 }}">
-  <div style="flex:1;background:#FAD20D;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
-    <img src="assets/logo.svg" alt="YelloBe" style="width:200px;height:auto">
-    <div style="width:36px;height:3px;border-radius:2px;background:#111"></div>
-    <div style="font-size:18px;font-weight:400">เช็กเครื่อง รับซื้อถึงบ้าน</div>
+  <div style="flex:1;background:#FAD20E;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+    {{ splashLogo }}
+    {{ splashLine }}
+    {{ splashText }}
   </div>
 </sc-if>
 
@@ -91,99 +94,116 @@ a{color:#111}a:hover{color:#5C5A55}
     <a href="Staff%20App.dc.html" style="min-height:44px;display:flex;align-items:center;padding:0 12px;font-size:15px;text-underline-offset:3px">สำหรับพนักงาน</a>
   </div>
   <div style="flex:1;overflow-y:auto;padding:12px 24px 24px;display:flex;flex-direction:column;gap:20px">
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <h1 style="margin:0;font-size:30px;font-weight:500;line-height:1.25">ก่อนเริ่มเช็กเครื่อง</h1>
+    <div style="display:flex;flex-direction:column;gap:16px;padding:4px 0 8px;flex:none">
+      <h1 style="margin:0;font-family:Kanit,sans-serif;font-size:36px;font-weight:500;line-height:1.15;letter-spacing:-.5px;text-wrap:pretty">ก่อนเริ่มเช็กเครื่อง</h1>
       <div style="display:flex;flex-wrap:wrap;gap:8px">
-        <span style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#FFFFFF;font-size:15px">{{ ic.clock }}ราว 6 นาที</span>
-        <span style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#FFFFFF;font-size:15px">{{ ic.user }}ไม่ต้องสมัครสมาชิก</span>
-        <span style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#FFFFFF;font-size:15px">{{ ic.home }}รับเครื่องถึงบ้าน</span>
+        <span style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#FFFFFF;border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-size:15px">{{ ic.user }}ไม่ต้องสมัครสมาชิก</span>
+        <span style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#FFFFFF;border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-size:15px">{{ ic.home }}รับเครื่องถึงบ้าน</span>
       </div>
     </div>
-    <div style="font-size:16px;font-weight:500">สิ่งที่ต้องเตรียม</div>
-    <div style="display:flex;flex-direction:column;gap:10px">
+<div aria-hidden="true" style="position:relative;flex:none;height:208px;border-radius:28px;background:radial-gradient(circle at 50% 120%,#FFE25A 0%,#FAD20E 55%,#F5C800 100%);overflow:hidden">
+      <span style="position:absolute;left:50%;top:50%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;border:1px solid rgba(255,255,255,.45)"></span>
+      <span style="position:absolute;left:50%;top:50%;width:200px;height:200px;margin:-100px 0 0 -100px;border-radius:50%;border:1px solid rgba(255,255,255,.6)"></span>
+      <div style="position:absolute;left:50%;top:26px;width:92px;height:184px;margin-left:-46px;border-radius:20px;background:#1A1A1A;padding:6px;box-sizing:border-box;transform:rotate(-6deg);box-shadow:0 18px 30px rgba(26,26,26,.25)">
+        <div style="width:100%;height:100%;border-radius:15px;background:#FFFAEB;padding:16px 8px;box-sizing:border-box;display:flex;flex-direction:column;gap:7px">
+          <span style="width:24px;height:4px;border-radius:2px;background:#1A1A1A;align-self:center;margin-bottom:6px"></span>
+          <span style="display:flex;gap:4px;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#1B6B33"></span><span style="flex:1;height:5px;border-radius:3px;background:#EBEBEB"></span></span>
+          <span style="display:flex;gap:4px;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#1B6B33"></span><span style="flex:1;height:5px;border-radius:3px;background:#EBEBEB"></span></span>
+          <span style="display:flex;gap:4px;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#FAD20E"></span><span style="flex:1;height:5px;border-radius:3px;background:#EBEBEB"></span></span>
+          <span style="display:flex;gap:4px;align-items:center"><span style="width:10px;height:10px;border-radius:50%;border:2px solid #D9D9D9;box-sizing:border-box"></span><span style="flex:1;height:5px;border-radius:3px;background:#EBEBEB"></span></span>
+          <span style="margin-top:auto;height:16px;border-radius:8px;background:#FAD20E"></span>
+        </div>
+      </div>
+      <span style="position:absolute;left:84px;top:52px;width:44px;border-top:1.5px dashed rgba(26,26,26,.35)"></span>
+      <span style="position:absolute;right:84px;top:118px;width:44px;border-top:1.5px dashed rgba(26,26,26,.35)"></span>
+      <span style="position:absolute;left:40px;top:30px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 6px 16px rgba(26,26,26,.10);display:flex;align-items:center;justify-content:center">{{ ic.camera }}</span><span style="position:absolute;left:28px;top:122px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 6px 16px rgba(26,26,26,.10);display:flex;align-items:center;justify-content:center">{{ ic.mic }}</span><span style="position:absolute;right:40px;top:96px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 6px 16px rgba(26,26,26,.10);display:flex;align-items:center;justify-content:center">{{ ic.wifi }}</span><span style="position:absolute;right:30px;top:24px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 6px 16px rgba(26,26,26,.10);display:flex;align-items:center;justify-content:center">{{ ic.battery }}</span>
+    </div>
+    <div style="font-family:Kanit,sans-serif;font-size:18px;font-weight:500;margin-bottom:-8px">สิ่งที่ต้องเตรียม</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
       <sc-for list="{{ prep }}" as="p" hint-placeholder-count="4">
-        <div style="display:flex;align-items:center;gap:14px;padding:16px;border-radius:20px;background:#FFFFFF">
-          <div style="width:48px;height:48px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center;flex:none">{{ p.icon }}</div>
-          <div style="font-size:16px;line-height:1.4;text-wrap:pretty">{{ p.text }}</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:16px;border-radius:20px;background:#FFFFFF;border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 1px 2px rgba(26,26,26,.04),0 6px 20px rgba(26,26,26,.05)">
+          <div style="width:48px;height:48px;border-radius:50%;background:#FAD20E;box-shadow:0 0 0 6px rgba(250,210,14,.18);display:flex;align-items:center;justify-content:center;flex:none">{{ p.icon }}</div>
+          <div style="font-size:15px;font-weight:500;line-height:1.4;text-wrap:pretty">{{ p.text }}</div>
         </div>
       </sc-for>
     </div>
   </div>
   <div style="padding:12px 24px 34px;flex:none">
-    <button onClick="{{ toC02 }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">เริ่มเช็ก</button>
+    <button onClick="{{ toC02 }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20E;font-size:18px;font-weight:500;cursor:pointer;box-shadow:0 10px 24px rgba(200,150,0,.28);transition:transform 100ms" style-active="transform:scale(0.97)">เริ่มเช็ก</button>
   </div>
 </sc-if>
 
 <sc-if value="{{ is.c02 }}">
   <div style="display:flex;align-items:center;height:56px;padding:0 8px;gap:4px;flex:none">
-    <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
+    <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:1px solid rgba(255,255,255,.9);border-radius:50%;background:#FFFFFF;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
     <div style="font-size:17px;font-weight:500">ขั้นตอนการเช็ก</div>
   </div>
   <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:18px">
-    <div style="padding:16px;border-radius:24px;background:#111;color:#fff;display:flex;align-items:center;gap:14px;min-height:56px">
-      <div style="width:48px;height:48px;border-radius:14px;background:#FAD20D;color:#111;display:flex;align-items:center;justify-content:center;flex:none">{{ ic.phone }}</div>
+    <div style="padding:16px;border-radius:28px;background:#1A1A1A;color:#fff;box-shadow:0 16px 36px rgba(26,26,26,.22);display:flex;align-items:center;gap:14px;min-height:56px">
+      <div style="width:48px;height:48px;border-radius:16px;background:#FAD20E;color:#1A1A1A;display:flex;align-items:center;justify-content:center;flex:none">{{ ic.phone }}</div>
       <div style="flex:1">
-        <div style="font-size:15px;color:#D9D7D0">เครื่องของคุณ</div>
+        <div style="font-size:15px;color:#D9D9D9">เครื่องของคุณ</div>
         <sc-if value="{{ devReading }}"><div style="display:flex;align-items:center;gap:8px;font-size:16px">{{ spinW }}กำลังอ่านรุ่นเครื่อง</div></sc-if>
-        <sc-if value="{{ devOk }}"><div style="font-size:20px;font-weight:500">iPhone 13 128GB</div><div style="font-size:15px;color:#D9D7D0">Midnight</div></sc-if>
+        <sc-if value="{{ devOk }}"><div style="font-size:20px;font-weight:500;font-family:Kanit,sans-serif">iPhone 13 128GB</div><div style="font-size:15px;color:#D9D9D9">Midnight</div></sc-if>
       </div>
     </div>
-    <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">เช็ก 5 ขั้นตอน ใช้เวลาราว 6 นาที</h1>
-    <div style="display:flex;flex-direction:column;gap:10px">
+    <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3;font-family:Kanit,sans-serif">เช็ก 5 ขั้นตอน</h1>
+    <div style="position:relative;display:flex;flex-direction:column;gap:10px">
+      <span aria-hidden="true" style="position:absolute;left:39px;top:28px;bottom:28px;border-left:2px dashed #EBD98A"></span>
       <sc-for list="{{ steps5 }}" as="st" hint-placeholder-count="5">
-        <div style="display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:20px;background:#FFFFFF">
-          <div style="width:32px;height:32px;border-radius:50%;background:#F3F2EE;display:flex;align-items:center;justify-content:center;font-weight:500;flex:none">{{ st.n }}</div>
+        <div style="position:relative;display:flex;gap:14px;align-items:center;padding:14px 16px;border-radius:20px;background:#FFFFFF;border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 1px 2px rgba(26,26,26,.04),0 6px 20px rgba(26,26,26,.05)">
+          <div style="position:relative;width:48px;height:48px;border-radius:16px;background:#FEF8CC;display:flex;align-items:center;justify-content:center;flex:none">{{ st.icon }}</div>
           <div><div style="font-size:16px;font-weight:500">{{ st.t }}</div><div style="font-size:15px;color:#5C5A55;line-height:1.4">{{ st.d }}</div></div>
         </div>
       </sc-for>
     </div>
   </div>
   <div style="padding:12px 24px 34px;flex:none">
-    <button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">เริ่มเลย</button>
+    <button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20E;font-size:18px;font-weight:500;cursor:pointer;box-shadow:0 10px 24px rgba(200,150,0,.28);transition:transform 100ms" style-active="transform:scale(0.97)">เริ่มเลย</button>
   </div>
 </sc-if>
 
 <sc-if value="{{ is.c03 }}">
   <div style="display:flex;align-items:center;height:56px;padding:0 8px;gap:4px;flex:none">
-    <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
+    <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:1px solid rgba(255,255,255,.9);border-radius:50%;background:#FFFFFF;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
     <div style="font-size:17px;font-weight:500">เปิดสิทธิ์</div>
   </div>
   <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:16px">
-    <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">แตะทีละแถวเพื่อเปิดสิทธิ์</h1>
+    <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3;font-family:Kanit,sans-serif">แตะทีละแถวเพื่อเปิดสิทธิ์</h1>
     <div style="display:flex;flex-direction:column;gap:10px">
       <sc-for list="{{ perms }}" as="p" hint-placeholder-count="4">
-        <button onClick="{{ p.tap }}" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:20px;background:#FFFFFF;border:none;text-align:left;cursor:pointer;min-height:72px;transition:transform 100ms" style-active="transform:scale(0.98)">
-          <div style="width:44px;height:44px;border-radius:50%;background:#F3F2EE;display:flex;align-items:center;justify-content:center;flex:none">{{ p.icon }}</div>
+        <button onClick="{{ p.tap }}" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:20px;background:#FFFFFF;border:none;text-align:left;cursor:pointer;min-height:72px;transition:transform 100ms;border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 1px 2px rgba(26,26,26,.04),0 6px 20px rgba(26,26,26,.05)" style-active="transform:scale(0.98)">
+          <div style="width:48px;height:48px;border-radius:16px;background:#FEF8CC;display:flex;align-items:center;justify-content:center;flex:none">{{ p.icon }}</div>
           <div style="flex:1"><div style="font-size:16px;font-weight:500">{{ p.name }}</div><div style="font-size:15px;color:#5C5A55">{{ p.desc }}</div></div>
-          <span style="padding:6px 12px;border-radius:999px;font-size:15px;white-space:nowrap;background:{{ p.bg }};color:{{ p.fg }};border:1px solid {{ p.bd }}">{{ p.status }}</span>
+          <span style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none"><span aria-hidden="true" style="position:relative;width:48px;height:28px;border-radius:999px;background:{{ p.trk }};transition:background 200ms"><span style="position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#FFFFFF;box-shadow:0 1px 3px rgba(26,26,26,.25);transform:translateX({{ p.kx }});transition:transform 200ms"></span></span><span style="font-size:15px;white-space:nowrap;color:{{ p.fg }}">{{ p.status }}</span></span>
         </button>
       </sc-for>
     </div>
-    <div style="display:flex;gap:10px;padding:14px 16px;border-radius:20px;background:#F3F2EE;font-size:15px;line-height:1.5;color:#444">
+    <div style="display:flex;gap:10px;padding:14px 16px;border-radius:16px;background:#F5F5F5;font-size:15px;line-height:1.5;color:#444">
       {{ ic.shield }}
       <div>ใช้ตรวจเครื่องเท่านั้น ไม่บันทึกเสียงและไม่เก็บตำแหน่ง ข้อไหนไม่เปิด จะข้ามไป และพนักงานตรวจให้ตอนรับเครื่อง</div>
     </div>
   </div>
   <div style="padding:12px 24px 34px;flex:none">
-    <button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">{{ permCta }}</button>
+    <button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20E;font-size:18px;font-weight:500;cursor:pointer;box-shadow:0 10px 24px rgba(200,150,0,.28);transition:transform 100ms" style-active="transform:scale(0.97)">{{ permCta }}</button>
   </div>
 </sc-if>
 
 <sc-if value="{{ is.auto }}">
   <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:16px">
-    <div style="height:120px;border-radius:24px;background:#FFFFFF;position:relative;overflow:hidden;flex:none">
-      <div style="position:absolute;left:24px;right:24px;bottom:30px;height:6px;border-radius:3px;background:#D6D3CB"></div>
-      <div style="position:absolute;left:50%;bottom:36px;width:150px;margin-left:-75px;height:16px;border-radius:8px;background:#111"></div>
-      <div style="position:absolute;left:50%;bottom:52px;width:120px;margin-left:-60px;height:4px;border-radius:2px;background:#FAD20D"></div>
+    <div style="height:188px;border-radius:28px;background:radial-gradient(circle at 50% 55%,#FFFFFF 0%,#FFF6C9 45%,#FDEB9A 100%);border:1px solid rgba(255,255,255,.9);box-sizing:border-box;position:relative;overflow:hidden;flex:none"><div style="position:absolute;left:50%;top:50%;width:164px;height:164px;margin:-82px 0 0 -82px;border-radius:50%;border:1px solid rgba(255,255,255,.95);box-sizing:border-box"></div><div style="position:absolute;left:50%;top:50%;width:236px;height:236px;margin:-118px 0 0 -118px;border-radius:50%;border:1px dashed rgba(26,26,26,.12);box-sizing:border-box"></div><span style="position:absolute;left:22%;top:22%;width:10px;height:10px;border-radius:50%;background:#FAD20E"></span><span style="position:absolute;right:20%;top:30%;width:6px;height:6px;border-radius:50%;background:#1A1A1A;opacity:.7"></span><span style="position:absolute;right:26%;bottom:18%;width:14px;height:14px;border-radius:50%;border:2px solid #FAD20E;box-sizing:border-box"></span><span style="position:absolute;left:28%;bottom:22%;width:5px;height:5px;border-radius:50%;background:#FAD20E"></span>
+      <div style="position:absolute;left:24px;right:24px;bottom:40px;height:8px;border-radius:8px;background:#1A1A1A;opacity:.12"></div>
+      <div style="position:absolute;left:50%;bottom:48px;width:156px;margin-left:-78px;height:18px;border-radius:8px;background:#1A1A1A"></div>
+      <div style="position:absolute;left:50%;bottom:66px;width:120px;margin-left:-60px;height:4px;border-radius:2px;background:#FAD20E"></div>
     </div>
     <div>
-      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">วางเครื่องหงายจอบนโต๊ะ</h1>
-      <p style="margin:6px 0 0;font-size:16px;color:#5C5A55;line-height:1.45">ไม่ต้องจับเครื่องราว 40 วินาที ระบบตรวจให้ทีละข้อ</p>
+      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3;font-family:Kanit,sans-serif">วางเครื่องหงายจอบนโต๊ะ</h1>
+      <p style="margin:6px 0 0;font-size:16px;color:#5C5A55;line-height:1.45">ไม่ต้องจับเครื่อง ระบบตรวจให้ทีละข้อ</p>
     </div>
-    <div style="border-radius:20px;background:#FFFFFF;padding:4px 16px">
+    <div style="border-radius:20px;background:#FFFFFF;padding:4px 16px;border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 1px 2px rgba(26,26,26,.04),0 6px 20px rgba(26,26,26,.05)">
       <sc-for list="{{ autoRows }}" as="r" hint-placeholder-count="8">
         <div style="display:flex;align-items:center;gap:12px;min-height:48px;border-bottom:1px solid {{ r.line }}">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5C5A55;width:18px">{{ r.n }}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#5C5A55;width:20px;flex:none">{{ r.n }}</span>
           <div style="flex:1;font-size:15px">{{ r.name }}<div style="font-size:15px;color:{{ r.vc }}">{{ r.val }}</div></div>
           {{ r.el }}
         </div>
@@ -191,26 +211,26 @@ a{color:#111}a:hover{color:#5C5A55}
     </div>
   </div>
   <div style="padding:12px 24px 34px;flex:none">
-    <button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">ระบบกำลังตรวจ วางเครื่องไว้</button>
+    <button disabled="disabled" style="width:100%;height:56px;border:none;border-radius:999px;background:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.85);color:#5C5A55;font-size:17px">ระบบกำลังตรวจ วางเครื่องไว้</button>
   </div>
 </sc-if>
 
 <sc-if value="{{ is.ear }}">
   <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:16px">
-    <div style="display:flex;justify-content:center;padding:8px 0"><div style="width:112px;height:112px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center">{{ icL.ear }}</div></div>
+    <div style="position:relative;flex:none;width:100%;height:188px;border-radius:28px;background:radial-gradient(circle at 50% 55%,#FFFFFF 0%,#FFF6C9 45%,#FDEB9A 100%);border:1px solid rgba(255,255,255,.9);box-sizing:border-box;display:flex;align-items:center;justify-content:center;overflow:hidden"><div style="position:absolute;left:50%;top:50%;width:164px;height:164px;margin:-82px 0 0 -82px;border-radius:50%;border:1px solid rgba(255,255,255,.95);box-sizing:border-box"></div><div style="position:absolute;left:50%;top:50%;width:236px;height:236px;margin:-118px 0 0 -118px;border-radius:50%;border:1px dashed rgba(26,26,26,.12);box-sizing:border-box"></div><span style="position:absolute;left:22%;top:22%;width:10px;height:10px;border-radius:50%;background:#FAD20E"></span><span style="position:absolute;right:20%;top:30%;width:6px;height:6px;border-radius:50%;background:#1A1A1A;opacity:.7"></span><span style="position:absolute;right:26%;bottom:18%;width:14px;height:14px;border-radius:50%;border:2px solid #FAD20E;box-sizing:border-box"></span><span style="position:absolute;left:28%;bottom:22%;width:5px;height:5px;border-radius:50%;background:#FAD20E"></span><div style="position:relative;width:116px;height:116px;border-radius:50%;background:#FAD20E;box-shadow:0 0 0 12px rgba(250,210,14,.16),0 16px 32px rgba(200,150,0,.32);display:flex;align-items:center;justify-content:center">{{ icL.ear }}</div></div>
     <div>
-      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">แนบเครื่องที่หู แล้วฟังชื่อสี</h1>
+      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3;font-family:Kanit,sans-serif">แนบเครื่องที่หู แล้วฟังชื่อสี</h1>
       <p style="margin:6px 0 0;font-size:16px;color:#5C5A55;line-height:1.45">รอบข้างเสียงดัง ระบบวัดเองไม่ได้ แตะสีที่ได้ยินจากลำโพงสนทนา</p>
     </div>
     <div style="display:flex;justify-content:center">
-      <button aria-label="ฟังอีกครั้ง" onClick="{{ replay }}" style="width:56px;height:56px;border-radius:50%;border:1.5px solid #111;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.95)">{{ ic.refresh }}</button>
+      <button aria-label="ฟังอีกครั้ง" onClick="{{ replay }}" style="width:56px;height:56px;border-radius:50%;border:1.5px solid #1A1A1A;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.95)">{{ ic.refresh }}</button>
     </div>
     <sc-if value="{{ ear.wrong }}"><div style="padding:12px 16px;border-radius:16px;background:#FFF1D6;color:#7A4A00;font-size:15px">ยังไม่ตรง แตะฟังอีกครั้งแล้วเลือกใหม่</div></sc-if>
     <sc-if value="{{ ear.ok }}"><div style="padding:12px 16px;border-radius:16px;background:#E4F4E8;color:#1B6B33;font-size:15px;display:flex;gap:8px;align-items:center">{{ okBadge }}ลำโพงสนทนาใช้งานได้</div></sc-if>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
       <sc-for list="{{ earColors }}" as="c" hint-placeholder-count="4">
-        <button onClick="{{ c.pick }}" style="height:72px;border-radius:20px;border:none;background:#FFFFFF;display:flex;align-items:center;gap:12px;padding:0 16px;font-size:17px;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">
-          <span style="width:28px;height:28px;border-radius:50%;background:{{ c.c }};border:1px solid #CFCCC4;flex:none"></span>{{ c.n }}
+        <button onClick="{{ c.pick }}" style="height:72px;border-radius:20px;border:none;background:#FFFFFF;display:flex;align-items:center;gap:12px;padding:0 16px;font-size:17px;cursor:pointer;transition:transform 100ms;border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 1px 2px rgba(26,26,26,.04),0 6px 20px rgba(26,26,26,.05)" style-active="transform:scale(0.97)">
+          <span style="width:28px;height:28px;border-radius:50%;background:{{ c.c }};border:1px solid #D4D4D4;flex:none"></span>{{ c.n }}
         </button>
       </sc-for>
     </div>
@@ -219,67 +239,67 @@ a{color:#111}a:hover{color:#5C5A55}
 
 <sc-if value="{{ isGen }}">
   <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:18px">
-    <div style="display:flex;justify-content:center;padding:12px 0"><div style="width:120px;height:120px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center">{{ gen.icon }}</div></div>
+    <div style="position:relative;flex:none;width:100%;height:188px;border-radius:28px;background:radial-gradient(circle at 50% 55%,#FFFFFF 0%,#FFF6C9 45%,#FDEB9A 100%);border:1px solid rgba(255,255,255,.9);box-sizing:border-box;display:flex;align-items:center;justify-content:center;overflow:hidden"><div style="position:absolute;left:50%;top:50%;width:164px;height:164px;margin:-82px 0 0 -82px;border-radius:50%;border:1px solid rgba(255,255,255,.95);box-sizing:border-box"></div><div style="position:absolute;left:50%;top:50%;width:236px;height:236px;margin:-118px 0 0 -118px;border-radius:50%;border:1px dashed rgba(26,26,26,.12);box-sizing:border-box"></div><span style="position:absolute;left:22%;top:22%;width:10px;height:10px;border-radius:50%;background:#FAD20E"></span><span style="position:absolute;right:20%;top:30%;width:6px;height:6px;border-radius:50%;background:#1A1A1A;opacity:.7"></span><span style="position:absolute;right:26%;bottom:18%;width:14px;height:14px;border-radius:50%;border:2px solid #FAD20E;box-sizing:border-box"></span><span style="position:absolute;left:28%;bottom:22%;width:5px;height:5px;border-radius:50%;background:#FAD20E"></span><div style="position:relative;width:116px;height:116px;border-radius:50%;background:#FAD20E;box-shadow:0 0 0 12px rgba(250,210,14,.16),0 16px 32px rgba(200,150,0,.32);display:flex;align-items:center;justify-content:center">{{ gen.icon }}</div></div>
     <div>
-      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3;text-wrap:pretty">{{ gen.title }}</h1>
+      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3;text-wrap:pretty;font-family:Kanit,sans-serif">{{ gen.title }}</h1>
       <p style="margin:6px 0 0;font-size:16px;color:#5C5A55;line-height:1.45;text-wrap:pretty">{{ gen.instr }}</p>
     </div>
-    <sc-if value="{{ gen.busy }}"><div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;background:#FFFFFF;font-size:16px;min-height:56px;box-sizing:border-box">{{ spin }}{{ gen.text }}</div></sc-if>
-    <sc-if value="{{ gen.passed }}"><div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;background:#E4F4E8;color:#1B6B33;font-size:16px;min-height:56px;box-sizing:border-box">{{ okBadge }}{{ gen.text }}</div></sc-if>
-    <sc-if value="{{ gen.warned }}"><div style="display:flex;gap:12px;padding:16px;border-radius:20px;background:#FFF1D6;color:#7A4A00;min-height:56px;box-sizing:border-box">{{ ic.info }}<div><div style="font-size:16px;font-weight:500">{{ gen.warn }}</div><div style="font-size:15px">{{ gen.warnSub }}</div></div></div></sc-if>
+    <sc-if value="{{ gen.busy }}"><div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;background:#FFFFFF;font-size:16px;min-height:56px;box-sizing:border-box;border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 1px 2px rgba(26,26,26,.04),0 6px 20px rgba(26,26,26,.05)">{{ spin }}{{ gen.text }}</div></sc-if>
+    <sc-if value="{{ gen.passed }}"><div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:16px;background:#E4F4E8;color:#1B6B33;font-size:16px;min-height:56px;box-sizing:border-box">{{ okBadge }}{{ gen.text }}</div></sc-if>
+    <sc-if value="{{ gen.warned }}"><div style="display:flex;gap:12px;padding:16px;border-radius:16px;background:#FFF1D6;color:#7A4A00;min-height:56px;box-sizing:border-box">{{ ic.info }}<div><div style="font-size:16px;font-weight:500">{{ gen.warn }}</div><div style="font-size:15px">{{ gen.warnSub }}</div></div></div></sc-if>
   </div>
   <div style="padding:12px 24px 34px;flex:none">
-    <sc-if value="{{ gen.bPrimary }}"><button onClick="{{ gen.bClick }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">{{ gen.bLabel }}</button></sc-if>
-    <sc-if value="{{ gen.bOutline }}"><button onClick="{{ skip }}" style="width:100%;height:56px;border:1.5px solid #111;border-radius:999px;background:transparent;font-size:17px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">{{ gen.bLabel }}</button></sc-if>
-    <sc-if value="{{ gen.bDisabled }}"><button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">{{ gen.bLabel }}</button></sc-if>
+    <sc-if value="{{ gen.bPrimary }}"><button onClick="{{ gen.bClick }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20E;font-size:18px;font-weight:500;cursor:pointer;box-shadow:0 10px 24px rgba(200,150,0,.28);transition:transform 100ms" style-active="transform:scale(0.97)">{{ gen.bLabel }}</button></sc-if>
+    <sc-if value="{{ gen.bOutline }}"><button onClick="{{ skip }}" style="width:100%;height:56px;border:1.5px solid #1A1A1A;border-radius:999px;background:transparent;font-size:17px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">{{ gen.bLabel }}</button></sc-if>
+    <sc-if value="{{ gen.bDisabled }}"><button disabled="disabled" style="width:100%;height:56px;border:none;border-radius:999px;background:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.85);color:#5C5A55;font-size:17px">{{ gen.bLabel }}</button></sc-if>
   </div>
 </sc-if>
 
 <sc-if value="{{ is.i14a }}">
   <div ref="{{ touchRef }}" onPointerDown="{{ tDown }}" onPointerMove="{{ tMove }}" onPointerUp="{{ tUp }}" onPointerLeave="{{ tUp }}" style="position:absolute;inset:0;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(16,1fr);background:#FFFFFF;touch-action:none;cursor:crosshair;user-select:none">
-    <sc-for list="{{ cells }}" as="c"><div style="background:{{ c.bg }};box-shadow:inset 0 0 0 0.5px #E2E0D9;transition:background 120ms"></div></sc-for>
+    <sc-for list="{{ cells }}" as="c"><div style="background:{{ c.bg }};box-shadow:inset 0 0 0 0.5px #EBEBEB;transition:background 120ms"></div></sc-for>
   </div>
-  <sc-if value="{{ touchFresh }}"><div style="position:absolute;top:56px;left:50%;transform:translateX(-50%);padding:8px 16px;border-radius:999px;background:#111;color:#fff;font-size:15px;font-weight:500;pointer-events:none;white-space:nowrap">{{ touchPill }}</div></sc-if>
-  <sc-if value="{{ touchStale }}"><button onClick="{{ skip }}" style="position:absolute;top:52px;left:50%;transform:translateX(-50%);z-index:2;height:48px;padding:0 22px;border:none;border-radius:999px;background:#111;color:#fff;font-size:16px;font-weight:500;white-space:nowrap;cursor:pointer">ข้ามข้อนี้</button></sc-if>
-  <sc-if value="{{ touchHint }}"><div style="position:absolute;left:40px;right:40px;top:50%;transform:translateY(-50%);padding:20px;border-radius:24px;background:rgba(17,17,17,.88);color:#fff;text-align:center;pointer-events:none"><div style="font-size:20px;font-weight:500">ลากนิ้วให้ทั่วจอ</div><div style="font-size:15px;color:#E2E0D9;margin-top:4px">ลากซิกแซกจากบนลงล่าง จนทุกช่องเป็นสีเหลือง</div></div></sc-if>
+  <sc-if value="{{ touchFresh }}"><div style="position:absolute;top:56px;left:50%;transform:translateX(-50%);padding:8px 16px;border-radius:999px;background:#1A1A1A;color:#fff;font-size:15px;font-weight:500;pointer-events:none;white-space:nowrap">{{ touchPill }}</div></sc-if>
+  <sc-if value="{{ touchStale }}"><button onClick="{{ skip }}" style="position:absolute;top:52px;left:50%;transform:translateX(-50%);z-index:2;height:48px;padding:0 22px;border:none;border-radius:999px;background:#1A1A1A;color:#fff;font-size:16px;font-weight:500;white-space:nowrap;cursor:pointer">ข้ามข้อนี้</button></sc-if>
+  <sc-if value="{{ touchHint }}"><div style="position:absolute;left:40px;right:40px;top:50%;transform:translateY(-50%);padding:20px;border-radius:24px;background:rgba(26,26,26,.88);color:#fff;text-align:center;pointer-events:none"><div style="font-size:20px;font-weight:500;font-family:Kanit,sans-serif">ลากนิ้วให้ทั่วจอ</div><div style="font-size:15px;color:#EBEBEB;margin-top:4px">ลากซิกแซกจากบนลงล่าง จนทุกช่องเป็นสีเหลือง</div></div></sc-if>
 </sc-if>
 
 <sc-if value="{{ is.i14b }}">
   <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:18px">
     <div>
-      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">แตะค้าง 2 นิ้วพร้อมกัน</h1>
+      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3;font-family:Kanit,sans-serif">แตะค้าง 2 นิ้วพร้อมกัน</h1>
       <p style="margin:6px 0 0;font-size:16px;color:#5C5A55;line-height:1.45">วางนิ้วบนวงกลมทั้งสองวง ค้างไว้ 2 วินาที</p>
     </div>
     <div style="flex:1;min-height:320px;display:flex;align-items:center;justify-content:space-around">
-      <button aria-label="วงกลมซ้าย" onPointerDown="{{ tfA }}" style="width:120px;height:120px;border-radius:50%;border:2px dashed #111;background:{{ tf.aBg }};cursor:pointer;font-size:15px;transition:background 150ms">{{ tf.aTxt }}</button>
-      <button aria-label="วงกลมขวา" onPointerDown="{{ tfB }}" style="width:120px;height:120px;border-radius:50%;border:2px dashed #111;background:{{ tf.bBg }};cursor:pointer;font-size:15px;transition:background 150ms">{{ tf.bTxt }}</button>
+      <button aria-label="วงกลมซ้าย" onPointerDown="{{ tfA }}" style="width:120px;height:120px;border-radius:50%;border:2px dashed #1A1A1A;background:{{ tf.aBg }};cursor:pointer;font-size:15px;transition:background 150ms">{{ tf.aTxt }}</button>
+      <button aria-label="วงกลมขวา" onPointerDown="{{ tfB }}" style="width:120px;height:120px;border-radius:50%;border:2px dashed #1A1A1A;background:{{ tf.bBg }};cursor:pointer;font-size:15px;transition:background 150ms">{{ tf.bTxt }}</button>
     </div>
-    <sc-if value="{{ tf.done }}"><div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;background:#E4F4E8;color:#1B6B33;font-size:16px">{{ okBadge }}แตะหลายนิ้วได้ปกติ</div></sc-if>
+    <sc-if value="{{ tf.done }}"><div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:16px;background:#E4F4E8;color:#1B6B33;font-size:16px">{{ okBadge }}แตะหลายนิ้วได้ปกติ</div></sc-if>
   </div>
 </sc-if>
 
 <sc-if value="{{ is.i15 }}">
   <div style="position:absolute;inset:0;background:{{ col.c }};transition:background 200ms"></div>
   <div style="position:absolute;inset:0;background:#000;opacity:{{ col.dim }};pointer-events:none"></div>
-  <div style="position:absolute;left:0;right:0;bottom:0;background:#FFFFFF;border-radius:28px 28px 0 0;transform:{{ col.tf }};transition:transform 280ms cubic-bezier(.2,.8,.2,1);box-shadow:0 -8px 24px rgba(0,0,0,.12)">
-    <button aria-label="ปัดลงเพื่อดูสีเต็มจอ" onPointerDown="{{ sheetDown }}" onPointerUp="{{ sheetUp }}" style="width:100%;height:44px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none"><span style="width:44px;height:5px;border-radius:3px;background:#CFCCC4"></span></button>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:#FFFFFF;border-radius:24px 28px 0 0;transform:{{ col.tf }};transition:transform 280ms cubic-bezier(.2,.8,.2,1);box-shadow:0 -8px 24px rgba(0,0,0,.12)">
+    <button aria-label="ปัดลงเพื่อดูสีเต็มจอ" onPointerDown="{{ sheetDown }}" onPointerUp="{{ sheetUp }}" style="width:100%;height:44px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none"><span style="width:44px;height:5px;border-radius:3px;background:#D4D4D4"></span></button>
     <div style="padding:0 24px 34px;display:flex;flex-direction:column;gap:14px">
       <div style="display:flex;align-items:center;gap:10px">
         <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;margin-left:-12px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
-        <div style="flex:1;font-size:15px;color:#5C5A55">หน้าจอ<span style="color:#111;font-weight:500;margin-left:8px">ข้อ 15 จาก 23</span></div>
+        <div style="flex:1;font-size:15px;color:#5C5A55">หน้าจอ<span style="color:#1A1A1A;font-weight:500;margin-left:8px">ข้อ 15 จาก 23</span></div>
         <button onClick="{{ skip }}" style="min-height:44px;border:none;background:transparent;font-size:15px;text-decoration:underline;text-underline-offset:3px;cursor:pointer">ข้ามข้อนี้</button>
       </div>
-      <div style="display:flex;gap:4px;margin-top:-6px"><sc-for list="{{ segs }}" as="g"><div style="flex:{{ g.flex }};height:6px;border-radius:3px;background:#E2E0D9;overflow:hidden"><div style="height:100%;width:{{ g.fill }};background:#111;transition:width 300ms ease-out"></div></div></sc-for></div>
+      <div style="display:flex;gap:4px;margin-top:-6px"><sc-for list="{{ segs }}" as="g"><div style="flex:{{ g.flex }};height:6px;border-radius:3px;background:#EBEBEB;overflow:hidden"><div style="height:100%;width:{{ g.fill }};background:#FAD20E;transition:width 300ms ease-out"></div></div></sc-for></div>
       <sc-if value="{{ col.isColor }}">
-        <div><div style="font-size:22px;font-weight:500">จอแสดงสีนี้ปกติไหม</div><div style="font-size:15px;color:#5C5A55">สีที่ {{ col.no }} จาก 5 {{ col.n }} ปัดแผงนี้ลงเพื่อดูเต็มจอ</div></div>
+        <div><div style="font-size:22px;font-weight:500;font-family:Kanit,sans-serif">จอแสดงสีนี้ปกติไหม</div><div style="font-size:15px;color:#5C5A55">สีที่ {{ col.no }} จาก 5 {{ col.n }} ปัดแผงนี้ลงเพื่อดูเต็มจอ</div></div>
         <button onClick="{{ colBad }}" style="height:48px;border:none;background:transparent;font-size:16px;text-decoration:underline;text-underline-offset:3px;cursor:pointer">เห็นจุดผิดปกติ</button>
-        <button onClick="{{ colOk }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">จอปกติ</button>
+        <button onClick="{{ colOk }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20E;font-size:18px;font-weight:500;cursor:pointer;box-shadow:0 10px 24px rgba(200,150,0,.28);transition:transform 100ms" style-active="transform:scale(0.97)">จอปกติ</button>
       </sc-if>
       <sc-if value="{{ col.isBright }}">
-        <div><div style="font-size:22px;font-weight:500">ลากปรับความสว่าง</div><div style="font-size:15px;color:#5C5A55">ลากไปต่ำสุด แล้วลากไปสูงสุด</div></div>
-        <label style="display:flex;align-items:center;gap:12px">{{ ic.sun }}<input type="range" min="0" max="100" value="{{ col.bright }}" onInput="{{ brightIn }}" aria-label="ความสว่าง" style="flex:1;height:44px;accent-color:#111"></label>
+        <div><div style="font-size:22px;font-weight:500;font-family:Kanit,sans-serif">ลากปรับความสว่าง</div><div style="font-size:15px;color:#5C5A55">ลากไปต่ำสุด แล้วลากไปสูงสุด</div></div>
+        <label style="display:flex;align-items:center;gap:12px">{{ ic.sun }}<input type="range" min="0" max="100" value="{{ col.bright }}" onInput="{{ brightIn }}" aria-label="ความสว่าง" style="flex:1;height:44px;accent-color:#1A1A1A"></label>
         <div style="display:flex;gap:8px;font-size:15px"><span style="padding:6px 12px;border-radius:999px;background:{{ col.minBg }};color:{{ col.minFg }}">ต่ำสุด</span><span style="padding:6px 12px;border-radius:999px;background:{{ col.maxBg }};color:{{ col.maxFg }}">สูงสุด</span></div>
-        <button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">{{ col.btn }}</button>
+        <button disabled="disabled" style="width:100%;height:56px;border:none;border-radius:999px;background:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.85);color:#5C5A55;font-size:17px">{{ col.btn }}</button>
       </sc-if>
     </div>
   </div>
@@ -287,52 +307,52 @@ a{color:#111}a:hover{color:#5C5A55}
 
 <sc-if value="{{ is.i20 }}">
   <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:18px">
-    <div style="display:flex;justify-content:center;padding:12px 0"><div style="width:120px;height:120px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center">{{ icL.buttons }}</div></div>
+    <div style="position:relative;flex:none;width:100%;height:188px;border-radius:28px;background:radial-gradient(circle at 50% 55%,#FFFFFF 0%,#FFF6C9 45%,#FDEB9A 100%);border:1px solid rgba(255,255,255,.9);box-sizing:border-box;display:flex;align-items:center;justify-content:center;overflow:hidden"><div style="position:absolute;left:50%;top:50%;width:164px;height:164px;margin:-82px 0 0 -82px;border-radius:50%;border:1px solid rgba(255,255,255,.95);box-sizing:border-box"></div><div style="position:absolute;left:50%;top:50%;width:236px;height:236px;margin:-118px 0 0 -118px;border-radius:50%;border:1px dashed rgba(26,26,26,.12);box-sizing:border-box"></div><span style="position:absolute;left:22%;top:22%;width:10px;height:10px;border-radius:50%;background:#FAD20E"></span><span style="position:absolute;right:20%;top:30%;width:6px;height:6px;border-radius:50%;background:#1A1A1A;opacity:.7"></span><span style="position:absolute;right:26%;bottom:18%;width:14px;height:14px;border-radius:50%;border:2px solid #FAD20E;box-sizing:border-box"></span><span style="position:absolute;left:28%;bottom:22%;width:5px;height:5px;border-radius:50%;background:#FAD20E"></span><div style="position:relative;width:116px;height:116px;border-radius:50%;background:#FAD20E;box-shadow:0 0 0 12px rgba(250,210,14,.16),0 16px 32px rgba(200,150,0,.32);display:flex;align-items:center;justify-content:center">{{ icL.buttons }}</div></div>
     <div>
-      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">กดปุ่มข้างเครื่องทีละปุ่ม</h1>
+      <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3;font-family:Kanit,sans-serif">กดปุ่มข้างเครื่องทีละปุ่ม</h1>
       <p style="margin:6px 0 0;font-size:16px;color:#5C5A55;line-height:1.45">Power ให้ล็อกจอ แล้วปลดล็อกกลับมาที่แอป</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px">
       <sc-for list="{{ btnRows }}" as="b" hint-placeholder-count="3">
-        <button onClick="{{ b.press }}" style="display:flex;align-items:center;gap:12px;padding:0 16px;height:60px;border-radius:20px;border:none;background:{{ b.bg }};color:{{ b.fg }};font-size:16px;text-align:left;cursor:pointer">
+        <button onClick="{{ b.press }}" style="display:flex;align-items:center;gap:12px;padding:0 16px;height:60px;border-radius:16px;border:none;background:{{ b.bg }};color:{{ b.fg }};font-size:16px;text-align:left;cursor:pointer">
           <span style="flex:1">{{ b.name }}</span><span style="font-size:15px">{{ b.st }}</span>{{ b.el }}
         </button>
       </sc-for>
     </div>
   </div>
   <div style="padding:12px 24px 34px;flex:none">
-    <button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">{{ btnCta }}</button>
+    <button disabled="disabled" style="width:100%;height:56px;border:none;border-radius:999px;background:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.85);color:#5C5A55;font-size:17px">{{ btnCta }}</button>
   </div>
 </sc-if>
 
 <sc-if value="{{ isShot }}">
   <div style="flex:1;overflow-y:auto;padding:8px 24px 24px;display:flex;flex-direction:column;gap:16px">
-    <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">{{ shot.title }}</h1>
+    <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3;font-family:Kanit,sans-serif">{{ shot.title }}</h1>
     <sc-if value="{{ shot.isGuide }}">
-      <div style="padding:16px;border-radius:20px;background:#FFFFFF;display:flex;flex-direction:column;gap:12px">
-        <div style="display:flex;gap:12px;align-items:flex-start"><span style="width:28px;height:28px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;flex:none">1</span><div style="font-size:16px;line-height:1.45">ไปที่ <b style="font-weight:500">{{ shot.path }}</b></div></div>
-        <div style="display:flex;gap:12px;align-items:flex-start"><span style="width:28px;height:28px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;flex:none">2</span><div style="font-size:16px;line-height:1.45">แคปหน้าจอ แล้วกลับมาที่แอปนี้</div></div>
-        <div style="display:flex;gap:12px;align-items:flex-start"><span style="width:28px;height:28px;border-radius:50%;background:#FAD20D;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;flex:none">3</span><div style="font-size:16px;line-height:1.45">ระบบหยิบภาพแคปล่าสุดให้เอง</div></div>
+      <div style="padding:16px;border-radius:20px;background:#FFFFFF;display:flex;flex-direction:column;gap:12px;border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 1px 2px rgba(26,26,26,.04),0 6px 20px rgba(26,26,26,.05)">
+        <div style="display:flex;gap:12px;align-items:flex-start"><span style="width:28px;height:28px;border-radius:50%;background:#FAD20E;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;flex:none">1</span><div style="font-size:16px;line-height:1.45">ไปที่ <b style="font-weight:500">{{ shot.path }}</b></div></div>
+        <div style="display:flex;gap:12px;align-items:flex-start"><span style="width:28px;height:28px;border-radius:50%;background:#FAD20E;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;flex:none">2</span><div style="font-size:16px;line-height:1.45">แคปหน้าจอ แล้วกลับมาที่แอปนี้</div></div>
+        <div style="display:flex;gap:12px;align-items:flex-start"><span style="width:28px;height:28px;border-radius:50%;background:#FAD20E;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;flex:none">3</span><div style="font-size:16px;line-height:1.45">ระบบหยิบภาพแคปล่าสุดให้เอง</div></div>
       </div>
       <div style="font-size:15px;color:#5C5A55;line-height:1.5">ถ้าแอปหาภาพไม่เจอ แตะเลือกภาพแคปล่าสุดเอง 1 ครั้ง</div>
     </sc-if>
-    <sc-if value="{{ shot.isReading }}"><div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;background:#FFFFFF;font-size:16px">{{ spin }}กำลังอ่านค่าจากภาพแคป</div></sc-if>
-    <sc-if value="{{ shot.isNotFound }}"><div style="display:flex;gap:12px;padding:16px;border-radius:20px;background:#FFF1D6;color:#7A4A00">{{ ic.info }}<div><div style="font-size:16px;font-weight:500">แอปหยิบภาพแคปเองไม่ได้</div><div style="font-size:15px">เลือกภาพแคปล่าสุดจากรูปภาพ 1 ครั้ง</div></div></div></sc-if>
-    <sc-if value="{{ shot.isPicker }}"><div style="display:flex;flex-direction:column;gap:10px"><div style="font-size:16px;font-weight:500">รูปภาพล่าสุด</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><sc-for list="{{ pickTiles }}" as="p"><button onClick="{{ p.pick }}" aria-label="{{ p.label }}" style="height:130px;border:{{ p.bd }};border-radius:12px;background:{{ p.bg }};padding:8px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;cursor:pointer;font-size:15px;text-align:left">{{ p.label }}</button></sc-for></div></div></sc-if>
+    <sc-if value="{{ shot.isReading }}"><div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;background:#FFFFFF;font-size:16px;border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 1px 2px rgba(26,26,26,.04),0 6px 20px rgba(26,26,26,.05)">{{ spin }}กำลังอ่านค่าจากภาพแคป</div></sc-if>
+    <sc-if value="{{ shot.isNotFound }}"><div style="display:flex;gap:12px;padding:16px;border-radius:16px;background:#FFF1D6;color:#7A4A00">{{ ic.info }}<div><div style="font-size:16px;font-weight:500">แอปหยิบภาพแคปเองไม่ได้</div><div style="font-size:15px">เลือกภาพแคปล่าสุดจากรูปภาพ 1 ครั้ง</div></div></div></sc-if>
+    <sc-if value="{{ shot.isPicker }}"><div style="display:flex;flex-direction:column;gap:10px"><div style="font-size:16px;font-weight:500">รูปภาพล่าสุด</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><sc-for list="{{ pickTiles }}" as="p"><button onClick="{{ p.pick }}" aria-label="{{ p.label }}" style="height:130px;border:{{ p.bd }};border-radius:8px;background:{{ p.bg }};padding:8px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;cursor:pointer;font-size:15px;text-align:left">{{ p.label }}</button></sc-for></div></div></sc-if>
     <sc-if value="{{ shot.isResult }}">
       <div style="display:flex;gap:14px;align-items:stretch">
-        <div style="width:108px;height:200px;border-radius:16px;background:#FFFFFF;border:1px solid #E2E0D9;padding:12px 10px;box-sizing:border-box;display:flex;flex-direction:column;gap:6px;flex:none">
-          <div style="height:6px;width:50%;border-radius:3px;background:#D6D3CB"></div>
+        <div style="width:108px;height:200px;border-radius:16px;background:#FFFFFF;border:1px solid #EBEBEB;padding:12px 10px;box-sizing:border-box;display:flex;flex-direction:column;gap:6px;flex:none">
+          <div style="height:6px;width:50%;border-radius:3px;background:#D9D9D9"></div>
           <div style="font-size:10px;font-weight:500;margin-top:6px">{{ shot.mockTitle }}</div>
-          <div style="height:5px;border-radius:3px;background:#ECEAE4"></div>
-          <div style="padding:6px;border-radius:6px;background:#FFF7CC;font-size:10px;font-family:'IBM Plex Mono',monospace;word-break:break-all">{{ shot.mockVal }}</div>
-          <div style="height:5px;border-radius:3px;background:#ECEAE4"></div>
-          <div style="height:5px;width:70%;border-radius:3px;background:#ECEAE4"></div>
+          <div style="height:5px;border-radius:3px;background:#F0F0F0"></div>
+          <div style="padding:6px;border-radius:8px;background:#FEF8CC;font-size:10px;font-family:'IBM Plex Mono',monospace;word-break:break-all">{{ shot.mockVal }}</div>
+          <div style="height:5px;border-radius:3px;background:#F0F0F0"></div>
+          <div style="height:5px;width:70%;border-radius:3px;background:#F0F0F0"></div>
         </div>
         <div style="flex:1;display:flex;flex-direction:column;gap:8px;min-width:0">
           <div style="font-size:15px;color:#5C5A55">ค่าที่อ่านได้</div>
           <sc-for list="{{ shot.rows }}" as="r">
-            <div style="display:flex;justify-content:space-between;gap:8px;padding:10px 12px;border-radius:14px;background:#FFFFFF;font-size:15px"><span style="color:#5C5A55">{{ r.k }}</span><span style="font-weight:500;font-family:{{ r.ff }};word-break:break-all;text-align:right">{{ r.v }}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:8px;padding:10px 12px;border-radius:20px;background:#FFFFFF;font-size:15px;border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 1px 2px rgba(26,26,26,.04),0 6px 20px rgba(26,26,26,.05)"><span style="color:#5C5A55">{{ r.k }}</span><span style="font-weight:500;font-family:{{ r.ff }};word-break:break-all;text-align:right">{{ r.v }}</span></div>
           </sc-for>
           <sc-if value="{{ shot.note }}"><div style="display:flex;gap:6px;align-items:center;font-size:15px;color:#1B6B33">{{ ic.check }}{{ shot.note }}</div></sc-if>
         </div>
@@ -341,25 +361,25 @@ a{color:#111}a:hover{color:#5C5A55}
     </sc-if>
   </div>
   <div style="padding:12px 24px 34px;flex:none;display:flex;flex-direction:column;gap:4px">
-    <sc-if value="{{ shot.isGuide }}"><button onClick="{{ openShot }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">{{ shot.open }}</button></sc-if>
-    <sc-if value="{{ shot.isNotFound }}"><button onClick="{{ toPicker }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">เลือกภาพแคปล่าสุด</button></sc-if>
-    <sc-if value="{{ shot.isPicker }}"><button onClick="{{ cancelPicker }}" style="width:100%;height:56px;border:1.5px solid #111;border-radius:999px;background:transparent;font-size:17px;font-weight:500;cursor:pointer">ยกเลิก</button></sc-if>
-    <sc-if value="{{ shot.isReading }}"><button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">รอสักครู่</button></sc-if>
+    <sc-if value="{{ shot.isGuide }}"><button onClick="{{ openShot }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20E;font-size:18px;font-weight:500;cursor:pointer;box-shadow:0 10px 24px rgba(200,150,0,.28);transition:transform 100ms" style-active="transform:scale(0.97)">{{ shot.open }}</button></sc-if>
+    <sc-if value="{{ shot.isNotFound }}"><button onClick="{{ toPicker }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20E;font-size:18px;font-weight:500;cursor:pointer;box-shadow:0 10px 24px rgba(200,150,0,.28);transition:transform 100ms" style-active="transform:scale(0.97)">เลือกภาพแคปล่าสุด</button></sc-if>
+    <sc-if value="{{ shot.isPicker }}"><button onClick="{{ cancelPicker }}" style="width:100%;height:56px;border:1.5px solid #1A1A1A;border-radius:999px;background:transparent;font-size:17px;font-weight:500;cursor:pointer">ยกเลิก</button></sc-if>
+    <sc-if value="{{ shot.isReading }}"><button disabled="disabled" style="width:100%;height:56px;border:none;border-radius:999px;background:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.85);color:#5C5A55;font-size:17px">รอสักครู่</button></sc-if>
     <sc-if value="{{ shot.isResult }}">
       <button onClick="{{ otherShot }}" style="height:48px;border:none;background:transparent;font-size:16px;text-decoration:underline;text-underline-offset:3px;cursor:pointer">เลือกภาพอื่น</button>
-      <button onClick="{{ useShot }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">ใช้ภาพนี้</button>
+      <button onClick="{{ useShot }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20E;font-size:18px;font-weight:500;cursor:pointer;box-shadow:0 10px 24px rgba(200,150,0,.28);transition:transform 100ms" style-active="transform:scale(0.97)">ใช้ภาพนี้</button>
     </sc-if>
   </div>
 </sc-if>
 
 <sc-if value="{{ is.unsup }}">
   <div style="flex:1;padding:8px 24px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center">
-    <div style="width:120px;height:120px;border-radius:50%;background:#F3F2EE;display:flex;align-items:center;justify-content:center">{{ icL.nfc }}</div>
-    <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3">รุ่นนี้ไม่รองรับ<br>ข้ามข้อนี้ให้แล้ว</h1>
+    <div style="position:relative;flex:none;width:100%;height:188px;border-radius:28px;background:radial-gradient(circle at 50% 55%,#FFFFFF 0%,#FFF6C9 45%,#FDEB9A 100%);border:1px solid rgba(255,255,255,.9);box-sizing:border-box;display:flex;align-items:center;justify-content:center;overflow:hidden"><div style="position:absolute;left:50%;top:50%;width:164px;height:164px;margin:-82px 0 0 -82px;border-radius:50%;border:1px solid rgba(255,255,255,.95);box-sizing:border-box"></div><div style="position:absolute;left:50%;top:50%;width:236px;height:236px;margin:-118px 0 0 -118px;border-radius:50%;border:1px dashed rgba(26,26,26,.12);box-sizing:border-box"></div><span style="position:absolute;left:22%;top:22%;width:10px;height:10px;border-radius:50%;background:#FAD20E"></span><span style="position:absolute;right:20%;top:30%;width:6px;height:6px;border-radius:50%;background:#1A1A1A;opacity:.7"></span><span style="position:absolute;right:26%;bottom:18%;width:14px;height:14px;border-radius:50%;border:2px solid #FAD20E;box-sizing:border-box"></span><span style="position:absolute;left:28%;bottom:22%;width:5px;height:5px;border-radius:50%;background:#FAD20E"></span><div style="position:relative;width:116px;height:116px;border-radius:50%;background:rgba(255,255,255,.85);box-shadow:0 12px 28px rgba(26,26,26,.10);display:flex;align-items:center;justify-content:center">{{ icL.nfc }}</div></div>
+    <h1 style="margin:0;font-size:26px;font-weight:500;line-height:1.3;font-family:Kanit,sans-serif">รุ่นนี้ไม่รองรับ<br>ข้ามข้อนี้ให้แล้ว</h1>
     <p style="margin:0;font-size:16px;color:#5C5A55">NFC ไม่นับเป็นข้อไม่ผ่าน</p>
   </div>
   <div style="padding:12px 24px 34px;flex:none">
-    <button disabled style="width:100%;height:56px;border:none;border-radius:999px;background:#E7E5DE;color:#5C5A55;font-size:17px">กำลังไปข้อถัดไป</button>
+    <button disabled="disabled" style="width:100%;height:56px;border:none;border-radius:999px;background:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.85);color:#5C5A55;font-size:17px">กำลังไปข้อถัดไป</button>
   </div>
 </sc-if>
 
@@ -368,75 +388,86 @@ a{color:#111}a:hover{color:#5C5A55}
     <div style="font-size:17px;font-weight:500">ผลเช็กเครื่อง</div>
   </div>
   <div style="flex:1;overflow-y:auto;padding:4px 24px 24px;display:flex;flex-direction:column;gap:14px">
-    <div style="padding:20px;border-radius:28px;background:#FFFFFF;display:flex;align-items:center;gap:18px">
-      <div style="position:relative;width:120px;height:120px;flex:none">
-        <svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" fill="none" stroke="#F3F2EE" stroke-width="12"></circle><circle cx="60" cy="60" r="52" fill="none" stroke="#1B6B33" stroke-width="12" stroke-linecap="round" stroke-dasharray="298 400" transform="rotate(-90 60 60)"></circle></svg>
-        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-size:15px;color:#5C5A55">ผ่าน</div><div style="font-size:30px;font-weight:600;line-height:1">21</div><div style="font-size:15px;color:#5C5A55">จาก 23</div></div>
+    <div style="padding:20px 20px 18px;border-radius:28px;background:#FFFFFF;border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 1px 2px rgba(26,26,26,.04),0 6px 20px rgba(26,26,26,.05);display:flex;flex-direction:column;align-items:center;gap:6px;flex:none">
+      <div style="align-self:stretch;display:flex;justify-content:space-between;align-items:center;gap:12px">
+        <div style="flex:1;min-width:0;font-family:Kanit,sans-serif;font-size:20px;font-weight:500;line-height:1.2">iPhone 13 128GB</div>
+        <span style="display:flex;align-items:center;gap:8px;padding:4px 4px 4px 12px;border-radius:999px;background:#E6EEFC;color:#1D4F91;font-size:15px;font-weight:500;white-space:nowrap">เกรดเบื้องต้น<span style="width:30px;height:30px;border-radius:50%;background:#1D4F91;color:#FFFFFF;font-family:Kanit,sans-serif;font-size:17px;display:flex;align-items:center;justify-content:center">B</span></span>
       </div>
-      <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
-        <div style="font-size:18px;font-weight:500">iPhone 13 128GB</div>
-        <span style="align-self:flex-start;padding:6px 12px;border-radius:999px;background:#FAD20D;font-size:15px;font-weight:500">เกรดเบื้องต้น B</span>
-        <span style="align-self:flex-start;padding:6px 12px;border-radius:999px;background:#F3F2EE;color:#444;font-size:15px">เช็กต่อตอนรับเครื่อง 2 ข้อ</span>
+      <div style="position:relative;width:300px;height:170px;margin-top:8px">
+        <svg width="300" height="170" viewBox="0 0 300 170" aria-hidden="true"><rect x="22.3" y="124.7" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(273.9 28.3 141.7)"></rect><rect x="24.6" y="108.2" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(281.7 30.6 125.2)"></rect><rect x="29.0" y="92.1" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(289.6 35.0 109.1)"></rect><rect x="35.7" y="76.9" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(297.4 41.7 93.9)"></rect><rect x="44.3" y="62.6" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(305.2 50.3 79.6)"></rect><rect x="54.8" y="49.7" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(313.0 60.8 66.7)"></rect><rect x="67.0" y="38.4" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(320.9 73.0 55.4)"></rect><rect x="80.6" y="28.8" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(328.7 86.6 45.8)"></rect><rect x="95.4" y="21.1" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(336.5 101.4 38.1)"></rect><rect x="111.1" y="15.5" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(344.3 117.1 32.5)"></rect><rect x="127.4" y="12.1" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(352.2 133.4 29.1)"></rect><rect x="144.0" y="11.0" width="12" height="34" rx="6" fill="#EBEBEB" transform="rotate(360.0 150.0 28.0)"></rect><rect x="160.6" y="12.1" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(367.8 166.6 29.1)"></rect><rect x="176.9" y="15.5" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(375.7 182.9 32.5)"></rect><rect x="192.6" y="21.1" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(383.5 198.6 38.1)"></rect><rect x="207.4" y="28.8" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(391.3 213.4 45.8)"></rect><rect x="221.0" y="38.4" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(399.1 227.0 55.4)"></rect><rect x="233.2" y="49.7" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(407.0 239.2 66.7)"></rect><rect x="243.7" y="62.6" width="12" height="34" rx="6" fill="#EBEBEB" transform="rotate(414.8 249.7 79.6)"></rect><rect x="252.3" y="76.9" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(422.6 258.3 93.9)"></rect><rect x="259.0" y="92.1" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(430.4 265.0 109.1)"></rect><rect x="263.4" y="108.2" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(438.3 269.4 125.2)"></rect><rect x="265.7" y="124.7" width="12" height="34" rx="6" fill="#FAD20E" transform="rotate(446.1 271.7 141.7)"></rect></svg>
+        <div style="position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center"><div style="font-size:15px;color:#5C5A55">ผ่าน</div><div style="font-family:Kanit,sans-serif;font-size:56px;font-weight:500;line-height:1;letter-spacing:-1px">21</div><div style="font-size:15px;color:#5C5A55">จาก 23</div></div>
       </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.7);font-size:15px;color:#444444">{{ ic.info }}เช็กต่อตอนรับเครื่อง 2 ข้อ</div>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px">
       <sc-for list="{{ groups }}" as="g" hint-placeholder-count="5">
-        <div style="border-radius:20px;background:#FFFFFF;overflow:hidden">
+        <div style="border-radius:20px;background:#FFFFFF;overflow:hidden;border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 1px 2px rgba(26,26,26,.04),0 6px 20px rgba(26,26,26,.05)">
           <button onClick="{{ g.toggle }}" aria-expanded="{{ g.open }}" style="width:100%;display:flex;align-items:center;gap:12px;padding:14px 16px;border:none;background:transparent;text-align:left;cursor:pointer;min-height:64px">
-            <div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:500">{{ g.name }}</div><div style="font-size:15px;color:#5C5A55">{{ g.note }}</div></div>
-            <span style="font-size:16px;font-weight:500">{{ g.score }}</span>
+            <div style="width:44px;height:44px;border-radius:14px;background:#FEF8CC;display:flex;align-items:center;justify-content:center;flex:none">{{ g.icon }}</div><div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:500">{{ g.name }}</div><div style="font-size:15px;color:#5C5A55">{{ g.note }}</div><div aria-hidden="true" style="display:flex;gap:3px;margin-top:6px"><sc-for list="{{ g.bars }}" as="b"><span style="width:14px;height:6px;border-radius:3px;background:{{ b.c }}"></span></sc-for></div></div>
+            <span style="font-family:Kanit,sans-serif;font-size:17px;font-weight:500;padding:4px 10px;border-radius:999px;background:#F5F5F5">{{ g.score }}</span>
             <span style="display:flex;transform:{{ g.rot }};transition:transform 200ms">{{ ic.down }}</span>
           </button>
           <sc-if value="{{ g.open }}">
             <div style="padding:0 16px 12px;display:flex;flex-direction:column">
               <sc-for list="{{ g.items }}" as="it">
-                <div style="display:flex;align-items:center;gap:10px;min-height:40px;border-top:1px solid #F3F2EE;font-size:15px"><span style="flex:1">{{ it.n }}</span><span style="color:#5C5A55;font-size:15px">{{ it.v }}</span>{{ it.el }}</div>
+                <div style="display:flex;align-items:center;gap:10px;min-height:40px;border-top:1px solid #F5F5F5;font-size:15px"><span style="flex:1">{{ it.n }}</span><span style="color:#5C5A55;font-size:15px">{{ it.v }}</span>{{ it.el }}</div>
               </sc-for>
             </div>
           </sc-if>
         </div>
       </sc-for>
     </div>
-    <div style="display:flex;gap:10px;padding:14px 16px;border-radius:20px;background:#F3F2EE;font-size:15px;color:#444;line-height:1.5">{{ ic.info }}<div>ราคาและเกรดสุดท้าย พนักงานแจ้งหลังดูตัวเครื่อง</div></div>
+    <div style="display:flex;gap:10px;padding:14px 16px;border-radius:16px;background:#F5F5F5;font-size:15px;color:#444;line-height:1.5">{{ ic.info }}<div>ราคาและเกรดสุดท้าย พนักงานแจ้งหลังดูตัวเครื่อง</div></div>
   </div>
   <div style="padding:12px 24px 34px;flex:none">
-    <button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20D;font-size:18px;font-weight:500;cursor:pointer;transition:transform 100ms" style-active="transform:scale(0.97)">รับ QR ขายเครื่อง</button>
+    <button onClick="{{ next }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#FAD20E;font-size:18px;font-weight:500;cursor:pointer;box-shadow:0 10px 24px rgba(200,150,0,.28);transition:transform 100ms" style-active="transform:scale(0.97)">รับ QR ขายเครื่อง</button>
   </div>
 </sc-if>
 
 <sc-if value="{{ is.c12 }}">
   <div style="display:flex;align-items:center;height:56px;padding:0 8px;gap:4px;flex:none">
-    <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
+    <button aria-label="ย้อนกลับ" onClick="{{ back }}" style="width:44px;height:44px;border:1px solid rgba(255,255,255,.9);border-radius:50%;background:#FFFFFF;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;cursor:pointer">{{ ic.back }}</button>
     <div style="font-size:17px;font-weight:500">QR ขายเครื่อง</div>
   </div>
-  <div style="flex:1;overflow-y:auto;padding:4px 24px 24px;display:flex;flex-direction:column;gap:14px">
-    <div style="padding:24px 20px;border-radius:28px;background:#FFFFFF;display:flex;flex-direction:column;align-items:center;gap:12px">
-      <div style="font-size:16px;text-align:center">ให้พนักงานสแกน QR นี้ตอนมารับเครื่อง</div>
-      <div style="width:220px;height:220px;padding:12px;border-radius:20px;border:1px solid #E2E0D9;box-sizing:border-box">{{ qr }}</div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500;letter-spacing:1px">DC-2610-0482</div>
-      <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:{{ qrBg }};color:{{ qrFg }};font-size:15px">{{ ic.clock }}ใช้ได้อีก <span style="font-family:'IBM Plex Mono',monospace;font-weight:500">{{ qrTime }}</span></div>
-    </div>
-    <div style="padding:16px;border-radius:20px;background:#FFFFFF;display:flex;flex-direction:column;gap:10px">
-      <div style="display:flex;justify-content:space-between;font-size:15px"><span style="color:#5C5A55">เครื่อง</span><span style="font-weight:500">iPhone 13 128GB Midnight</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:15px"><span style="color:#5C5A55">ผลเช็ก</span><span style="font-weight:500">ผ่าน 21 จาก 23</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:15px"><span style="color:#5C5A55">เกรดเบื้องต้น</span><span style="font-weight:500">B</span></div>
+  <div style="position:relative;flex:1;overflow-y:auto;padding:4px 24px 24px;display:flex;flex-direction:column;gap:14px">
+    <span aria-hidden="true" style="position:absolute;left:50%;top:120px;width:360px;height:360px;margin-left:-180px;border-radius:50%;background:radial-gradient(circle,rgba(250,210,14,.35) 0%,rgba(250,210,14,0) 65%);pointer-events:none"></span>
+    <div style="position:relative;border-radius:24px;background:#FFFFFF;box-shadow:0 2px 4px rgba(26,26,26,.05),0 18px 40px rgba(26,26,26,.14);overflow:hidden;flex:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px 12px 20px;background:#FAD20E">
+        <img src="assets/logo.svg" alt="YelloBe" style="width:92px;height:auto">
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:{{ qrBg }};color:{{ qrFg }};font-size:15px;white-space:nowrap">{{ ic.clock }}ใช้ได้อีก <span style="font-family:'IBM Plex Mono',monospace;font-weight:500">{{ qrTime }}</span></div>
+      </div>
+      <div style="padding:20px 20px 12px;display:flex;flex-direction:column;align-items:center;gap:14px">
+        <div style="font-size:16px;text-align:center;text-wrap:pretty">ให้พนักงานสแกน QR นี้ตอนมารับเครื่อง</div>
+        <div style="width:212px;height:212px;padding:12px;border-radius:16px;border:1px solid #EBEBEB;box-sizing:border-box">{{ qr }}</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:500;letter-spacing:1.5px">DC-2610-0482</div>
+      </div>
+      <div aria-hidden="true" style="position:relative;height:24px;display:flex;align-items:center">
+        <span style="position:absolute;left:-12px;top:0;width:24px;height:24px;border-radius:50%;background:#FFF4D6;box-shadow:inset -2px 0 4px rgba(26,26,26,.06)"></span>
+        <span style="flex:1;margin:0 22px;border-top:2px dashed #EBEBEB"></span>
+        <span style="position:absolute;right:-12px;top:0;width:24px;height:24px;border-radius:50%;background:#FFF4D6;box-shadow:inset 2px 0 4px rgba(26,26,26,.06)"></span>
+      </div>
+      <div style="padding:8px 20px 20px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:15px"><span style="color:#5C5A55">เครื่อง</span><span style="font-weight:500;text-align:right">iPhone 13 128GB Midnight</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:15px"><span style="color:#5C5A55">ผลเช็ก</span><span style="font-weight:500">ผ่าน 21 จาก 23</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:15px"><span style="color:#5C5A55">เกรดเบื้องต้น</span><span style="min-width:32px;height:28px;padding:0 10px;box-sizing:border-box;border-radius:999px;background:#E6EEFC;color:#1D4F91;font-family:Kanit,sans-serif;font-size:17px;font-weight:500;display:flex;align-items:center;justify-content:center">B</span></div>
+      </div>
     </div>
   </div>
   <div style="padding:12px 24px 34px;flex:none">
-    <button onClick="{{ saveQr }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#111;color:#fff;font-size:18px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform 100ms" style-active="transform:scale(0.97)">{{ ic.download }}บันทึก QR ลงรูปภาพ</button>
+    <button onClick="{{ saveQr }}" style="width:100%;height:56px;border:none;border-radius:999px;background:#1A1A1A;color:#fff;font-size:18px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform 100ms" style-active="transform:scale(0.97)">{{ ic.download }}บันทึก QR ลงรูปภาพ</button>
   </div>
 </sc-if>
 
   </div>
   <sc-if value="{{ showSB }}">
-  <div style="position:absolute;top:0;left:0;right:0;height:47px;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 36px;pointer-events:none;color:#111">
+  <div style="position:absolute;top:0;left:0;right:0;height:47px;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 36px;pointer-events:none;color:#1A1A1A">
     <span style="font-size:15px;font-weight:600">9:41</span>
-    <svg width="68" height="12" viewBox="0 0 68 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1" fill="#111"></rect><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="#111"></rect><rect x="10" y="3" width="3" height="9" rx="1" fill="#111"></rect><rect x="15" y="0" width="3" height="12" rx="1" fill="#111"></rect><path d="M27 4.5a8 8 0 0 1 11 0M29.3 7a4.6 4.6 0 0 1 6.4 0M32.5 10.2h.01" stroke="#111" stroke-width="1.8" fill="none" stroke-linecap="round"></path><rect x="44" y="1" width="21" height="10" rx="3" fill="none" stroke="#111" stroke-width="1.2"></rect><rect x="46" y="3" width="13" height="6" rx="1.5" fill="#111"></rect><rect x="66" y="4" width="1.6" height="4" rx=".8" fill="#111"></rect></svg>
+    <svg width="68" height="12" viewBox="0 0 68 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1" fill="#1A1A1A"></rect><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="#1A1A1A"></rect><rect x="10" y="3" width="3" height="9" rx="1" fill="#1A1A1A"></rect><rect x="15" y="0" width="3" height="12" rx="1" fill="#1A1A1A"></rect><path d="M27 4.5a8 8 0 0 1 11 0M29.3 7a4.6 4.6 0 0 1 6.4 0M32.5 10.2h.01" stroke="#1A1A1A" stroke-width="1.8" fill="none" stroke-linecap="round"></path><rect x="44" y="1" width="21" height="10" rx="3" fill="none" stroke="#1A1A1A" stroke-width="1.2"></rect><rect x="46" y="3" width="13" height="6" rx="1.5" fill="#1A1A1A"></rect><rect x="66" y="4" width="1.6" height="4" rx=".8" fill="#1A1A1A"></rect></svg>
   </div>
   </sc-if>
   <sc-if value="{{ alertOpen }}">
   <div style="position:absolute;inset:0;z-index:6;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center">
-    <div role="dialog" aria-modal="true" style="width:270px;border-radius:14px;background:#F2F2F2;text-align:center;overflow:hidden">
+    <div role="dialog" aria-modal="true" style="width:270px;border-radius:16px;background:#F2F2F2;text-align:center;overflow:hidden">
       <div style="padding:18px 16px 14px"><div style="font-size:16px;font-weight:500;line-height:1.35">“YelloBe” ต้องการใช้{{ alert.name }}</div><div style="font-size:15px;margin-top:4px;line-height:1.4;color:#333">{{ alert.desc }}</div></div>
       <div style="display:flex;border-top:1px solid #C8C7CC">
         <button onClick="{{ deny }}" style="flex:1;height:44px;border:none;border-right:1px solid #C8C7CC;background:transparent;font-size:16px;color:#0A60D6;cursor:pointer">ไม่อนุญาต</button>
@@ -445,21 +476,21 @@ a{color:#111}a:hover{color:#5C5A55}
     </div>
   </div>
   </sc-if>
-  <div style="position:absolute;left:50%;bottom:112px;z-index:7;transform:translateX(-50%);padding:10px 18px;border-radius:999px;background:#111;color:#fff;font-size:15px;white-space:nowrap;pointer-events:none;opacity:{{ toastOp }};transition:opacity 200ms">{{ toast }}</div>
+  <div style="position:absolute;left:50%;bottom:112px;z-index:7;transform:translateX(-50%);padding:10px 18px;border-radius:999px;background:#1A1A1A;color:#fff;font-size:15px;white-space:nowrap;pointer-events:none;opacity:{{ toastOp }};transition:opacity 200ms">{{ toast }}</div>
 </div>
 </div>
 </div>
 </main>
 <sc-if value="{{ grid }}">
-<div style="position:fixed;inset:0;z-index:50;background:#E8E6DF;overflow:auto;padding:24px;box-sizing:border-box">
+<div style="position:fixed;inset:0;z-index:50;background:#EFEDE6;overflow:auto;padding:24px;box-sizing:border-box">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-    <div style="font-size:22px;font-weight:500">ทุกจอ Customer App</div>
-    <button onClick="{{ closeGrid }}" style="height:44px;padding:0 20px;border:none;border-radius:999px;background:#111;color:#fff;font-size:15px;cursor:pointer">ปิด</button>
+    <div style="font-size:22px;font-weight:500;font-family:Kanit,sans-serif">ทุกจอ Customer App</div>
+    <button onClick="{{ closeGrid }}" style="height:44px;padding:0 20px;border:none;border-radius:999px;background:#1A1A1A;color:#fff;font-size:15px;cursor:pointer">ปิด</button>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:24px">
     <sc-for list="{{ gridItems }}" as="g">
       <button onClick="{{ g.go }}" style="border:none;background:transparent;padding:0;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:8px">
-        <div style="width:174px;height:365px;border-radius:26px;overflow:hidden;background:#111"><iframe src="{{ g.src }}" title="{{ g.name }}" loading="lazy" style="width:414px;height:868px;border:none;transform:scale(0.42);transform-origin:top left;pointer-events:none"></iframe></div>
+        <div style="width:174px;height:365px;border-radius:24px;overflow:hidden;background:#1A1A1A"><iframe src="{{ g.src }}" title="{{ g.name }}" loading="lazy" style="width:414px;height:868px;border:none;transform:scale(0.42);transform-origin:top left;pointer-events:none"></iframe></div>
         <div style="font-size:13px"><span style="font-family:'IBM Plex Mono',monospace;color:#5C5A55;margin-right:6px">{{ g.code }}</span>{{ g.name }}</div>
       </button>
     </sc-for>
@@ -506,25 +537,25 @@ function badge(bg, fg, n, anim) {
   return React.createElement('span', { style: { width: 26, height: 26, borderRadius: '50%', background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', animation: anim && !RM ? 'ybpop 200ms ease-out' : 'none' } }, I(n, 16, fg, 2.4));
 }
 function spinner(light) {
-  return React.createElement('span', { role: 'status', 'aria-label': 'กำลังตรวจ', style: { width: 22, height: 22, borderRadius: '50%', border: '2.5px solid ' + (light ? 'rgba(255,255,255,.3)' : '#E2E0D9'), borderTopColor: light ? '#fff' : '#111', boxSizing: 'border-box', animation: RM ? 'ybspin 2.4s linear infinite' : 'ybspin .8s linear infinite', flex: 'none', display: 'block' } });
+  return React.createElement('span', { role: 'status', 'aria-label': 'กำลังตรวจ', style: { width: 22, height: 22, borderRadius: '50%', border: '2.5px solid ' + (light ? 'rgba(255,255,255,.3)' : '#EBEBEB'), borderTopColor: light ? '#fff' : '#1A1A1A', boxSizing: 'border-box', animation: RM ? 'ybspin 2.4s linear infinite' : 'ybspin .8s linear infinite', flex: 'none', display: 'block' } });
 }
 function stEl(st) {
   if (st === 'run') return spinner();
   if (st === 'p') return badge('#E4F4E8', '#1B6B33', 'check', true);
-  if (st === 's') return badge('#F3F2EE', '#444', 'minus');
+  if (st === 's') return badge('#F5F5F5', '#444', 'minus');
   if (st === 'f') return badge('#FDECEC', '#B3261E', 'x');
   if (st === 'w') return badge('#FFF1D6', '#7A4A00', 'ear', true);
-  return React.createElement('span', { style: { width: 26, height: 26, borderRadius: '50%', border: '2px solid #D6D3CB', boxSizing: 'border-box', display: 'block', flex: 'none' } });
+  return React.createElement('span', { style: { width: 26, height: 26, borderRadius: '50%', border: '2px solid #D9D9D9', boxSizing: 'border-box', display: 'block', flex: 'none' } });
 }
 function qrSvg(seed) {
   const N = 25; let a = seed; const rnd = () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const rects = []; const inF = (x, y) => (x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16);
   for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) { if (!inF(x, y) && rnd() > 0.52) rects.push(React.createElement('rect', { key: x + '-' + y, x, y, width: 1, height: 1 })); }
   [[0, 0], [18, 0], [0, 18]].forEach(([fx, fy], i) => {
-    rects.push(React.createElement('rect', { key: 'fo' + i, x: fx + 0.5, y: fy + 0.5, width: 6, height: 6, fill: 'none', stroke: '#111', strokeWidth: 1 }));
+    rects.push(React.createElement('rect', { key: 'fo' + i, x: fx + 0.5, y: fy + 0.5, width: 6, height: 6, fill: 'none', stroke: '#1A1A1A', strokeWidth: 1 }));
     rects.push(React.createElement('rect', { key: 'fi' + i, x: fx + 2, y: fy + 2, width: 3, height: 3 }));
   });
-  return React.createElement('svg', { viewBox: '0 0 25 25', width: '100%', height: '100%', fill: '#111', shapeRendering: 'crispEdges', role: 'img', 'aria-label': 'QR ขายเครื่อง DC-2610-0482' }, rects);
+  return React.createElement('svg', { viewBox: '0 0 25 25', width: '100%', height: '100%', fill: '#1A1A1A', shapeRendering: 'crispEdges', role: 'img', 'aria-label': 'QR ขายเครื่อง DC-2610-0482' }, rects);
 }
 const FLOW = [
   ['c00','C-00','Splash'],['c01','C-01','หน้าเตรียมตัว'],['c02','C-02','ขั้นตอนการเช็ก'],['c03','C-03','เปิดสิทธิ์'],
@@ -542,7 +573,7 @@ const GNAME = n => n <= 8 ? 'ระบบตรวจอัตโนมัติ
 const GEN = {
   i9:{icon:'wifi',title:'เปิด Wi-Fi ไว้',instr:'ระบบเช็กว่าเชื่อมต่อและออกอินเทอร์เน็ตได้',mode:'auto',seq:['กำลังเช็ก Wi-Fi'],result:'เชื่อมต่อแล้ว ออกอินเทอร์เน็ตได้'},
   i10:{icon:'bt',title:'รอค้นหา Bluetooth',instr:'ไม่ต้องจับคู่ และไม่เก็บชื่ออุปกรณ์',mode:'auto',seq:['กำลังค้นหาสัญญาณรอบตัว'],result:'พบอุปกรณ์รอบตัว 6 เครื่อง'},
-  i11:{icon:'pin',title:'รอจับตำแหน่ง GPS',instr:'ใช้เวลาไม่เกิน 30 วินาที ไม่ส่งตำแหน่งขึ้นระบบ',mode:'auto',seq:['กำลังจับตำแหน่ง'],result:'แม่นยำ 8 เมตร ใช้เวลา 6 วินาที'},
+  i11:{icon:'pin',title:'รอจับตำแหน่ง GPS',instr:'ไม่ส่งตำแหน่งขึ้นระบบ',mode:'auto',seq:['กำลังจับตำแหน่ง'],result:'แม่นยำ 8 เมตร ใช้เวลา 6 วินาที'},
   i12:{icon:'sim',title:'เช็กซิมและสัญญาณ',instr:'อ่านชื่อเครือข่ายและระดับสัญญาณ ไม่อ่านเบอร์โทร',mode:'warn',seq:['กำลังอ่านซิม'],warn:'ไม่พบซิมในเครื่อง',warnSub:'ข้ามได้ พนักงานทดสอบให้ตอนรับเครื่อง',skip:'ไม่มีซิม ข้ามได้',result:'AIS สัญญาณ 4 ขีด'},
   i13:{icon:'nfc',title:'แตะบัตรที่ด้านหลังเครื่อง',instr:'ใช้บัตรที่มีชิป เช่น บัตรรถไฟฟ้าหรือบัตรเดบิต ระบบไม่อ่านข้อมูลบัตร',mode:'wait',wait:'รอแตะบัตร',result:'อ่านชิปบัตรได้',skip:'ไม่มีบัตร ข้ามได้'},
   i16:{icon:'hand',title:'เอามือบังลำโพงด้านบน',instr:'จอจะดับ แล้วยกมือออก ทำ 2 ครั้ง',mode:'auto',seq:['ครั้งที่ 1 จาก 2 เหลือเวลา 15 วินาที','ครั้งที่ 2 จาก 2 เหลือเวลา 12 วินาที'],result:'จอดับและติดกลับครบ 2 ครั้ง'},
@@ -631,7 +662,7 @@ class Component extends DCLogic {
   }
   enter(id) {
     const G = GEN[id];
-    if (id === 'c00' && !this.bare) this.t(1200, () => { if (!this.state.playing) this.go('c01', 0); });
+    if (id === 'c00' && !this.bare) this.t(RM ? 1200 : 1800, () => { if (!this.state.playing) this.go('c01', 0); });
     if (id === 'c02') this.t(900, () => this.setState({ dev: 'ok' }));
     if (id === 'auto') {
       if (this.bare) return this.setState({ autoIdx: 3 });
@@ -678,7 +709,7 @@ class Component extends DCLogic {
     const s = this.state, id = s.screen, G = GEN[id], SH = SHOT[id];
     const is = {}; is[id] = true;
     const ic = {}; Object.keys(P).forEach(k => ic[k] = I(k));
-    const icL = { ear: I('ear', 56, '#111', 1.6), buttons: I('buttons', 56, '#111', 1.6), nfc: I('nfc', 56, '#444', 1.6) };
+    const icL = { ear: I('ear', 56, '#1A1A1A', 1.6), buttons: I('buttons', 56, '#1A1A1A', 1.6), nfc: I('nfc', 56, '#444', 1.6) };
     let n = id === 'auto' ? Math.min(Math.max(s.autoIdx, 0), 7) + 1 : N[id];
     const passed = (G && s.gen.phase === 'pass') || (id === 'ear' && s.ear.ok) || (id === 'i14b' && s.tf.done) || (id === 'i15' && s.col.done) || (id === 'i20' && s.btnDone) || (SH && s.shotPassed) || id === 'unsup' || (id === 'i14a' && s.cells.every(Boolean));
     let done = id === 'auto' ? Math.max(s.autoIdx, 0) : id === 'ear' ? 7 + (s.ear.ok ? 1 : 0) : n ? n - 1 + (passed ? 1 : 0) : 0;
@@ -691,7 +722,7 @@ class Component extends DCLogic {
     let gen = {};
     if (G) {
       const ph = s.gen.phase;
-      gen = { icon: I(G.icon, 56, '#111', 1.6), title: G.title, instr: G.instr, text: s.gen.text, busy: ph === 'check' || ph === 'wait', passed: ph === 'pass', warned: ph === 'warn', warn: G.warn, warnSub: G.warnSub };
+      gen = { icon: I(G.icon, 56, '#1A1A1A', 1.6), title: G.title, instr: G.instr, text: s.gen.text, busy: ph === 'check' || ph === 'wait', passed: ph === 'pass', warned: ph === 'warn', warn: G.warn, warnSub: G.warnSub };
       if (ph === 'idle') Object.assign(gen, { bPrimary: true, bLabel: G.cta, bClick: () => this.runGen(G, true) });
       else if (ph === 'warn') Object.assign(gen, { bPrimary: true, bLabel: 'ข้ามข้อนี้', bClick: () => this.next() });
       else if (ph === 'wait') Object.assign(gen, { bOutline: true, bLabel: G.skip.replace(' ข้ามได้', '') + ' ข้ามข้อนี้' });
@@ -699,12 +730,12 @@ class Component extends DCLogic {
     }
     const autoRows = AUTO.map((a, k) => {
       const st = s.autoIdx > k ? (k === 3 ? 'w' : 'p') : s.autoIdx === k ? 'run' : 'wait';
-      return { n: k + 1, name: a[0], val: st === 'run' ? 'กำลังตรวจ' : st === 'wait' ? 'รอ' : a[1], vc: k === 3 && st === 'w' ? '#7A4A00' : '#5C5A55', el: stEl(st), line: k === 7 ? 'transparent' : '#F3F2EE' };
+      return { n: k + 1, name: a[0], val: st === 'run' ? 'กำลังตรวจ' : st === 'wait' ? 'รอ' : a[1], vc: k === 3 && st === 'w' ? '#7A4A00' : '#5C5A55', el: stEl(st), line: k === 7 ? 'transparent' : '#F5F5F5' };
     });
     const c = s.col;
     const col = { c: COLS[c.idx][1], n: COLS[c.idx][0], no: c.idx + 1, isColor: c.step === 'color', isBright: c.step === 'bright', bright: c.bright,
       dim: c.step === 'bright' ? ((100 - c.bright) / 100 * 0.75).toFixed(2) : 0, tf: c.collapsed ? 'translateY(calc(100% - 44px))' : 'translateY(0)',
-      minBg: c.minSeen ? '#E4F4E8' : '#F3F2EE', minFg: c.minSeen ? '#1B6B33' : '#444', maxBg: c.done ? '#E4F4E8' : '#F3F2EE', maxFg: c.done ? '#1B6B33' : '#444',
+      minBg: c.minSeen ? '#E4F4E8' : '#F5F5F5', minFg: c.minSeen ? '#1B6B33' : '#444', maxBg: c.done ? '#E4F4E8' : '#F5F5F5', maxFg: c.done ? '#1B6B33' : '#444',
       btn: c.done ? 'ผ่านแล้ว ไปข้อถัดไป' : 'ลากให้สุดทั้งสองทาง' };
     const covered = s.cells.filter(Boolean).length, pct = Math.round(covered / 128 * 100);
     const shot = SH ? { title: SH.title, path: SH.path, open: SH.open, mockTitle: SH.mockTitle, mockVal: SH.mockVal, note: SH.note || '', isGuide: s.shot === 'guide', isReading: s.shot === 'reading', isResult: s.shot === 'result', isNotFound: s.shot === 'notfound', isPicker: s.shot === 'picker',
@@ -722,6 +753,9 @@ class Component extends DCLogic {
     const full = id === 'i14a' || id === 'i15' || id === 'c00';
 
     return {
+      splashLogo: React.createElement('img', { src: 'assets/logo.svg', alt: 'YelloBe', style: { width: 200, height: 'auto', animation: (RM || this.bare) ? 'none' : 'ybLogo 700ms cubic-bezier(.2,.8,.2,1) both' } }),
+      splashLine: React.createElement('div', { style: { width: 36, height: 3, borderRadius: 2, background: '#1A1A1A', animation: (RM || this.bare) ? 'none' : 'ybLine 400ms 450ms cubic-bezier(.2,.8,.2,1) both' } }),
+      splashText: React.createElement('div', { style: { fontSize: 18, fontWeight: 400, animation: (RM || this.bare) ? 'none' : 'ybRise 450ms 650ms ease-out both' } }, 'เช็กเครื่อง รับซื้อถึงบ้าน'),
       is, ic, icL, isCheck, hdr, segs, gen, isGen: !!G, isShot: !!SH, shot, autoRows, col,
       showPanel: !this.bare, mainPad: this.bare ? '0' : '20px 16px', scale: s.scale, frameW: Math.round(414 * s.scale), frameH: Math.round(868 * s.scale),
       padTop: full ? 0 : 47, showSB: id !== 'i14a' && id !== 'i15',
@@ -734,37 +768,37 @@ class Component extends DCLogic {
       },
       openGrid: () => this.setState({ grid: true }), closeGrid: () => this.setState({ grid: false }),
       gridItems: FLOW.map(f => ({ code: f[1], name: f[2], src: mkSrc(f[0]), go: () => { this.setState({ grid: false }); this.go(f[0], 0); } })),
-      screens: FLOW.map(f => ({ code: f[1], name: f[2], bg: f[0] === id ? '#FAD20D' : 'transparent', fw: f[0] === id ? 500 : 400, go: () => { clearInterval(this.playIv); this.setState({ playing: false }); this.go(f[0], IDX(f[0]) > IDX(id) ? 1 : -1); } })),
+      screens: FLOW.map(f => ({ code: f[1], name: f[2], bg: f[0] === id ? '#FAD20E' : 'transparent', fw: f[0] === id ? 500 : 400, go: () => { clearInterval(this.playIv); this.setState({ playing: false }); this.go(f[0], IDX(f[0]) > IDX(id) ? 1 : -1); } })),
       demos, hasDemos: demos.length > 0 && !this.bare,
       next: () => this.next(), back: () => this.back(), skip: () => this.next(), toC02: () => this.go('c02', 1),
-      prep: [['battery', 'ชาร์จแบตเกิน 20% และเตรียมสายชาร์จ'], ['wifi', 'ต่อ Wi-Fi'], ['speaker', 'อยู่ในที่เงียบ มีโต๊ะวางเครื่อง'], ['phone', 'ถอดเคสและฟิล์มกันมอง']].map(p => ({ icon: I(p[0], 24, '#111'), text: p[1] })),
+      prep: [['battery', 'ชาร์จแบตเกิน 20% และเตรียมสายชาร์จ'], ['wifi', 'ต่อ Wi-Fi'], ['speaker', 'อยู่ในที่เงียบ มีโต๊ะวางเครื่อง'], ['phone', 'ถอดเคสและฟิล์มกันมอง']].map(p => ({ icon: I(p[0], 24, '#1A1A1A'), text: p[1] })),
       devReading: s.dev === 'reading', devOk: s.dev !== 'reading',
-      steps5: [['ระบบตรวจอัตโนมัติ', 'วางเครื่องหงายจอบนโต๊ะ ระบบตรวจให้เอง'], ['การเชื่อมต่อ', 'Wi-Fi, Bluetooth, GPS, ซิม และ NFC'], ['หน้าจอ', 'ลากนิ้ว ดูสี และบังเซ็นเซอร์'], ['สแกน ชาร์จ และปุ่ม', 'Face ID เสียบสาย และกดปุ่ม'], ['ข้อมูลเสริม', 'แคปหน้าจอแบต IMEI และอะไหล่']].map((x, i) => ({ n: i + 1, t: x[0], d: x[1] })),
-      perms: PERMS.map(p => { const on = s.perm[p[0]]; return { name: p[1], desc: p[2], icon: I(p[3]), status: on ? 'เปิดแล้ว' : 'แตะเพื่อเปิด', bg: on ? '#E4F4E8' : '#FFFFFF', fg: on ? '#1B6B33' : '#111', bd: on ? '#E4F4E8' : '#111', tap: () => { if (!on) this.setState({ alert: p[0] }); } }; }),
+      steps5: [['ระบบตรวจอัตโนมัติ', 'วางเครื่องหงายจอบนโต๊ะ ระบบตรวจให้เอง'], ['การเชื่อมต่อ', 'Wi-Fi, Bluetooth, GPS, ซิม และ NFC'], ['หน้าจอ', 'ลากนิ้ว ดูสี และบังเซ็นเซอร์'], ['สแกน ชาร์จ และปุ่ม', 'Face ID เสียบสาย และกดปุ่ม'], ['ข้อมูลเสริม', 'แคปหน้าจอแบต IMEI และอะไหล่']].map((x, i) => ({ n: i + 1, t: x[0], d: x[1], icon: I(['phone', 'wifi', 'sun', 'face', 'battery'][i], 24, '#1A1A1A') })),
+      perms: PERMS.map(p => { const on = s.perm[p[0]]; return { name: p[1], desc: p[2], icon: I(p[3]), status: on ? 'เปิดแล้ว' : 'แตะเพื่อเปิด', bg: on ? '#E4F4E8' : '#FFFFFF', fg: on ? '#1B6B33' : '#1A1A1A', bd: on ? '#E4F4E8' : '#1A1A1A', trk: on ? '#FAD20E' : '#E3E3E3', kx: on ? '20px' : '0px', tap: () => { if (!on) this.setState({ alert: p[0] }); } }; }),
       permCta: Object.values(s.perm).every(Boolean) ? 'ต่อไป' : 'ต่อไป ข้ามที่ยังไม่เปิด',
       alertOpen: !!s.alert, alert: s.alert ? { name: PERMS.find(p => p[0] === s.alert)[1], desc: PERMS.find(p => p[0] === s.alert)[2] } : {},
       allow: () => this.setState({ perm: Object.assign({}, s.perm, { [s.alert]: true }), alert: null }), deny: () => this.setState({ alert: null }),
       ear: s.ear, replay: () => this.toastMsg('กำลังเล่นเสียงอีกครั้ง'),
       earColors: EARC.map(e => ({ n: e[0], c: e[1], pick: () => { if (s.ear.ok) return; if (e[0] === s.ear.answer) { this.setState({ ear: Object.assign({}, s.ear, { ok: true, wrong: false }) }); this.autoNext(500); } else this.setState({ ear: { answer: pickEar(s.ear.answer), wrong: true, ok: false } }); } })),
-      cells: s.cells.map(v => ({ bg: v ? '#FAD20D' : '#FFFFFF' })), touchPill: covered === 128 ? 'ครบแล้ว' : 'ครอบคลุม ' + pct + '%', touchHint: covered === 0, touchFresh: !s.touchStale, touchStale: !!s.touchStale,
+      cells: s.cells.map(v => ({ bg: v ? '#FAD20E' : '#FFFFFF' })), touchPill: covered === 128 ? 'ครบแล้ว' : 'ครอบคลุม ' + pct + '%', touchHint: covered === 0, touchFresh: !s.touchStale, touchStale: !!s.touchStale,
       tDown: e => { this.drawing = true; this.lastPt = null; try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {} this.paintAt(e.clientX, e.clientY); },
       tMove: e => { if (this.drawing) this.paintAt(e.clientX, e.clientY); }, tUp: () => { this.drawing = false; this.lastPt = null; },
-      tf: { done: s.tf.done, aBg: s.tf.a ? '#FAD20D' : '#FFFFFF', bBg: s.tf.b ? '#FAD20D' : '#FFFFFF', aTxt: s.tf.a ? 'ค้างไว้' : 'นิ้วที่ 1', bTxt: s.tf.b ? 'ค้างไว้' : 'นิ้วที่ 2' },
+      tf: { done: s.tf.done, aBg: s.tf.a ? '#FAD20E' : '#FFFFFF', bBg: s.tf.b ? '#FAD20E' : '#FFFFFF', aTxt: s.tf.a ? 'ค้างไว้' : 'นิ้วที่ 1', bTxt: s.tf.b ? 'ค้างไว้' : 'นิ้วที่ 2' },
       tfA: () => { const tf = Object.assign({}, s.tf, { a: true }); this.setState({ tf }); if (tf.b) this.t(900, () => { this.setState({ tf: Object.assign({}, tf, { done: true }) }); this.autoNext(500); }); },
       tfB: () => { const tf = Object.assign({}, s.tf, { b: true }); this.setState({ tf }); if (tf.a) this.t(900, () => { this.setState({ tf: Object.assign({}, tf, { done: true }) }); this.autoNext(500); }); },
       colOk: () => this.colOk(), colBad: () => { this.toastMsg('บันทึกไว้ให้พนักงานดู'); this.colOk(); },
       brightIn: e => this.brightIn(+e.target.value),
       sheetDown: e => { this.sy = e.clientY; }, sheetUp: e => { const dy = e.clientY - (this.sy || e.clientY); const cl = dy > 25 ? true : dy < -25 ? false : !c.collapsed; this.setState({ col: Object.assign({}, c, { collapsed: cl }) }); },
-      btnRows: ['เพิ่มเสียง', 'ลดเสียง', 'Power'].map((b, k) => ({ name: b, st: s.btn[k] ? 'กดแล้ว' : 'รอกด', el: stEl(s.btn[k] ? 'p' : 'wait'), bg: s.btn[k] ? '#E4F4E8' : '#FFFFFF', fg: s.btn[k] ? '#1B6B33' : '#111', press: () => this.press(k) })),
+      btnRows: ['เพิ่มเสียง', 'ลดเสียง', 'Power'].map((b, k) => ({ name: b, st: s.btn[k] ? 'กดแล้ว' : 'รอกด', el: stEl(s.btn[k] ? 'p' : 'wait'), bg: s.btn[k] ? '#E4F4E8' : '#FFFFFF', fg: s.btn[k] ? '#1B6B33' : '#1A1A1A', press: () => this.press(k) })),
       btnCta: s.btnDone ? 'ผ่านแล้ว ไปข้อถัดไป' : 'รอกดปุ่มให้ครบ',
       openShot: () => { this.setState({ shot: 'reading' }); this.t(1500, () => this.setState({ shot: 'result' })); },
       otherShot: () => this.setState({ shot: 'picker' }), toPicker: () => this.setState({ shot: 'picker' }), cancelPicker: () => this.setState({ shot: 'notfound' }),
-      pickTiles: ['ภาพแคปล่าสุด', 'รูป 2', 'รูป 3', 'รูป 4', 'รูป 5', 'รูป 6'].map((l, i) => ({ label: l, bg: i ? '#E7E5DE' : '#FFFFFF', bd: i ? 'none' : '2px solid #111', pick: () => { this.setState({ shot: 'reading' }); this.t(1300, () => this.setState({ shot: 'result' })); } })),
+      pickTiles: ['ภาพแคปล่าสุด', 'รูป 2', 'รูป 3', 'รูป 4', 'รูป 5', 'รูป 6'].map((l, i) => ({ label: l, bg: i ? '#EDEDED' : '#FFFFFF', bd: i ? 'none' : '2px solid #1A1A1A', pick: () => { this.setState({ shot: 'reading' }); this.t(1300, () => this.setState({ shot: 'result' })); } })),
       useShot: () => { this.setState({ shotPassed: true }); this.next(); },
-      groups: GROUPS.map((g, gi) => { const open = !!s.expand[gi]; return { name: g[0], score: g[1], note: g[2], open, rot: open ? 'rotate(180deg)' : 'none',
+      groups: GROUPS.map((g, gi) => { const open = !!s.expand[gi]; return { name: g[0], score: g[1], note: g[2], open, icon: I(['phone', 'wifi', 'sun', 'face', 'battery'][gi], 22, '#1A1A1A'), bars: g[3].map((it, k) => ({ k, c: it[1] === 'p' ? '#FAD20E' : '#E3E3E3' })), rot: open ? 'rotate(180deg)' : 'none',
         toggle: () => this.setState({ expand: Object.assign({}, s.expand, { [gi]: !open }) }), items: g[3].map(it => ({ n: it[0], v: it[2] || '', el: stEl(it[1]) })) }; }),
       qr: qrSvg(482), qrTime: String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0'),
-      qrBg: s.qrLeft < 300 ? '#FFF1D6' : '#F3F2EE', qrFg: s.qrLeft < 300 ? '#7A4A00' : '#444',
+      qrBg: s.qrLeft < 300 ? '#FFF1D6' : '#FFFFFF', qrFg: s.qrLeft < 300 ? '#7A4A00' : '#444',
       saveQr: () => this.toastMsg('บันทึก QR ลงรูปภาพแล้ว'),
       toast: s.toast, toastOp: s.toast ? 1 : 0,
       layerRef: this.layerRef, screenRef: this.screenRef, touchRef: this.touchRef, grid: s.grid
